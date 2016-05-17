@@ -95,14 +95,16 @@ $tmpl_tecnicas = array(
 <html>
     <head>
         <meta charset="utf-8" />
-        <title>Tec Bucket</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link href="css/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
         <link href="css/estilo.css" rel="stylesheet" />
         <script src="js/jquery.js"></script>
         <script src="css/bootstrap/js/bootstrap.min.js"></script>
+        <title>LabSis - Seg</title>
     </head>
     <body>
         <main class="container">
+            <h1>LabSis - Seg</h1>
             <div class="row">
                 <div class="col-sm-12">
                     <div class="row">

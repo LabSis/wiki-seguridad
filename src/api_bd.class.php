@@ -36,6 +36,7 @@ class ApiBd {
         $o_tecnicas = array();
         foreach ($tecnicas as $tecnica) {
             $consulta = "SELECT id, nombre, id_padre FROM tecnicas WHERE id_padre = {$tecnica["id"]}";
+            echo $consulta;
             $subtecnicas = self::$conexion->consultar_simple($consulta);
             $o_tecnica = array(
                 "nombre" => $tecnica["nombre"],
