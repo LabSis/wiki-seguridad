@@ -26,7 +26,7 @@ class ApiBd {
     public static function sanitizar($cadena) {
         $mysqli = self::$conexion->get_mysqli();
         $cadena = mysqli_real_escape_string($mysqli, $cadena);
-        return strip_tags($cadena, "<a>");
+        return strip_tags($cadena, "<a><h1><h2><h3><h4><h5><h6>");
     }
 
     public static function obtener_tecnicas() {
@@ -36,7 +36,6 @@ class ApiBd {
         $o_tecnicas = array();
         foreach ($tecnicas as $tecnica) {
             $consulta = "SELECT id, nombre, id_padre FROM tecnicas WHERE id_padre = {$tecnica["id"]}";
-            echo $consulta;
             $subtecnicas = self::$conexion->consultar_simple($consulta);
             $o_tecnica = array(
                 "nombre" => $tecnica["nombre"],
