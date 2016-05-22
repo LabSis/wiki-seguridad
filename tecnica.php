@@ -1,9 +1,7 @@
 <?php
 ini_set("display_errors", 1);
-require_once 'src/conexion.class.php';
-require_once 'src/api_bd.class.php';
+require_once 'config.php';
 $id_tecnica = $_GET["id"];
-Conexion::set_default_conexion("labsis_seg", Conexion::init("localhost", "root", "", "labsis_seg", true));
 $metodo = filter_input(INPUT_SERVER, "REQUEST_METHOD");
 if(strcasecmp($metodo, "POST") === 0){
     // Guardar sección o artículo...

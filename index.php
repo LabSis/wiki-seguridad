@@ -1,9 +1,8 @@
 <?php
-session_start();
+
+require_once 'config.php';
+
 ini_set("display_errors", 1);
-require_once 'src/conexion.class.php';
-require_once 'src/api_bd.class.php';
-Conexion::set_default_conexion("labsis_seg", Conexion::init("localhost", "root", "", "labsis_seg", true));
 $tmpl_tecnicas = ApiBd::obtener_tecnicas();
 
 /*
