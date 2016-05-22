@@ -4,8 +4,11 @@ require_once 'src/conexion.class.php';
 require_once 'src/api_bd.class.php';
 $id_tecnica = $_GET["id"];
 Conexion::set_default_conexion("labsis_seg", Conexion::init("localhost", "root", "", "labsis_seg", true));
-if(!empty($_POST)){
+$metodo = filter_input(INPUT_SERVER, "REQUEST_METHOD");
+if(strcasecmp($metodo, "POST") === 0){
     // Guardar sección o artículo...
+    $titulo = filter_input(INPUT_POST, "txtTitulo", FILTER_SANITIZE_STRING);
+    $contenido = filter_input(INPUT_POST, "txtContenido", FILTER_SANITIZE_STRING);
     ApiBd::crear_articulo($titulo, $id_tecnica, $contenido);
 }
 $tmpl_tecnica = ApiBd::obtener_tecnica($id_tecnica);
@@ -40,14 +43,14 @@ $tmpl_tecnica = ApiBd::obtener_tecnica($id_tecnica);
                 </div>
             </div>
             <div class="row">
-                <form role="form">
+                <form role="form" action="tecnica.php?id=<?php echo $id_tecnica ?>" method="post">
                     <div class="form-group">
                         <label for="comment">Título:</label>
-                        <input type="text" class="form-control" id="txtTitulo">
+                        <input type="text" class="form-control" name="txtTitulo" id="txtTitulo">
                     </div>
                     <div class="form-group">
                         <label for="comment">Contenido:</label>
-                        <textarea class="form-control" rows="20" id="txtContenido"></textarea>
+                        <textarea class="form-control" rows="20" name="txtContenido" id="txtContenido"></textarea>
                     </div>
                     <button type="submit" class="btn btn-default">Crear sección</button>
                 </form>

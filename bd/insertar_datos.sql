@@ -1,5 +1,3 @@
-DROP DATABASE IF EXISTS labsis_seg;
-CREATE DATABASE labsis_seg;
 USE labsis_seg;
 
 -- Técnicas padres
@@ -16,3 +14,4 @@ INSERT INTO tecnicas (nombre, id_padre) VALUES ("SQL Injection", @injection);
 INSERT INTO tecnicas (nombre, id_padre) VALUES ("LDAP Injection", @injection);
 INSERT INTO tecnicas (nombre, id_padre) VALUES ("XML Injection", @injection);
 INSERT INTO tecnicas (nombre, id_padre) VALUES ("NoSQL Injection", @injection);
+

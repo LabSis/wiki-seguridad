@@ -96,7 +96,6 @@ class ApiBd {
         $titulo = self::sanitizar($titulo);
         $contenido = self::sanitizar($contenido);
         $insercion = "INSERT INTO articulos (nombre,id_tecnica,contenido) VALUES ('{$titulo}',{$id_tecnica},'{$contenido}')";
-        echo $insercion;
         if (self::$conexion->insertar_simple($insercion)) {
             self::cerrar();
             return true;
