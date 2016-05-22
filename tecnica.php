@@ -2,6 +2,7 @@
 require_once 'config.php';
 
 $sesion = Sesion::get_instancia();
+$sesion->limpiar_mensajes();
 
 $id_tecnica = $_GET["id"];
 $metodo = filter_input(INPUT_SERVER, "REQUEST_METHOD");
@@ -22,10 +23,21 @@ if (strcasecmp($metodo, "POST") === 0) {
         $hubo_error = true;
     }
     if (!$hubo_error) {
-        ApiBd::crear_articulo($titulo, $id_tecnica, $contenido);
+        $ok = ApiBd::crear_articulo($titulo, $id_tecnica, $contenido);
+        if ($ok){
+            $sesion->cargar_mensaje("El artículo fue guardado con éxito", Sesion::TIPO_MENSAJE_EXITO);
+        } else {
+            $sesion->cargar_mensaje("Hubo un error al guardar el artículo", Sesion::TIPO_MENSAJE_ERROR);
+        }
     }
 }
-$tmpl_tecnica = ApiBd::obtener_tecnica($id_tecnica);
+$tmpl_tecnica = array();
+try{
+    $tmpl_tecnica = ApiBd::obtener_tecnica($id_tecnica);
+} catch(Exception $ex) {
+    $sesion->cargar_mensaje($ex->getMessage(), Sesion::TIPO_MENSAJE_ERROR);
+}
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -42,19 +54,21 @@ $tmpl_tecnica = ApiBd::obtener_tecnica($id_tecnica);
             <?php require_once ('tmpl/maquetado/mensajes.tmpl.php') ?>
             <div class="row">
                 <div class="col-sm-12">
-                    <h1><?php echo $tmpl_tecnica["nombre"]; ?></h1>
-                    <?php foreach ($tmpl_tecnica["articulos"] as $articulo): ?>
-                        <section>
-                            <h3>
-                                <?php echo $articulo["titulo"] ?>
-                            </h3>
-                            <div class="contenido">
-                                <p>
-                                    <?php echo $articulo["contenido"] ?>
-                                </p>
-                            </div>
-                        </section>
-                    <?php endforeach; ?>
+                    <h1><?php echo (isset($tmpl_tecnica["nombre"]))?$tmpl_tecnica["nombre"]:""; ?></h1>
+                    <?php if(isset($tmpl_tecnica["articulos"])): ?>
+                        <?php foreach ($tmpl_tecnica["articulos"] as $articulo): ?>
+                            <section>
+                                <h3>
+                                    <?php echo $articulo["titulo"] ?>
+                                </h3>
+                                <div class="contenido">
+                                    <p>
+                                        <?php echo $articulo["contenido"] ?>
+                                    </p>
+                                </div>
+                            </section>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
                 </div>
             </div>
             <div class="row">

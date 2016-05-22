@@ -6,7 +6,8 @@ CREATE TABLE IF NOT EXISTS articulos(
 	id INT NOT NULL AUTO_INCREMENT,
 	nombre VARCHAR(100) NOT NULL,
 	contenido TEXT NOT NULL,
-        id_tecnica INT NOT NULL,
+    id_tecnica INT NOT NULL,
+    fecha_hora DATETIME NOT NULL,
 	PRIMARY KEY (id)
 )ENGINE=MyISAM DEFAULT CHARACTER SET=utf8;
 

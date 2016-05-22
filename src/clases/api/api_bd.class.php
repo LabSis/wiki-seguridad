@@ -73,9 +73,13 @@ class ApiBd {
         self::iniciar();
         $consulta = "SELECT id, nombre FROM tecnicas WHERE id={$id_tecnica}";
         $tecnica = self::$conexion->consultar_simple($consulta);
-        $o_tecnica = array(
-            "nombre" => $tecnica[0]["nombre"]
-        );
+        if ($tecnica !== false && !empty($tecnica)) {
+            $o_tecnica = array(
+                "nombre" => $tecnica[0]["nombre"]
+            );
+        } else {
+            throw new InvalidArgumentException("Página no encontrada");
+        }
         $consulta = "SELECT nombre, contenido FROM articulos WHERE id_tecnica={$id_tecnica}";
         $articulos = self::$conexion->consultar_simple($consulta);
         $o_articulos = array();
@@ -90,17 +94,28 @@ class ApiBd {
         self::cerrar();
         return $o_tecnica;
     }
+    
+    public static function existe_tecnica($id_tecnica) {
+        try {
+            self::obtener_tecnica($id_tecnica);
+        } catch (InvalidArgumentException $ex) {
+            return false;
+        }
+        return true;
+    }
 
     public static function crear_articulo($titulo, $id_tecnica, $contenido) {
-        self::iniciar();
-        $titulo = self::sanitizar($titulo);
-        $contenido = self::sanitizar($contenido);
-        $insercion = "INSERT INTO articulos (nombre,id_tecnica,contenido) VALUES ('{$titulo}',{$id_tecnica},'{$contenido}')";
-        if (self::$conexion->insertar_simple($insercion)) {
+        if (self::existe_tecnica($id_tecnica)) {
+            self::iniciar();
+            $titulo = self::sanitizar($titulo);
+            $contenido = self::sanitizar($contenido);
+            $insercion = "INSERT INTO articulos (nombre,id_tecnica,contenido) VALUES ('{$titulo}',{$id_tecnica},'{$contenido}')";
+            if (self::$conexion->insertar_simple($insercion)) {
+                self::cerrar();
+                return true;
+            }
             self::cerrar();
-            return true;
         }
-        self::cerrar();
         return false;
     }
 
