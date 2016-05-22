@@ -1,13 +1,29 @@
 <?php
-ini_set("display_errors", 1);
 require_once 'config.php';
+
+$sesion = Sesion::get_instancia();
+
 $id_tecnica = $_GET["id"];
 $metodo = filter_input(INPUT_SERVER, "REQUEST_METHOD");
-if(strcasecmp($metodo, "POST") === 0){
+if (strcasecmp($metodo, "POST") === 0) {
+    $hubo_error = false;
     // Guardar sección o artículo...
     $titulo = filter_input(INPUT_POST, "txtTitulo", FILTER_SANITIZE_STRING);
+    $titulo = trim($titulo);
+    if (strlen($titulo) === 0) {
+        $sesion->cargar_mensaje("El título no puede ser vacío", Sesion::TIPO_MENSAJE_ERROR);
+        $hubo_error = true;
+    }
+
     $contenido = filter_input(INPUT_POST, "txtContenido", FILTER_SANITIZE_STRING);
-    ApiBd::crear_articulo($titulo, $id_tecnica, $contenido);
+    $contenido = trim($contenido);
+    if (strlen($contenido) === 0) {
+        $sesion->cargar_mensaje("El contenido no puede ser vacío", Sesion::TIPO_MENSAJE_ERROR);
+        $hubo_error = true;
+    }
+    if (!$hubo_error) {
+        ApiBd::crear_articulo($titulo, $id_tecnica, $contenido);
+    }
 }
 $tmpl_tecnica = ApiBd::obtener_tecnica($id_tecnica);
 ?>
@@ -23,14 +39,15 @@ $tmpl_tecnica = ApiBd::obtener_tecnica($id_tecnica);
     </head>
     <body>
         <main class="container">
+            <?php require_once ('tmpl/maquetado/mensajes.tmpl.php') ?>
             <div class="row">
                 <div class="col-sm-12">
-                    <h3><?php echo $tmpl_tecnica["nombre"]; ?></h3>
+                    <h1><?php echo $tmpl_tecnica["nombre"]; ?></h1>
                     <?php foreach ($tmpl_tecnica["articulos"] as $articulo): ?>
                         <section>
-                            <h5>
+                            <h3>
                                 <?php echo $articulo["titulo"] ?>
-                            </h5>
+                            </h3>
                             <div class="contenido">
                                 <p>
                                     <?php echo $articulo["contenido"] ?>
