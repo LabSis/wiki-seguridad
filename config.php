@@ -37,7 +37,7 @@ date_default_timezone_set($config['default_timezone']);
 //Rutas
 $RUTA_SERVIDOR = dirname(__FILE__) . '/';
 //Si decidimos usar https habria que cambiar aqui
-$RUTA_WEB = 'http://' . $_SERVER['HTTP_HOST'] . '/nubeideal';
+$RUTA_WEB = 'http://' . $_SERVER['HTTP_HOST'] . '/labsis_seg';
 
 $RUTA_PUBLICA = $RUTA_SERVIDOR . "public/";
 

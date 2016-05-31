@@ -117,7 +117,7 @@ $tmpl_tecnicas = array(
                                         <ul>
                                             <?php foreach ($tmpl_tecnica["links"] as $link): ?>
                                                 <li>
-                                                    <a href="tecnica.php?id=<?php echo $link["href"]; ?>">
+                                                    <a href="src/tecnica.php?id=<?php echo $link["href"]; ?>">
                                                         <?php echo $link["nombre"]; ?>
                                                     </a>
                                                 </li>

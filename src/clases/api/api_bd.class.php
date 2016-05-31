@@ -23,10 +23,10 @@ class ApiBd {
         }
     }
 
-    public static function sanitizar($cadena) {
+    public static function sanitizar($cadena, $strip_tags = "") {
         $mysqli = self::$conexion->get_mysqli();
         $cadena = mysqli_real_escape_string($mysqli, $cadena);
-        return strip_tags($cadena, "<a><h1><h2><h3><h4><h5><h6>");
+        return strip_tags($cadena, $strip_tags);
     }
 
     public static function obtener_tecnicas() {
@@ -108,7 +108,7 @@ class ApiBd {
         if (self::existe_tecnica($id_tecnica)) {
             self::iniciar();
             $titulo = self::sanitizar($titulo);
-            $contenido = self::sanitizar($contenido);
+            $contenido = self::sanitizar($contenido, "<a><strong><em><ol><li><ul><p>");
             $insercion = "INSERT INTO articulos (nombre,id_tecnica,contenido) VALUES ('{$titulo}',{$id_tecnica},'{$contenido}')";
             if (self::$conexion->insertar_simple($insercion)) {
                 self::cerrar();

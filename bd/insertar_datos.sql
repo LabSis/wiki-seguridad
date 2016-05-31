@@ -1,14 +1,14 @@
 USE labsis_seg;
 
--- Técnicas padres
+-- TÃ©cnicas padres
 INSERT INTO tecnicas (nombre, id_padre) VALUES ("Injection", NULL);
 INSERT INTO tecnicas (nombre, id_padre) VALUES ("Sitios cruzados", NULL);
 INSERT INTO tecnicas (nombre, id_padre) VALUES ("Control de acceso", NULL);
-INSERT INTO tecnicas (nombre, id_padre) VALUES ("Inclusión", NULL);
+INSERT INTO tecnicas (nombre, id_padre) VALUES ("InclusiÃ³n", NULL);
 
 SET @injection = (SELECT id FROM tecnicas WHERE nombre="Injection");
 
--- Sub-técnicas 
+-- Sub-tÃ©cnicas 
 
 INSERT INTO tecnicas (nombre, id_padre) VALUES ("SQL Injection", @injection);
 INSERT INTO tecnicas (nombre, id_padre) VALUES ("LDAP Injection", @injection);
