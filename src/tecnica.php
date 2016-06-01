@@ -45,6 +45,8 @@ try{
             <?php require_once ('../tmpl/maquetado/mensajes.tmpl.php') ?>
             <div class="row">
                 <div class="col-sm-12">
+                    <a href="<?php echo $RUTA_WEB ?>">Volver</a> |
+                    <hr/>
                     <h1><?php echo (isset($tmpl_tecnica["nombre"]))?$tmpl_tecnica["nombre"]:""; ?></h1>
                     <?php if(isset($tmpl_tecnica["articulos"])): ?>
                         <?php foreach ($tmpl_tecnica["articulos"] as $articulo): ?>
