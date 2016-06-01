@@ -75,16 +75,18 @@ class ApiBd {
         $tecnica = self::$conexion->consultar_simple($consulta);
         if ($tecnica !== false && !empty($tecnica)) {
             $o_tecnica = array(
-                "nombre" => $tecnica[0]["nombre"]
+                "nombre" => $tecnica[0]["nombre"],
+                "id" => $tecnica[0]["id"]
             );
         } else {
             throw new InvalidArgumentException("Página no encontrada");
         }
-        $consulta = "SELECT nombre, contenido FROM articulos WHERE id_tecnica={$id_tecnica}";
+        $consulta = "SELECT id, nombre, contenido FROM articulos WHERE activada=TRUE AND id_tecnica={$id_tecnica}";
         $articulos = self::$conexion->consultar_simple($consulta);
         $o_articulos = array();
         foreach ($articulos as $articulo) {
             $o_articulos[] = array(
+                "id" => $articulo["id"],
                 "titulo" => $articulo["nombre"],
                 "fecha" => "",
                 "contenido" => $articulo["contenido"]
@@ -118,5 +120,16 @@ class ApiBd {
         }
         return false;
     }
-
+    
+    public static function desactivar_articulo($id_articulo){
+        self::iniciar();
+        $id_articulo = self::sanitizar($id_articulo);
+        $actualizacion = "UPDATE articulos AS a SET activada=FALSE WHERE a.id=$id_articulo";
+        if (self::$conexion->actualizar_simple($actualizacion)) {
+            self::cerrar();
+            return true;
+        }
+        self::cerrar();
+        return false;
+    }
 }

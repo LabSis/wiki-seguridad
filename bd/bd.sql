@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS articulos(
 	contenido TEXT NOT NULL,
     id_tecnica INT NOT NULL,
     fecha_hora DATETIME NOT NULL,
+    activada BOOLEAN NOT NULL DEFAULT TRUE,
 	PRIMARY KEY (id)
 )ENGINE=MyISAM DEFAULT CHARACTER SET=utf8;
 

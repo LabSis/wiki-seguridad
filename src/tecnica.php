@@ -27,6 +27,16 @@ try{
         <script type="text/javascript">
             $(document).ready(function(){
                 CKEDITOR.replace("txtContenido");
+
+                function mostrarModalConfirmacionBorrar(idArticulo){
+                    $("#hidIdArticulo").val(idArticulo);
+                    $("#confirmarBorrado").modal("show");
+                }
+
+                $(".borrar").click(function(){
+                    var id = $(this).parents("section").data("id");
+                    mostrarModalConfirmacionBorrar(id);
+                });
             });
         </script>
     </head>
@@ -38,7 +48,7 @@ try{
                     <h1><?php echo (isset($tmpl_tecnica["nombre"]))?$tmpl_tecnica["nombre"]:""; ?></h1>
                     <?php if(isset($tmpl_tecnica["articulos"])): ?>
                         <?php foreach ($tmpl_tecnica["articulos"] as $articulo): ?>
-                            <section>
+                            <section data-id="<?php echo $articulo["id"]?>">
                                 <h3>
                                     <?php echo $articulo["titulo"] ?>
                                 </h3>
@@ -46,6 +56,7 @@ try{
                                     <p>
                                         <?php echo $articulo["contenido"] ?>
                                     </p>
+                                    <i class="borrar glyphicon glyphicon-trash"></i>
                                 </div>
                             </section>
                         <?php endforeach; ?>
@@ -53,9 +64,9 @@ try{
                 </div>
             </div>
             <div class="row crear_articulo">
-                <form role="form" action="guardar_tecnica.php?id=<?php echo $id_tecnica ?>" method="post">
+                <form role="form" action="guardar_articulo.php?id=<?php echo $id_tecnica ?>" method="post">
                     <div>
-                        <p>Al agregar un artículo usted se hace responsable de la información que pública. Para un control interno guardamos datos de aquellas personas que crean un artículo. Gracias.</p>
+                        <p>Al agregar un artículo usted se hace responsable de la información que publica. Para llevar un control interno guardamos algunos datos de aquellas personas que crean un artículo. Gracias.</p>
                     </div>
                     <div class="form-group">
                         <label for="comment">Título:</label>
@@ -69,5 +80,26 @@ try{
                 </form>
             </div>
         </main>
+        <div class="modal fade" id="confirmarBorrado" tabindex="-1" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form action="<?php echo $RUTA_WEB ?>/src/desactivar_articulo.php" method="POST">
+                        <input type="hidden" value="<?php echo $tmpl_tecnica["id"] ?>" name="id_tecnica" id="hidIdTecnica" />
+                        <input type="hidden" name="id_articulo" id="hidIdArticulo" />
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title">Confirmar borrado</h4>
+                        </div>
+                        <div class="modal-body">
+                            <p>¿Estás seguro que deseas borrar el artículo? Más tarde puedes deshacer este cambio</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                            <button type="submit" class="btn btn-primary">Aceptar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </body>
 </html>
