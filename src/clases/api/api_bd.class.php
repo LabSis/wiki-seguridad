@@ -132,4 +132,8 @@ class ApiBd {
         self::cerrar();
         return false;
     }
+
+    public static function editar_articulo($id_articulo, $txt_titulo, $txt_contenido){
+        return true;
+    }
 }

@@ -17,7 +17,7 @@ if (strcasecmp($metodo, "POST") === 0) {
         $ok = false;
     }
     if ($ok) {
-        $sesion->cargar_mensaje("El artículo fue borrado con éxito", Sesion::TIPO_MENSAJE_ERROR);
+        $sesion->cargar_mensaje("El artículo fue borrado con éxito", Sesion::TIPO_MENSAJE_EXITO);
     } else {
         $sesion->cargar_mensaje("Error al borrar el artículo", Sesion::TIPO_MENSAJE_ERROR);
     }

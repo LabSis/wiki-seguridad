@@ -9,9 +9,10 @@ section{
     margin-top: 80px;
     margin-bottom: 50px;
 }
-.borrar{
+.borrar, .editar{
     position: float;
     float: right;
     top: 5px;
     cursor: pointer;
+    margin-right: 10px;
 }

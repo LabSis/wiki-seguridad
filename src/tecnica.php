@@ -2,7 +2,6 @@
 require_once '../config.php';
 
 $sesion = Sesion::get_instancia();
-$sesion->limpiar_mensajes();
 
 $id_tecnica = $_GET["id"];
 
@@ -27,26 +26,43 @@ try{
         <script type="text/javascript">
             $(document).ready(function(){
                 CKEDITOR.replace("txtContenido");
+                CKEDITOR.replace("txtContenidoModal");
 
                 function mostrarModalConfirmacionBorrar(idArticulo){
                     $("#hidIdArticulo").val(idArticulo);
-                    $("#confirmarBorrado").modal("show");
+                    var idTecnica = $("#hidIdTecnica").val();
+                    $("#hidIdTecnicaModalBorrado").val(idTecnica);
+                    $("#modalConfirmarBorrado").modal("show");
                 }
 
                 $(".borrar").click(function(){
                     var id = $(this).parents("section").data("id");
                     mostrarModalConfirmacionBorrar(id);
                 });
+
+                function mostrarModalEditar(idArticulo){
+                    
+                }
+
+                $(".editar").click(function(){
+                    var contenido = $(this).parents(".contenido").text();
+                    console.log(contenido);
+                    
+                    //$("#txtContenidoModalEditar").text(contenido);
+                    $("#modalEditar").modal("show");
+                    
+                });
             });
         </script>
     </head>
     <body>
         <main class="container">
-            <?php require_once ('../tmpl/maquetado/mensajes.tmpl.php') ?>
+            <input type="hidden" value="<?php echo $tmpl_tecnica["id"] ?>" name="id_tecnica" id="hidIdTecnica" />
             <div class="row">
                 <div class="col-sm-12">
                     <a href="<?php echo $RUTA_WEB ?>">Volver</a> |
                     <hr/>
+                    <?php require_once ('../tmpl/maquetado/mensajes.tmpl.php') ?>
                     <h1><?php echo (isset($tmpl_tecnica["nombre"]))?$tmpl_tecnica["nombre"]:""; ?></h1>
                     <?php if(isset($tmpl_tecnica["articulos"])): ?>
                         <?php foreach ($tmpl_tecnica["articulos"] as $articulo): ?>
@@ -58,7 +74,8 @@ try{
                                     <p>
                                         <?php echo $articulo["contenido"] ?>
                                     </p>
-                                    <i class="borrar glyphicon glyphicon-trash"></i>
+                                    <i class="borrar glyphicon glyphicon-trash" title="Borrar"></i>
+                                    <i class="editar glyphicon glyphicon-edit" title="Editar"></i>
                                 </div>
                             </section>
                         <?php endforeach; ?>
@@ -78,15 +95,15 @@ try{
                         <label for="comment">Contenido:</label>
                         <textarea class="form-control" rows="20" name="txtContenido" id="txtContenido"></textarea>
                     </div>
-                    <button type="submit" class="btn btn-default">Crear sección</button>
+                    <button type="submit" class="btn btn-default">Crear artículo</button>
                 </form>
             </div>
         </main>
-        <div class="modal fade" id="confirmarBorrado" tabindex="-1" role="dialog">
+        <div class="modal fade" id="modalConfirmarBorrado" tabindex="-1" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <form action="<?php echo $RUTA_WEB ?>/src/desactivar_articulo.php" method="POST">
-                        <input type="hidden" value="<?php echo $tmpl_tecnica["id"] ?>" name="id_tecnica" id="hidIdTecnica" />
+                        <input type="hidden" value="<?php echo $tmpl_tecnica["id"] ?>" name="id_tecnica" id="hidIdTecnicaModalBorrado" />
                         <input type="hidden" name="id_articulo" id="hidIdArticulo" />
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -94,6 +111,34 @@ try{
                         </div>
                         <div class="modal-body">
                             <p>¿Estás seguro que deseas borrar el artículo? Más tarde puedes deshacer este cambio</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                            <button type="submit" class="btn btn-primary">Aceptar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="modalEditar" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <form action="<?php echo $RUTA_WEB ?>/src/editar_articulo.php" method="POST">
+                        <input type="hidden" value="<?php echo $tmpl_tecnica["id"] ?>" name="hidIdTecnicaModalEditar" id="hidIdTecnicaModalEditar" />
+                        <input type="hidden" name="hidIdArticuloModalEditar" id="hidIdArticuloModalEditar" />
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title">Editar artículo</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="comment">Título:</label>
+                                <input type="text" class="form-control" name="txtTituloModalEditar" id="txtTituloModal">
+                            </div>
+                            <div class="form-group">
+                                <label for="comment">Contenido:</label>
+                                <textarea class="form-control" rows="20" name="txtContenidoModalEditar" id="txtContenidoModal"></textarea>
+                            </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>

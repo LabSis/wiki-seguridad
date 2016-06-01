@@ -2,6 +2,9 @@
 
 require_once 'config.php';
 
+$sesion = Sesion::get_instancia();
+$sesion->limpiar_mensajes();
+
 ini_set("display_errors", 1);
 $tmpl_tecnicas = ApiBd::obtener_tecnicas();
 
@@ -104,6 +107,7 @@ $tmpl_tecnicas = array(
     <body>
         <main class="container">
             <h1>LabSis - Seg</h1>
+            <h3>Técnicas</h3>
             <div class="row">
                 <div class="col-sm-12">
                     <div class="row">
