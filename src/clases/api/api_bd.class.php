@@ -141,6 +141,18 @@ SQL;
         $id_articulo = self::sanitizar($id_articulo);
         $titulo = self::sanitizar($titulo);
         $contenido = self::sanitizar($contenido, "<a><strong><em><ol><li><ul><p>");
+        
+        // Obtengo artículo anterior
+        $consulta = <<<SQL
+        SELECT id, nombre, contenido FROM articulos WHERE activada=TRUE AND id={$id_articulo}
+SQL;
+        $articulo = self::$conexion->consultar_simple($consulta);
+        if(isset($articulo) && is_array($articulo)){
+            $contenido_articulo_anterior = $articulo[0]["contenido"];
+            $dif = xdiff_string_diff($contenido_articulo_anterior, $contenido);
+            echo "DIF: <br>";
+            echo $dif;
+        }
         $actualizacion = <<<SQL
         UPDATE articulos AS a SET nombre='$titulo', contenido='$contenido'
         WHERE a.id=$id_articulo
