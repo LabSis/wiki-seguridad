@@ -124,7 +124,10 @@ class ApiBd {
     public static function desactivar_articulo($id_articulo){
         self::iniciar();
         $id_articulo = self::sanitizar($id_articulo);
-        $actualizacion = "UPDATE articulos AS a SET activada=FALSE WHERE a.id=$id_articulo";
+        $actualizacion = <<<SQL
+        UPDATE articulos AS a SET activada=FALSE
+        WHERE a.id=$id_articulo
+SQL;
         if (self::$conexion->actualizar_simple($actualizacion)) {
             self::cerrar();
             return true;
@@ -133,7 +136,21 @@ class ApiBd {
         return false;
     }
 
-    public static function editar_articulo($id_articulo, $txt_titulo, $txt_contenido){
-        return true;
+    public static function editar_articulo($id_articulo, $titulo, $contenido){
+        self::iniciar();
+        $id_articulo = self::sanitizar($id_articulo);
+        $titulo = self::sanitizar($titulo);
+        $contenido = self::sanitizar($contenido, "<a><strong><em><ol><li><ul><p>");
+        $actualizacion = <<<SQL
+        UPDATE articulos AS a SET nombre='$titulo', contenido='$contenido'
+        WHERE a.id=$id_articulo
+SQL;
+        echo $actualizacion;
+        if (self::$conexion->actualizar_simple($actualizacion)) {
+            self::cerrar();
+            return true;
+        }
+        self::cerrar();
+        return false;
     }
 }

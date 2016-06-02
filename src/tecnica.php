@@ -26,7 +26,7 @@ try{
         <script type="text/javascript">
             $(document).ready(function(){
                 CKEDITOR.replace("txtContenido");
-                CKEDITOR.replace("txtContenidoModal");
+                CKEDITOR.replace("txtContenidoModalEditar");
 
                 function mostrarModalConfirmacionBorrar(idArticulo){
                     $("#hidIdArticulo").val(idArticulo);
@@ -40,16 +40,18 @@ try{
                     mostrarModalConfirmacionBorrar(id);
                 });
 
-                function mostrarModalEditar(idArticulo){
-                    
+                function mostrarModalEditar(idArticulo, titulo, contenido){
+                    CKEDITOR.instances['txtContenidoModalEditar'].setData(contenido);
+                    $("#txtTituloModalEditar").val(titulo);
+                    $("#hidIdArticuloModalEditar").val(idArticulo);
+                    $("#modalEditar").modal("show");
                 }
 
                 $(".editar").click(function(){
-                    var contenido = $(this).parents(".contenido").text();
-                    console.log(contenido);
-                    
-                    //$("#txtContenidoModalEditar").text(contenido);
-                    $("#modalEditar").modal("show");
+                    var titulo = $(this).parents("section").find(".titulo").text().trim();
+                    var contenido = $(this).parents(".contenido").html().trim();
+                    var idArticulo = $(this).parents("section").data("id");
+                    mostrarModalEditar(idArticulo, titulo, contenido);
                     
                 });
             });
@@ -67,7 +69,7 @@ try{
                     <?php if(isset($tmpl_tecnica["articulos"])): ?>
                         <?php foreach ($tmpl_tecnica["articulos"] as $articulo): ?>
                             <section data-id="<?php echo $articulo["id"]?>">
-                                <h3>
+                                <h3 class="titulo">
                                     <?php echo $articulo["titulo"] ?>
                                 </h3>
                                 <div class="contenido">
@@ -88,11 +90,11 @@ try{
                         <p>Al agregar un artículo usted se hace responsable de la información que publica. Para llevar un control interno guardamos algunos datos de aquellas personas que crean un artículo. Gracias.</p>
                     </div>
                     <div class="form-group">
-                        <label for="comment">Título:</label>
+                        <label for="txtTitulo">Título:</label>
                         <input type="text" class="form-control" name="txtTitulo" id="txtTitulo">
                     </div>
                     <div class="form-group">
-                        <label for="comment">Contenido:</label>
+                        <label for="txtContenido">Contenido:</label>
                         <textarea class="form-control" rows="20" name="txtContenido" id="txtContenido"></textarea>
                     </div>
                     <button type="submit" class="btn btn-default">Crear artículo</button>
@@ -133,11 +135,11 @@ try{
                         <div class="modal-body">
                             <div class="form-group">
                                 <label for="comment">Título:</label>
-                                <input type="text" class="form-control" name="txtTituloModalEditar" id="txtTituloModal">
+                                <input type="text" class="form-control" name="txtTituloModalEditar" id="txtTituloModalEditar">
                             </div>
                             <div class="form-group">
                                 <label for="comment">Contenido:</label>
-                                <textarea class="form-control" rows="20" name="txtContenidoModalEditar" id="txtContenidoModal"></textarea>
+                                <textarea class="form-control" rows="20" name="txtContenidoModalEditar" id="txtContenidoModalEditar"></textarea>
                             </div>
                         </div>
                         <div class="modal-footer">
