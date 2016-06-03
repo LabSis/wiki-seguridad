@@ -12,7 +12,7 @@ $config = array(
     #Configuración de la Base de Datos
     'db_host' => 'localhost',
     'db_user' => 'root',
-    'db_pass' => '',
+    'db_pass' => '12345678',
     'db_name' => 'labsis_seg'
 );
 $DEBUG_MODE = $config['debug'];

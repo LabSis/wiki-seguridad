@@ -111,7 +111,7 @@ class ApiBd {
             self::iniciar();
             $titulo = self::sanitizar($titulo);
             $contenido = self::sanitizar($contenido, "<a><strong><em><ol><li><ul><p>");
-            $insercion = "INSERT INTO articulos (nombre,id_tecnica,contenido) VALUES ('{$titulo}',{$id_tecnica},'{$contenido}')";
+            $insercion = "INSERT INTO articulos (nombre,id_tecnica,contenido, fecha_hora) VALUES ('{$titulo}',{$id_tecnica},'{$contenido}', NOW())";
             if (self::$conexion->insertar_simple($insercion)) {
                 self::cerrar();
                 return true;
@@ -141,28 +141,45 @@ SQL;
         $id_articulo = self::sanitizar($id_articulo);
         $titulo = self::sanitizar($titulo);
         $contenido = self::sanitizar($contenido, "<a><strong><em><ol><li><ul><p>");
-        
+        $ok = true;
+		self::$conexion->transaccion_comenzar();
+
         // Obtengo artículo anterior
         $consulta = <<<SQL
         SELECT id, nombre, contenido FROM articulos WHERE activada=TRUE AND id={$id_articulo}
 SQL;
         $articulo = self::$conexion->consultar_simple($consulta);
-        if(isset($articulo) && is_array($articulo)){
+        if(isset($articulo) && is_array($articulo) && count($articulo) > 0){
             $contenido_articulo_anterior = $articulo[0]["contenido"];
+			/*echo $contenido_articulo_anterior;
+			echo "-------------------";
+			echo $contenido;*/
             $dif = xdiff_string_diff($contenido_articulo_anterior, $contenido);
-            echo "DIF: <br>";
-            echo $dif;
+			
+            $actualizacion_historial = <<<SQL
+			INSERT INTO historial_articulos VALUES (id_articulo, diff, fecha_hora)
+			VALUES ($id_articulo, '$dif', NOW())
+SQL;
+			if (!self::$conexion->actualizar_simple($actualizacion_historial)) {
+				echo $actualizacion_historial;
+		        $ok = false;
+		    } else {
+				echo "true";
+			}
         }
         $actualizacion = <<<SQL
         UPDATE articulos AS a SET nombre='$titulo', contenido='$contenido'
         WHERE a.id=$id_articulo
 SQL;
-        echo $actualizacion;
-        if (self::$conexion->actualizar_simple($actualizacion)) {
-            self::cerrar();
-            return true;
+        if (!self::$conexion->actualizar_simple($actualizacion)) {
+            $ok = false;
         }
+		if ($ok) {
+			self::$conexion->transaccion_confirmar();
+		} else {
+			self::$conexion->transaccion_revertir();
+		}
         self::cerrar();
-        return false;
+        return $ok;
     }
 }
