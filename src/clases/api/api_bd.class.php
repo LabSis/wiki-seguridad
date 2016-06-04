@@ -154,14 +154,12 @@ SQL;
 			/*echo $contenido_articulo_anterior;
 			echo "-------------------";
 			echo $contenido;*/
-            $dif = xdiff_string_diff($contenido_articulo_anterior, $contenido);
-			
+            $dif = xdiff_string_bdiff($contenido, $contenido_articulo_anterior);
             $actualizacion_historial = <<<SQL
-			INSERT INTO historial_articulos VALUES (id_articulo, diff, fecha_hora)
+			INSERT INTO historial_articulos (id_articulo, diff, fecha_hora)
 			VALUES ($id_articulo, '$dif', NOW())
 SQL;
-			if (!self::$conexion->actualizar_simple($actualizacion_historial)) {
-				echo $actualizacion_historial;
+			if (!self::$conexion->insertar_simple($actualizacion_historial)) {
 		        $ok = false;
 		    } else {
 				echo "true";

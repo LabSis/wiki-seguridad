@@ -24,6 +24,6 @@ if (strcasecmp($metodo, "POST") === 0) {
     } else {
         $sesion->cargar_mensaje("Error al editar el artículo", Sesion::TIPO_MENSAJE_ERROR);
     }
-    header("Location: tecnica.php?id=$id_tecnica");
+    //header("Location: tecnica.php?id=$id_tecnica");
 }
 
