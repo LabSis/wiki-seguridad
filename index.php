@@ -2,8 +2,7 @@
 
 require_once 'config.php';
 
-$sesion = Sesion::get_instancia();
-$sesion->limpiar_mensajes();
+$sesion = Session::get_instance();
 
 ini_set("display_errors", 1);
 $tmpl_tecnicas = ApiBd::obtener_tecnicas();

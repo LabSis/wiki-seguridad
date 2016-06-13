@@ -1,14 +1,10 @@
 <?php
 require_once '../config.php';
 
-$sesion = Sesion::get_instancia();
-$sesion->limpiar_mensajes();
-
+$sesion = Session::get_instance();
 
 $metodo = filter_input(INPUT_SERVER, "REQUEST_METHOD");
 if (strcasecmp($metodo, "POST") === 0) {
-
-
     $id_tecnica = filter_input(INPUT_POST, "hidIdTecnicaModalEditar");
     $id_articulo = filter_input(INPUT_POST, "hidIdArticuloModalEditar");
     $txt_titulo = filter_input(INPUT_POST, "txtTituloModalEditar");
@@ -20,9 +16,9 @@ if (strcasecmp($metodo, "POST") === 0) {
         $ok = false;
     }
     if ($ok) {
-        $sesion->cargar_mensaje("El artículo fue editado con éxito", Sesion::TIPO_MENSAJE_EXITO);
+        $sesion->add_success_message("El artículo fue editado con éxito");
     } else {
-        $sesion->cargar_mensaje("Error al editar el artículo", Sesion::TIPO_MENSAJE_ERROR);
+        $sesion->add_success_message("Error al editar el artículo");
     }
     //header("Location: tecnica.php?id=$id_tecnica");
 }

@@ -1,7 +1,7 @@
 <?php
 require_once '../config.php';
 
-$sesion = Sesion::get_instancia();
+$sesion = Session::get_instance();
 
 $id_tecnica = $_GET["id"];
 
@@ -9,7 +9,7 @@ $tmpl_tecnica = array();
 try{
     $tmpl_tecnica = ApiBd::obtener_tecnica($id_tecnica);
 } catch(Exception $ex) {
-    $sesion->cargar_mensaje($ex->getMessage(), Sesion::TIPO_MENSAJE_ERROR);
+    $sesion->load_success_message($ex->getMessage());
 }
 
 ?>
@@ -18,11 +18,11 @@ try{
     <head>
         <meta charset="utf-8" />
         <title>LabSis - Seg</title>
-        <link href="<?php echo $RUTA_WEB ?>/css/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
-        <link href="<?php echo $RUTA_WEB ?>/css/estilo.css" rel="stylesheet" />
-        <script type="text/javascript" src="<?php echo $RUTA_WEB ?>/js/jquery.js"></script>
-        <script type="text/javascript" src="<?php echo $RUTA_WEB ?>/js/ckeditor/ckeditor.js"></script>
-        <script type="text/javascript" src="<?php echo $RUTA_WEB ?>/css/bootstrap/js/bootstrap.min.js"></script>
+        <link href="<?php echo $WEB_PATH ?>/css/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+        <link href="<?php echo $WEB_PATH ?>/css/estilo.css" rel="stylesheet" />
+        <script type="text/javascript" src="<?php echo $WEB_PATH ?>/js/jquery.js"></script>
+        <script type="text/javascript" src="<?php echo $WEB_PATH ?>/js/ckeditor/ckeditor.js"></script>
+        <script type="text/javascript" src="<?php echo $WEB_PATH ?>/css/bootstrap/js/bootstrap.min.js"></script>
         <script type="text/javascript">
             $(document).ready(function(){
                 CKEDITOR.replace("txtContenido");
@@ -63,7 +63,7 @@ try{
             <input type="hidden" value="<?php echo $tmpl_tecnica["id"] ?>" name="id_tecnica" id="hidIdTecnica" />
             <div class="row">
                 <div class="col-sm-12">
-                    <a href="<?php echo $RUTA_WEB ?>">Volver</a> |
+                    <a href="<?php echo $WEB_PATH ?>">Volver</a> |
                     <hr/>
                     <?php require_once ('../tmpl/maquetado/mensajes.tmpl.php') ?>
                     <h1><?php echo (isset($tmpl_tecnica["nombre"]))?$tmpl_tecnica["nombre"]:""; ?></h1>
@@ -103,7 +103,7 @@ try{
         <div class="modal fade" id="modalConfirmarBorrado" tabindex="-1" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <form action="<?php echo $RUTA_WEB ?>/src/desactivar_articulo.php" method="POST">
+                    <form action="<?php echo $WEB_PATH ?>/src/desactivar_articulo.php" method="POST">
                         <input type="hidden" value="<?php echo $tmpl_tecnica["id"] ?>" name="id_tecnica" id="hidIdTecnicaModalBorrado" />
                         <input type="hidden" name="id_articulo" id="hidIdArticulo" />
                         <div class="modal-header">
@@ -124,7 +124,7 @@ try{
         <div class="modal fade" id="modalEditar" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
-                    <form action="<?php echo $RUTA_WEB ?>/src/editar_articulo.php" method="POST">
+                    <form action="<?php echo $WEB_PATH ?>/src/editar_articulo.php" method="POST">
                         <input type="hidden" value="<?php echo $tmpl_tecnica["id"] ?>" name="hidIdTecnicaModalEditar" id="hidIdTecnicaModalEditar" />
                         <input type="hidden" name="hidIdArticuloModalEditar" id="hidIdArticuloModalEditar" />
                         <div class="modal-header">
