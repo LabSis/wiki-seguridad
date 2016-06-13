@@ -41,6 +41,7 @@ try{
                 });
 
                 function mostrarModalEditar(idArticulo, titulo, contenido){
+                    console.log(contenido);
                     CKEDITOR.instances['txtContenidoModalEditar'].setData(contenido);
                     $("#txtTituloModalEditar").val(titulo);
                     $("#hidIdArticuloModalEditar").val(idArticulo);
@@ -73,9 +74,7 @@ try{
                                     <?php echo $articulo["titulo"] ?>
                                 </h3>
                                 <div class="contenido">
-                                    <p>
-                                        <?php echo $articulo["contenido"] ?>
-                                    </p>
+                                    <?php echo $articulo["contenido"] ?>
                                     <i class="borrar glyphicon glyphicon-trash" title="Borrar"></i>
                                     <i class="editar glyphicon glyphicon-edit" title="Editar"></i>
                                 </div>
