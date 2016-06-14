@@ -41,7 +41,16 @@ try{
                 });
 
                 function mostrarModalEditar(idArticulo, titulo, contenido){
-                    console.log(contenido);
+                    $.ajax({
+                        url: "<?php echo $WEB_PATH ?><?php echo $CTRL_REL_PATH ?>consultar_versiones_articulo.php",
+                        type: "post",
+                        data: {
+                            idArticulo: idArticulo
+                        }
+                    }).done(function(r){
+                        console.log(r);
+                    });
+                    
                     CKEDITOR.instances['txtContenidoModalEditar'].setData(contenido);
                     $("#txtTituloModalEditar").val(titulo);
                     $("#hidIdArticuloModalEditar").val(idArticulo);
@@ -53,7 +62,6 @@ try{
                     var contenido = $(this).parents(".contenido").html().trim();
                     var idArticulo = $(this).parents("section").data("id");
                     mostrarModalEditar(idArticulo, titulo, contenido);
-                    
                 });
             });
         </script>

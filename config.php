@@ -2,7 +2,7 @@
 
 /********
 
-CONFIG VERSION 2.2
+CONFIG VERSION 2.3
 
 ********/
 

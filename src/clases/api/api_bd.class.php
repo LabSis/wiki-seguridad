@@ -136,6 +136,23 @@ SQL;
         return false;
     }
 
+    public static function obtener_historial_articulos($id_articulo){
+        self::iniciar();
+        $id_articulo = self::sanitizar($id_articulo);
+        $consulta = "SELECT * FROM historial_articulos WHERE id_articulo=$id_articulo";
+        $respuesta = self::$conexion->consultar_simple($consulta);
+        $articulos = array();
+        if(isset($respuesta) && is_array($respuesta)){
+            foreach($respuesta as $fila){
+                $articulo = array();
+                $articulo["fecha_hora"] = $fila["fecha_hora"];
+                $articulos[] = $articulo;
+            }
+        }
+        self::cerrar();
+        return $articulos;
+    }
+
     public static function editar_articulo($id_articulo, $titulo, $contenido){
         self::iniciar();
         $id_articulo = self::sanitizar($id_articulo);
