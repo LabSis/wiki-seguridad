@@ -41,7 +41,7 @@ try{
                 });
 
                 function mostrarModalEditar(idArticulo, titulo, contenido){
-                    $.ajax({
+                    /*$.ajax({
                         url: "<?php echo $WEB_PATH ?><?php echo $CTRL_REL_PATH ?>consultar_versiones_articulo.php",
                         type: "post",
                         data: {
@@ -49,7 +49,7 @@ try{
                         }
                     }).done(function(r){
                         console.log(r);
-                    });
+                    });*/
                     
                     CKEDITOR.instances['txtContenidoModalEditar'].setData(contenido);
                     $("#txtTituloModalEditar").val(titulo);
@@ -61,7 +61,17 @@ try{
                     var titulo = $(this).parents("section").find(".titulo").text().trim();
                     var contenido = $(this).parents(".contenido").html().trim();
                     var idArticulo = $(this).parents("section").data("id");
+                    $("#btnVerHistorial").data("id-articulo", idArticulo);
                     mostrarModalEditar(idArticulo, titulo, contenido);
+                });
+
+                function verHistorial(idArticulo){
+                    location.href = "<?php echo $WEB_PATH ?><?php echo $CTRL_REL_PATH ?>ver_historial_articulo.php?id_articulo=" + idArticulo;
+                }
+
+                $("#btnVerHistorial").click(function(){
+                    var idArticulo = $(this).data("id-articulo");
+                    verHistorial(idArticulo);
                 });
             });
         </script>
@@ -104,7 +114,7 @@ try{
                         <label for="txtContenido">Contenido:</label>
                         <textarea class="form-control" rows="20" name="txtContenido" id="txtContenido"></textarea>
                     </div>
-                    <button type="submit" class="btn btn-default">Crear artículo</button>
+                    <button type="submit" class="btn btn-primary pull-right">Crear artículo</button>
                 </form>
             </div>
         </main>
@@ -132,7 +142,7 @@ try{
         <div class="modal fade" id="modalEditar" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
-                    <form action="<?php echo $WEB_PATH ?>/src/editar_articulo.php" method="POST">
+                    <form action="<?php echo $WEB_PATH ?>src/editar_articulo.php" method="POST">
                         <input type="hidden" value="<?php echo $tmpl_tecnica["id"] ?>" name="hidIdTecnicaModalEditar" id="hidIdTecnicaModalEditar" />
                         <input type="hidden" name="hidIdArticuloModalEditar" id="hidIdArticuloModalEditar" />
                         <div class="modal-header">
@@ -150,6 +160,7 @@ try{
                             </div>
                         </div>
                         <div class="modal-footer">
+                            <a data-id-articulo="" id="btnVerHistorial" class="btn btn-default" >Ver historial</a>
                             <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
                             <button type="submit" class="btn btn-primary">Aceptar</button>
                         </div>

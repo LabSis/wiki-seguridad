@@ -139,18 +139,83 @@ SQL;
     public static function obtener_historial_articulos($id_articulo){
         self::iniciar();
         $id_articulo = self::sanitizar($id_articulo);
-        $consulta = "SELECT * FROM historial_articulos WHERE id_articulo=$id_articulo";
+        $consulta = <<<SQL
+            SELECT *
+            FROM historial_articulos
+            WHERE id_articulo=$id_articulo
+            ORDER BY fecha_hora DESC
+SQL;
         $respuesta = self::$conexion->consultar_simple($consulta);
         $articulos = array();
         if(isset($respuesta) && is_array($respuesta)){
             foreach($respuesta as $fila){
                 $articulo = array();
                 $articulo["fecha_hora"] = $fila["fecha_hora"];
+                $articulo["id"] = $fila["id"];
+                $articulo["id_articulo"] = $fila["id_articulo"];
                 $articulos[] = $articulo;
             }
         }
         self::cerrar();
         return $articulos;
+    }
+
+    /**
+     * Obtener una versión de un artículo.
+     *
+     * Tener en cuenta que si la versión es muy vieja, este método va aplicando
+     * los difs consecutivamente hacia atrás.
+     *
+     * @return la versión de un artículo.
+     */
+    public static function obtener_version_articulo($id_version, $id_articulo){
+        self::iniciar();
+        $id_version = self::sanitizar($id_version);
+        $id_articulo = self::sanitizar($id_articulo);
+        $version = "";
+
+        if($id_version == "-1"){
+            // Versión actual
+            if(isset($id_articulo)){
+                $consulta = <<<SQL
+                    SELECT contenido
+                    FROM articulos
+                    WHERE id=$id_articulo
+SQL;
+                $respuesta = self::$conexion->consultar_simple($consulta);
+                if(isset($respuesta) && is_array($respuesta) && !empty($respuesta)){
+                    $version = $respuesta[0]["contenido"];
+                }
+            }
+        } else {
+             $consulta = <<<SQL
+                SELECT id, diff, id_articulo
+                FROM historial_articulos
+                WHERE id=$id_version
+SQL;
+            $respuesta = self::$conexion->consultar_simple($consulta);
+            $id_articulo = null;
+            if(isset($respuesta) && is_array($respuesta)){
+                if(!empty($respuesta)){
+                    $patch = $respuesta[0]["diff"];
+                    $id_articulo = $respuesta[0]["id_articulo"];
+                }
+            }
+            if(isset($id_articulo)){
+                $consulta = <<<SQL
+                    SELECT contenido
+                    FROM articulos
+                    WHERE id=$id_articulo
+SQL;
+                $respuesta = self::$conexion->consultar_simple($consulta);
+                if(isset($respuesta) && is_array($respuesta) && !empty($respuesta)){
+                    $contenido = $respuesta[0]["contenido"];
+                    $version = xdiff_string_bpatch($contenido, $patch);
+                }
+            }
+        }
+        self::cerrar();
+        return $version;
     }
 
     public static function editar_articulo($id_articulo, $titulo, $contenido){
