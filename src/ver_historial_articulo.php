@@ -12,6 +12,7 @@ if (strcasecmp($metodo, "POST") === 0) {
     if(isset($id_articulo) && is_numeric($id_articulo)){
         $historial_articulos = ApiBd::obtener_historial_articulos($id_articulo);
         array_unshift($historial_articulos, array("fecha_hora" => "Actual", "id" => "-1"));
+        $version_actual = ApiBd::obtener_version_articulo("-1", $id_articulo);
     }
 }
 ?>
@@ -95,7 +96,7 @@ if (strcasecmp($metodo, "POST") === 0) {
                 <form role="form" action="guardar_articulo.php?id=<?php echo $id_tecnica ?>" method="post">
                     <h4>Edición de la versión de <span id="spanTituloEdicion"></span></h4>
                     <div class="form-group">
-                        <textarea class="form-control" rows="20" id="txtEdicion" ></textarea>
+                        <textarea class="form-control" rows="20" id="txtEdicion" ><?php echo $version_actual ?></textarea>
                     </div>
                     <button type="submit" class="btn btn-primary pull-right">Aceptar</button>
                 </form>

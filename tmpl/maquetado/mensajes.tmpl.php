@@ -1,6 +1,6 @@
 <div id="mensajeFormulario">
     <?php if (Session::get_instance()->has_messages()): ?>
-        <?php $template_mensajes = Session::get_instance()->get_menssages(); ?>
+        <?php $template_mensajes = Session::get_instance()->get_messages(); ?>
         <?php if (isset($template_mensajes) && count($template_mensajes) > 0): ?>
             <?php
             $template_correspondencias_tipos_mensaje = array(
