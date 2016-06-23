@@ -249,9 +249,7 @@ SQL;
 SQL;
 			if (!self::$conexion->insertar_simple($actualizacion_historial)) {
 		        $ok = false;
-		    } else {
-				echo "true";
-			}
+		    }
         }
         $actualizacion = <<<SQL
         UPDATE articulos AS a SET nombre='$titulo', contenido='$contenido'

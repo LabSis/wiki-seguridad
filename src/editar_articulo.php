@@ -20,6 +20,6 @@ if (strcasecmp($metodo, "POST") === 0) {
     } else {
         $sesion->add_success_message("Error al editar el artículo");
     }
-    //header("Location: tecnica.php?id=$id_tecnica");
+    header("Location: tecnica.php?id=$id_tecnica");
 }
 
