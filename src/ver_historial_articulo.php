@@ -60,7 +60,6 @@ if (strcasecmp($metodo, "POST") === 0) {
                             "id_articulo": idArticulo
                         }
                     }).done(function(r){
-                        console.log(r);
                         r = JSON.parse(r);
                         if(r.status === "ok"){
                             CKEDITOR.instances['txtEdicion'].setData(r.version);

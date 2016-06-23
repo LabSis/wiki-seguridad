@@ -191,26 +191,32 @@ SQL;
              $consulta = <<<SQL
                 SELECT id, diff, id_articulo
                 FROM historial_articulos
-                WHERE id=$id_version
+                WHERE id_articulo=$id_articulo AND id>=$id_version
+                ORDER BY id DESC
 SQL;
             $respuesta = self::$conexion->consultar_simple($consulta);
-            $id_articulo = null;
             if(isset($respuesta) && is_array($respuesta)){
-                if(!empty($respuesta)){
-                    $patch = $respuesta[0]["diff"];
-                    $id_articulo = $respuesta[0]["id_articulo"];
-                }
-            }
-            if(isset($id_articulo)){
-                $consulta = <<<SQL
-                    SELECT contenido
-                    FROM articulos
-                    WHERE id=$id_articulo
+                $len_respuesta = count($respuesta);
+                for($i = 0; $i < $len_respuesta; $i++){
+                    $id_articulo = null;
+                    $patch = $respuesta[$i]["diff"];
+                    $id_articulo = $respuesta[$i]["id_articulo"];
+                    if(isset($id_articulo)){
+                        if(empty($version)){
+                            $consulta = <<<SQL
+                                SELECT contenido
+                                FROM articulos
+                                WHERE id=$id_articulo
 SQL;
-                $respuesta = self::$conexion->consultar_simple($consulta);
-                if(isset($respuesta) && is_array($respuesta) && !empty($respuesta)){
-                    $contenido = $respuesta[0]["contenido"];
-                    $version = xdiff_string_bpatch($contenido, $patch);
+                            $resp = self::$conexion->consultar_simple($consulta);
+                            if(isset($resp) && is_array($resp) && !empty($resp)){
+                                $contenido = $resp[0]["contenido"];
+                                $version = xdiff_string_bpatch($contenido, $patch);
+                            }
+                        } else {
+                            $version = xdiff_string_bpatch($version, $patch);
+                        }
+                    }
                 }
             }
         }
