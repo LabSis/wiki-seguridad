@@ -9,6 +9,7 @@ if (strcasecmp($metodo, "POST") === 0) {
     //header("Location: tecnica.php?id=$id_tecnica");
 } else if (strcasecmp($metodo, "GET") === 0) {
     $id_articulo = filter_input(INPUT_GET, "id_articulo");
+    $id_tecnica = filter_input(INPUT_GET, "id_tecnica");
     if(isset($id_articulo) && is_numeric($id_articulo)){
         $historial_articulos = ApiBd::obtener_historial_articulos($id_articulo);
         array_unshift($historial_articulos, array("fecha_hora" => "Actual", "id" => "-1"));
@@ -22,6 +23,7 @@ if (strcasecmp($metodo, "POST") === 0) {
         <meta charset="utf-8" />
         <title>Historial de artículo</title>
         <link href="<?php echo $WEB_PATH ?>/css/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+        <link href="<?php echo $WEB_PATH ?>/css/estilo.css" rel="stylesheet" />
         <style>
             .historico{
                 position: float;
@@ -76,6 +78,8 @@ if (strcasecmp($metodo, "POST") === 0) {
     </head>
     <body>
         <main class="container">
+            <?php $LINK_VOLVER = "{$WEB_PATH}{$CTRL_REL_PATH}tecnica.php?id=$id_tecnica"?>
+            <?php require_once $SERVER_PATH . $TEMPLATES_REL_PATH . 'maquetado/menu.tmpl.php' ?>
             <div class="row">
                 <div class="col-sm-12">
                     <h2>Historial de artículos</h2>
@@ -104,4 +108,5 @@ if (strcasecmp($metodo, "POST") === 0) {
         </main>
     </body>
 </html>
+
 

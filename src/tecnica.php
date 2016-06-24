@@ -65,13 +65,14 @@ try{
                     mostrarModalEditar(idArticulo, titulo, contenido);
                 });
 
-                function verHistorial(idArticulo){
-                    location.href = "<?php echo $WEB_PATH ?><?php echo $CTRL_REL_PATH ?>ver_historial_articulo.php?id_articulo=" + idArticulo;
+                function verHistorial(idArticulo, idTecnica){
+                    location.href = "<?php echo $WEB_PATH ?><?php echo $CTRL_REL_PATH ?>ver_historial_articulo.php?id_articulo=" + idArticulo + "&id_tecnica=" + idTecnica;
                 }
 
                 $("#btnVerHistorial").click(function(){
                     var idArticulo = $(this).data("id-articulo");
-                    verHistorial(idArticulo);
+                    var idTecnica = $("#hidIdTecnica").val();
+                    verHistorial(idArticulo, idTecnica);
                 });
             });
         </script>
@@ -79,11 +80,10 @@ try{
     <body>
         <main class="container">
             <input type="hidden" value="<?php echo $tmpl_tecnica["id"] ?>" name="id_tecnica" id="hidIdTecnica" />
+            <?php require_once $SERVER_PATH . $TEMPLATES_REL_PATH . 'maquetado/menu.tmpl.php' ?>
             <div class="row">
                 <div class="col-sm-12">
-                    <a href="<?php echo $WEB_PATH ?>">Volver</a> |
-                    <hr/>
-                    <?php require_once ('../tmpl/maquetado/mensajes.tmpl.php') ?>
+                    <?php require_once $SERVER_PATH . $TEMPLATES_REL_PATH . 'maquetado/mensajes.tmpl.php' ?>
                     <h1><?php echo (isset($tmpl_tecnica["nombre"]))?$tmpl_tecnica["nombre"]:""; ?></h1>
                     <?php if(isset($tmpl_tecnica["articulos"])): ?>
                         <?php foreach ($tmpl_tecnica["articulos"] as $articulo): ?>
