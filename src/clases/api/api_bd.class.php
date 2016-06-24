@@ -267,4 +267,16 @@ SQL;
         self::cerrar();
         return $ok;
     }
+
+    public static function consultar_articulos_desactivados($id_tecnica){
+        self::iniciar();
+        $id_tecnica = self::sanitizar($id_tecnica);
+        $consulta = <<<SQL
+            SELECT * 
+            FROM articulos
+            WHERE id_tecnica=$id_tecnica AND activada=FALSE
+SQL;
+        $articulos = self::$conexion->consultar_simple($consulta);
+        return $articulos;
+    }
 }

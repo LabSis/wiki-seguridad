@@ -77,6 +77,7 @@ try{
                     mostrarModalEditar(idArticulo, titulo, contenido);
                 });
 
+                // Ver historial
                 function verHistorial(idArticulo, idTecnica){
                     location.href = "<?php echo $WEB_PATH ?><?php echo $CTRL_REL_PATH ?>ver_historial_articulo.php?id_articulo=" + idArticulo + "&id_tecnica=" + idTecnica;
                 }
@@ -85,6 +86,36 @@ try{
                     var idArticulo = $(this).data("id-articulo");
                     var idTecnica = $("#hidIdTecnica").val();
                     verHistorial(idArticulo, idTecnica);
+                });
+
+                // Ver artículos desactivados
+                function mostrarArticulosDesactivados(idTecnica){
+                    $.ajax({
+                        url: "ajax/consultar_articulos_desactivados.php",
+                        type: "post",
+                        data: {
+                            id_tecnica: idTecnica
+                        }
+                    }).done(function(r){
+                        var articulosDesactivados = JSON.parse(r);
+                        $("section:last").after("OK");
+                        console.log(articulosDesactivados);
+                    }).fail(function(){
+                        alert("Fail AJAX");
+                    });
+                }
+
+                function ocultarArticulosDesactivados(idTecnica){
+                    
+                }
+
+                $("#chkMostrarArticulosDesactivados").change(function(){
+                    var idTecnica = $("#hidIdTecnica").val();
+                    if($(this).prop("checked")){
+                        mostrarArticulosDesactivados(idTecnica);
+                    } else {
+                        ocultarArticulosDesactivados(idTecnica);
+                    }
                 });
             });
         </script>
@@ -111,6 +142,8 @@ try{
                             </section>
                         <?php endforeach; ?>
                     <?php endif; ?>
+                    <input type="checkbox" id="chkMostrarArticulosDesactivados" />
+                    <label for="chkMostrarArticulosDesactivados" >Mostrar artículos desactivados</label>
                 </div>
             </div>
             <div class="row crear_articulo">
