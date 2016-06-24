@@ -130,7 +130,8 @@ class ApiBd {
 SQL;
         if (self::$conexion->actualizar_simple($actualizacion)) {
             self::cerrar();
-            return true;
+            // Elimino el título y el contenido
+            return self::editar_articulo($id_articulo, "", "");
         }
         self::cerrar();
         return false;

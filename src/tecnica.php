@@ -28,6 +28,8 @@ try{
                 CKEDITOR.replace("txtContenido");
                 CKEDITOR.replace("txtContenidoModalEditar");
 
+                // Borrado de artículo
+                var articuloABorrarJQuery = null;
                 function mostrarModalConfirmacionBorrar(idArticulo){
                     $("#hidIdArticulo").val(idArticulo);
                     var idTecnica = $("#hidIdTecnica").val();
@@ -35,11 +37,21 @@ try{
                     $("#modalConfirmarBorrado").modal("show");
                 }
 
+                $(document).on("hide.bs.modal", "#modalConfirmarBorrado", function () {
+                    console.log(articuloABorrarJQuery);
+                    if(articuloABorrarJQuery != null){
+                        articuloABorrarJQuery.removeClass("articuloSeleccionado");
+                    }
+                });
+
                 $(".borrar").click(function(){
+                    articuloABorrarJQuery = $(this).parents("section");
+                    articuloABorrarJQuery.addClass("articuloSeleccionado");
                     var id = $(this).parents("section").data("id");
                     mostrarModalConfirmacionBorrar(id);
                 });
 
+                // Edición de artículo
                 function mostrarModalEditar(idArticulo, titulo, contenido){
                     /*$.ajax({
                         url: "<?php echo $WEB_PATH ?><?php echo $CTRL_REL_PATH ?>consultar_versiones_articulo.php",
@@ -126,14 +138,14 @@ try{
                         <input type="hidden" name="id_articulo" id="hidIdArticulo" />
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <h4 class="modal-title">Confirmar borrado</h4>
+                            <h4 class="modal-title">Confirmación de borrado</h4>
                         </div>
                         <div class="modal-body">
-                            <p>¿Estás seguro que deseas borrar el artículo? Más tarde puedes deshacer este cambio</p>
+                            <p>¿Estás seguro que deseas borrar este artículo? Más tarde puedes deshacer este cambio.</p>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                            <button type="submit" class="btn btn-primary">Aceptar</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                            <button type="submit" class="btn btn-primary">Sí</button>
                         </div>
                     </form>
                 </div>

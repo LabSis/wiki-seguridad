@@ -1,9 +1,7 @@
 <?php
 require_once '../config.php';
 
-$sesion = Sesion::get_instancia();
-$sesion->limpiar_mensajes();
-
+$sesion = Session::get_instance();
 
 $metodo = filter_input(INPUT_SERVER, "REQUEST_METHOD");
 if (strcasecmp($metodo, "POST") === 0) {
@@ -17,9 +15,9 @@ if (strcasecmp($metodo, "POST") === 0) {
         $ok = false;
     }
     if ($ok) {
-        $sesion->cargar_mensaje("El artículo fue borrado con éxito", Sesion::TIPO_MENSAJE_EXITO);
+        $sesion->add_success_message("El artículo fue borrado con éxito");
     } else {
-        $sesion->cargar_mensaje("Error al borrar el artículo", Sesion::TIPO_MENSAJE_ERROR);
+        $sesion->add_error_message("Error al borrar el artículo");
     }
     header("Location: tecnica.php?id=$id_tecnica");
 }

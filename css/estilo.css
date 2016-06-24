@@ -16,3 +16,6 @@ section{
     cursor: pointer;
     margin-right: 10px;
 }
+.articuloSeleccionado{
+    border: 1px solid black;
+}
