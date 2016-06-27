@@ -126,7 +126,7 @@ class ApiBd {
         $id_articulo = self::sanitizar($id_articulo);
         $actualizacion = <<<SQL
         UPDATE articulos AS a SET activada=FALSE
-        WHERE a.id=$id_articulo
+        WHERE a.id=$id_articulo AND activada=TRUE
 SQL;
         if (self::$conexion->actualizar_simple($actualizacion)) {
             self::cerrar();
@@ -278,5 +278,12 @@ SQL;
 SQL;
         $articulos = self::$conexion->consultar_simple($consulta);
         return $articulos;
+    }
+
+    public static function obtener_anteultima_version($id_articulo){
+        $articulo = array();
+        $articulo["nombre"] = "titulo";
+        $articulo["contenido"] = "contenido";
+        return $articulo;
     }
 }

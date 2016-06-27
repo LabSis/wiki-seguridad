@@ -69,7 +69,7 @@ try{
                     $("#modalEditar").modal("show");
                 }
 
-                $(".editar").click(function(){
+                $(document).on("click", ".editar", function(){
                     var titulo = $(this).parents("section").find(".titulo").text().trim();
                     var contenido = $(this).parents(".contenido").html().trim();
                     var idArticulo = $(this).parents("section").data("id");
@@ -98,7 +98,28 @@ try{
                         }
                     }).done(function(r){
                         var articulosDesactivados = JSON.parse(r);
-                        $("section:last").after("OK");
+                        if(articulosDesactivados.status === "ok") {
+                            var articulos = articulosDesactivados.articulos;
+                            for(indiceArticulo in articulos){
+                                var articulo = articulos[indiceArticulo];
+
+                                // Creo el HTML
+                                var seccionHtml = '<section class="articulo-desactivado" data-id="' + articulo.id +'">';
+                                var tituloHtml = '<h3 class="titulo">';
+                                var contenidoHtml = '<div class="contenido">';
+
+                                tituloHtml += articulo.nombre;
+                                contenidoHtml += articulo.contenido;
+
+                                tituloHtml += "</h3>";
+                                contenidoHtml += '<i class="editar glyphicon glyphicon-edit" title="Editar"></i></div>';
+                                seccionHtml += tituloHtml;
+                                seccionHtml += contenidoHtml;
+
+                                seccionHtml += "</section>";
+                                $("section:last").after(seccionHtml);
+                            }
+                        }
                         console.log(articulosDesactivados);
                     }).fail(function(){
                         alert("Fail AJAX");
@@ -106,7 +127,7 @@ try{
                 }
 
                 function ocultarArticulosDesactivados(idTecnica){
-                    
+                    $(".articulo-desactivado").remove();
                 }
 
                 $("#chkMostrarArticulosDesactivados").change(function(){
