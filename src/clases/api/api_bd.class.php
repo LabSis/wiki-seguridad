@@ -120,20 +120,30 @@ class ApiBd {
         }
         return false;
     }
-    
+
+    /**
+     * Desactiva un artículo a través de su id.
+     *
+     * Elimina el contenido del artículo actual, agrega una versión al
+     * historial y pone el flag activada en false.
+     *
+     */
     public static function desactivar_articulo($id_articulo){
-        self::iniciar();
-        $id_articulo = self::sanitizar($id_articulo);
-        $actualizacion = <<<SQL
-        UPDATE articulos AS a SET activada=FALSE
-        WHERE a.id=$id_articulo AND activada=TRUE
+        if (self::editar_articulo($id_articulo, "", "")) {
+            self::iniciar();
+            $id_articulo = self::sanitizar($id_articulo);
+            $actualizacion = <<<SQL
+                UPDATE articulos AS a SET activada=FALSE
+                WHERE a.id=$id_articulo AND activada=TRUE
 SQL;
-        if (self::$conexion->actualizar_simple($actualizacion)) {
-            self::cerrar();
-            // Elimino el título y el contenido
-            return self::editar_articulo($id_articulo, "", "");
+            if (self::$conexion->actualizar_simple($actualizacion)) {
+                self::cerrar();
+                return true;
+            } else {
+                self::cerrar();
+                return false;
+            }
         }
-        self::cerrar();
         return false;
     }
 
@@ -167,13 +177,16 @@ SQL;
      * Tener en cuenta que si la versión es muy vieja, este método va aplicando
      * los difs consecutivamente hacia atrás.
      *
-     * @return la versión de un artículo.
+     * @param string $id_version es el id de versión que se desea recuperar.
+     * @param string $id_articulo es el id del artículo del cual se desea
+     * recuperar la versión.
+     * @return string la versión de un artículo.
      */
     public static function obtener_version_articulo($id_version, $id_articulo){
         self::iniciar();
         $id_version = self::sanitizar($id_version);
         $id_articulo = self::sanitizar($id_articulo);
-        $version = "";
+        $version = null;
 
         if($id_version == "-1"){
             // Versión actual
@@ -203,7 +216,7 @@ SQL;
                     $patch = $respuesta[$i]["diff"];
                     $id_articulo = $respuesta[$i]["id_articulo"];
                     if(isset($id_articulo)){
-                        if(empty($version)){
+                        if(is_null($version)){
                             $consulta = <<<SQL
                                 SELECT contenido
                                 FROM articulos
@@ -280,10 +293,30 @@ SQL;
         return $articulos;
     }
 
+    /**
+     * Retorna la anteúltima versión.
+     *
+     * Es decir, la versión más reciente que se guarda en la tabla
+     * historial_articulos.
+     *
+     */
     public static function obtener_anteultima_version($id_articulo){
+        self::iniciar();
         $articulo = array();
-        $articulo["nombre"] = "titulo";
-        $articulo["contenido"] = "contenido";
+        $consulta = <<<SQL
+            SELECT MAX(id) AS id_version
+            FROM historial_articulos
+            WHERE id_articulo=$id_articulo
+SQL;
+        $respuesta = self::$conexion->consultar_simple($consulta);
+        $articulo["nombre"] = null;
+        $articulo["contenido"] = null;
+        if(isset($respuesta) && !empty($respuesta)){
+            $id_version = $respuesta[0]["id_version"];
+            $articulo["nombre"] = $id_version;
+            $articulo["contenido"] = self::obtener_version_articulo($id_version, $id_articulo);
+        }
+        self::cerrar();
         return $articulo;
     }
 }
