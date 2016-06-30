@@ -4,10 +4,10 @@
         <?php if (isset($template_mensajes) && count($template_mensajes) > 0): ?>
             <?php
             $template_correspondencias_tipos_mensaje = array(
-                Sesion::TYPE_SUCCESS_MESSAGE => 'success',
-                Sesion::TYPE_INFORMATION_MESSAGE => 'info',
-                Sesion::TYPE_WARNING_MESSAGE => 'warning',
-                Sesion::TYPE_ERROR_MESSAGE => 'danger'
+                Session::TYPE_SUCCESS_MESSAGE => 'success',
+                Session::TYPE_INFORMATION_MESSAGE => 'info',
+                Session::TYPE_WARNING_MESSAGE => 'warning',
+                Session::TYPE_ERROR_MESSAGE => 'danger'
             );
             ?>
             <?php foreach ($template_mensajes as $tipo_mensaje => $mensajes_por_tipo): ?>

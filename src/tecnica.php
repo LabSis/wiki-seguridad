@@ -9,7 +9,7 @@ $tmpl_tecnica = array();
 try{
     $tmpl_tecnica = ApiBd::obtener_tecnica($id_tecnica);
 } catch(Exception $ex) {
-    $sesion->load_success_message($ex->getMessage());
+    $sesion->add_success_message($ex->getMessage());
 }
 
 ?>

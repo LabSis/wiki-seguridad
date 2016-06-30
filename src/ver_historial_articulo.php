@@ -97,12 +97,12 @@ if (strcasecmp($metodo, "POST") === 0) {
                 <?php endforeach; ?>
             </ul>
             <div class="editor row" >
-                <form role="form" action="guardar_articulo.php?id=<?php echo $id_tecnica ?>" method="post">
+                <form role="form" action="<?php echo $WEB_PATH . $CTRL_REL_PATH ?>editar_articulo.php" method="POST">
                     <h4>Edición de la versión de <span id="spanTituloEdicion"></span></h4>
                     <div class="form-group">
                         <textarea class="form-control" rows="20" id="txtEdicion" ><?php echo $version_actual ?></textarea>
                     </div>
-                    <button type="submit" class="btn btn-primary pull-right">Aceptar</button>
+                    <button type="submit" class="btn btn-primary pull-right">Guardar nueva versión</button>
                 </form>
             </div>
         </main>
