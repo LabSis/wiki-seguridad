@@ -117,7 +117,7 @@ try{
                                 seccionHtml += contenidoHtml;
 
                                 seccionHtml += "</section>";
-                                $("section:last").after(seccionHtml);
+                                $("#divSecciones").append(seccionHtml);
                             }
                         }
                         console.log(articulosDesactivados);
@@ -149,20 +149,22 @@ try{
                 <div class="col-sm-12">
                     <?php require_once $SERVER_PATH . $TEMPLATES_REL_PATH . 'maquetado/mensajes.tmpl.php' ?>
                     <h1><?php echo (isset($tmpl_tecnica["nombre"]))?$tmpl_tecnica["nombre"]:""; ?></h1>
-                    <?php if(isset($tmpl_tecnica["articulos"])): ?>
-                        <?php foreach ($tmpl_tecnica["articulos"] as $articulo): ?>
-                            <section data-id="<?php echo $articulo["id"]?>">
-                                <h3 class="titulo">
-                                    <?php echo $articulo["titulo"] ?>
-                                </h3>
-                                <div class="contenido">
-                                    <?php echo $articulo["contenido"] ?>
-                                    <i class="borrar glyphicon glyphicon-trash" title="Borrar"></i>
-                                    <i class="editar glyphicon glyphicon-edit" title="Editar"></i>
-                                </div>
-                            </section>
-                        <?php endforeach; ?>
-                    <?php endif; ?>
+                    <div id="divSecciones">
+                        <?php if(isset($tmpl_tecnica["articulos"])): ?>
+                            <?php foreach ($tmpl_tecnica["articulos"] as $articulo): ?>
+                                <section data-id="<?php echo $articulo["id"]?>">
+                                    <h3 class="titulo">
+                                        <?php echo $articulo["titulo"] ?>
+                                    </h3>
+                                    <div class="contenido">
+                                        <?php echo $articulo["contenido"] ?>
+                                        <i class="borrar glyphicon glyphicon-trash" title="Borrar"></i>
+                                        <i class="editar glyphicon glyphicon-edit" title="Editar"></i>
+                                    </div>
+                                </section>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </div>
                     <input type="checkbox" id="chkMostrarArticulosDesactivados" />
                     <label for="chkMostrarArticulosDesactivados" >Mostrar artículos desactivados</label>
                 </div>
