@@ -274,7 +274,7 @@ SQL;
             $contenido_articulo_anterior = $articulo[0]["contenido"];
             $titulo_articulo_anterior = $articulo[0]["titulo"];
             $dif = xdiff_string_bdiff($contenido, $contenido_articulo_anterior);
-            $diff_titulo = xdiff_string_bdiff($contenido, $titulo_articulo_anterior);
+            $diff_titulo = xdiff_string_bdiff($titulo, $titulo_articulo_anterior);
             $actualizacion_historial = <<<SQL
 			INSERT INTO historial_articulos (id_articulo, diff, diff_titulo, fecha_hora)
 			VALUES ($id_articulo, '$dif', '$diff_titulo', NOW())
