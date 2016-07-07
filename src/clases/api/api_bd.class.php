@@ -187,23 +187,25 @@ SQL;
         $id_version = self::sanitizar($id_version);
         $id_articulo = self::sanitizar($id_articulo);
         $version = null;
+        $titulo = null;
 
         if($id_version == "-1"){
             // Versión actual
             if(isset($id_articulo)){
                 $consulta = <<<SQL
-                    SELECT contenido
+                    SELECT contenido, nombre
                     FROM articulos
                     WHERE id=$id_articulo
 SQL;
                 $respuesta = self::$conexion->consultar_simple($consulta);
                 if(isset($respuesta) && is_array($respuesta) && !empty($respuesta)){
                     $version = $respuesta[0]["contenido"];
+                    $titulo = $respuesta[0]["nombre"];
                 }
             }
         } else {
              $consulta = <<<SQL
-                SELECT id, diff, id_articulo
+                SELECT id, diff, diff_titulo, id_articulo
                 FROM historial_articulos
                 WHERE id_articulo=$id_articulo AND id>=$id_version
                 ORDER BY id DESC
@@ -214,8 +216,10 @@ SQL;
                 for($i = 0; $i < $len_respuesta; $i++){
                     $id_articulo = null;
                     $patch = $respuesta[$i]["diff"];
+                    $patch_titulo = $respuesta[$i]["diff_titulo"];
                     $id_articulo = $respuesta[$i]["id_articulo"];
                     if(isset($id_articulo)){
+                        // Cargo el contenido
                         if(is_null($version)){
                             $consulta = <<<SQL
                                 SELECT contenido
@@ -230,12 +234,27 @@ SQL;
                         } else {
                             $version = xdiff_string_bpatch($version, $patch);
                         }
+                        // Cargo el título
+                        if(is_null($titulo)){
+                            $consulta = <<<SQL
+                                SELECT nombre
+                                FROM articulos
+                                WHERE id=$id_articulo
+SQL;
+                            $resp = self::$conexion->consultar_simple($consulta);
+                            if(isset($resp) && is_array($resp) && !empty($resp)){
+                                $nombre = $resp[0]["nombre"];
+                                $titulo = xdiff_string_bpatch($nombre, $patch_titulo);
+                            }
+                        } else {
+                            $titulo = xdiff_string_bpatch($titulo, $patch_titulo);
+                        }
                     }
                 }
             }
         }
         self::cerrar();
-        return $version;
+        return array("version" => $version, "titulo" => $titulo);
     }
 
     public static function editar_articulo($id_articulo, $titulo, $contenido){
@@ -248,18 +267,17 @@ SQL;
 
         // Obtengo artículo anterior
         $consulta = <<<SQL
-        SELECT id, nombre, contenido FROM articulos WHERE activada=TRUE AND id={$id_articulo}
+        SELECT id, nombre, contenido, nombre FROM articulos WHERE activada=TRUE AND id={$id_articulo}
 SQL;
         $articulo = self::$conexion->consultar_simple($consulta);
         if(isset($articulo) && is_array($articulo) && count($articulo) > 0){
             $contenido_articulo_anterior = $articulo[0]["contenido"];
-			/*echo $contenido_articulo_anterior;
-			echo "-------------------";
-			echo $contenido;*/
+            $titulo_articulo_anterior = $articulo[0]["titulo"];
             $dif = xdiff_string_bdiff($contenido, $contenido_articulo_anterior);
+            $diff_titulo = xdiff_string_bdiff($contenido, $titulo_articulo_anterior);
             $actualizacion_historial = <<<SQL
-			INSERT INTO historial_articulos (id_articulo, diff, fecha_hora)
-			VALUES ($id_articulo, '$dif', NOW())
+			INSERT INTO historial_articulos (id_articulo, diff, diff_titulo, fecha_hora)
+			VALUES ($id_articulo, '$dif', '$diff_titulo', NOW())
 SQL;
 			if (!self::$conexion->insertar_simple($actualizacion_historial)) {
 		        $ok = false;

@@ -13,7 +13,9 @@ if (strcasecmp($metodo, "POST") === 0) {
     if(isset($id_articulo) && is_numeric($id_articulo)){
         $historial_articulos = ApiBd::obtener_historial_articulos($id_articulo);
         array_unshift($historial_articulos, array("fecha_hora" => "Actual", "id" => "-1"));
-        $version_actual = ApiBd::obtener_version_articulo("-1", $id_articulo);
+        $articulo_actual = ApiBd::obtener_version_articulo("-1", $id_articulo);
+        $version_actual = $articulo_actual["version"];
+        $titulo_actual = $articulo_actual["titulo"];
     }
 }
 ?>
@@ -65,6 +67,7 @@ if (strcasecmp($metodo, "POST") === 0) {
                     }).done(function(r){
                         r = JSON.parse(r);
                         if(r.status === "ok"){
+                            $("#txtTituloModalEditar").val(r.titulo);
                             CKEDITOR.instances['txtEdicion'].setData(r.version);
                         }
                     });
@@ -101,12 +104,11 @@ if (strcasecmp($metodo, "POST") === 0) {
                 
                     <input type="hidden" value="<?php echo $id_tecnica ?>" name="hidIdTecnicaModalEditar" id="hidIdTecnicaModalEditar" />
                     <input type="hidden" value="<?php echo $id_articulo ?>" name="hidIdArticuloModalEditar" id="hidIdArticuloModalEditar" />
-                
-                
+
                     <h4>Edición de la versión de <span id="spanTituloEdicion"></span></h4>
                     <div class="form-group">
                         <label for="comment">Título:</label>
-                        <input type="text" class="form-control" name="txtTituloModalEditar" id="txtTituloModalEditar">
+                        <input type="text" class="form-control" name="txtTituloModalEditar" id="txtTituloModalEditar" value="<?php echo $titulo_actual ?>">
                     </div>
                     <div class="form-group">
                         <textarea class="form-control" rows="20" id="txtEdicion" name="txtContenidoModalEditar" ><?php echo $version_actual ?></textarea>

@@ -10,9 +10,10 @@ if (strcasecmp($metodo, "POST") === 0) {
     $resultados = array();
     $resultados["status"] = "no";
     if(isset($id_version) && isset($id_articulo)){
-        $version = ApiBd::obtener_version_articulo($id_version, $id_articulo);
+        $articulo_version = ApiBd::obtener_version_articulo($id_version, $id_articulo);
         $resultados["status"] = "ok";
-        $resultados["version"] = $version;
+        $resultados["version"] = $articulo_version["version"];
+        $resultados["titulo"] = $articulo_version["titulo"];
     }
     echo json_encode($resultados);
 }
