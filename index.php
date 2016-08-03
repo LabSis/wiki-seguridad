@@ -98,7 +98,7 @@ $tmpl_tecnicas = array(
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link href="css/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
-        <link href="css/estilo.css" rel="stylesheet" />
+        <link href="css/general.css" rel="stylesheet" />
         <script src="js/jquery.js"></script>
         <script src="css/bootstrap/js/bootstrap.min.js"></script>
         <title>LabSis - Seg</title>

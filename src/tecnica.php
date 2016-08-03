@@ -19,7 +19,8 @@ try{
         <meta charset="utf-8" />
         <title>LabSis - Seg</title>
         <link href="<?php echo $WEB_PATH ?>/css/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
-        <link href="<?php echo $WEB_PATH ?>/css/estilo.css" rel="stylesheet" />
+        <link href="<?php echo $WEB_PATH ?>/css/general.css" rel="stylesheet" />
+        <link href="<?php echo $WEB_PATH ?>/css/tecnica.css" rel="stylesheet" />
         <script type="text/javascript" src="<?php echo $WEB_PATH ?>/js/jquery.js"></script>
         <script type="text/javascript" src="<?php echo $WEB_PATH ?>/js/ckeditor/ckeditor.js"></script>
         <script type="text/javascript" src="<?php echo $WEB_PATH ?>/css/bootstrap/js/bootstrap.min.js"></script>
@@ -165,15 +166,16 @@ try{
                             <?php endforeach; ?>
                         <?php endif; ?>
                     </div>
+                </div>
+            </div>
+            <div class="row deactivate-article">
+                <div class="col-sm-12">
                     <input type="checkbox" id="chkMostrarArticulosDesactivados" />
                     <label for="chkMostrarArticulosDesactivados" >Mostrar artículos desactivados</label>
                 </div>
             </div>
-            <div class="row crear_articulo">
+            <div class="row create-article">
                 <form role="form" action="guardar_articulo.php?id=<?php echo $id_tecnica ?>" method="post">
-                    <div>
-                        <p>Al agregar un artículo usted se hace responsable de la información que publica. Para llevar un control interno guardamos algunos datos de aquellas personas que crean un artículo. Gracias.</p>
-                    </div>
                     <div class="form-group">
                         <label for="txtTitulo">Título:</label>
                         <input type="text" class="form-control" name="txtTitulo" id="txtTitulo">
@@ -181,6 +183,9 @@ try{
                     <div class="form-group">
                         <label for="txtContenido">Contenido:</label>
                         <textarea class="form-control" rows="20" name="txtContenido" id="txtContenido"></textarea>
+                    </div>
+                    <div>
+                        <p>Al agregar un artículo usted se hace responsable de la información que publica. Para llevar un control interno guardamos algunos datos de aquellas personas que crean un artículo. Gracias.</p>
                     </div>
                     <button type="submit" class="btn btn-primary pull-right">Crear artículo</button>
                 </form>

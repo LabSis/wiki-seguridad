@@ -25,7 +25,7 @@ if (strcasecmp($metodo, "POST") === 0) {
         <meta charset="utf-8" />
         <title>Historial de artículo</title>
         <link href="<?php echo $WEB_PATH ?>/css/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
-        <link href="<?php echo $WEB_PATH ?>/css/estilo.css" rel="stylesheet" />
+        <link href="<?php echo $WEB_PATH ?>/css/general.css" rel="stylesheet" />
         <style>
             .historico{
                 position: float;
