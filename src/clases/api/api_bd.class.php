@@ -110,7 +110,7 @@ class ApiBd {
         if (self::existe_tecnica($id_tecnica)) {
             self::iniciar();
             $titulo = self::sanitizar($titulo);
-            $contenido = self::sanitizar($contenido, "<a><strong><em><ol><li><ul><p>");
+            $contenido = self::sanitizar($contenido, "<a><strong><em><ol><li><ul><p><span>");
             $insercion = "INSERT INTO articulos (nombre,id_tecnica,contenido, fecha_hora) VALUES ('{$titulo}',{$id_tecnica},'{$contenido}', NOW())";
             if (self::$conexion->insertar_simple($insercion)) {
                 self::cerrar();
@@ -261,7 +261,7 @@ SQL;
         self::iniciar();
         $id_articulo = self::sanitizar($id_articulo);
         $titulo = self::sanitizar($titulo);
-        $contenido = self::sanitizar($contenido, "<a><strong><em><ol><li><ul><p>");
+        $contenido = self::sanitizar($contenido, "<a><strong><em><ol><li><ul><p><span>");
         $ok = true;
 		self::$conexion->transaccion_comenzar();
 
