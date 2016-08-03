@@ -1,0 +1,32 @@
+main{
+    margin-top: 40px;
+}
+section{
+    margin-bottom: 80px;
+    border-bottom: 1px solid #ddd;
+}
+.create-article{
+    margin-top: 40px;
+    margin-bottom: 50px;
+    padding: 10px;
+    border: 1px solid steelblue;
+    border-radius: 8px;
+}
+.deactivate-article{
+    padding: 10px;
+    border-bottom: 1px solid gray;
+    border-left: 1px solid gray;
+    border-right: 1px solid gray;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+.borrar, .editar{
+    position: float;
+    float: right;
+    top: 5px;
+    cursor: pointer;
+    margin-right: 10px;
+}
+.articuloSeleccionado{
+    border: 1px solid black;
+}
