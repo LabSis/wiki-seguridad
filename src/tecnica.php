@@ -171,7 +171,7 @@ try{
             <div class="row deactivate-article">
                 <div class="col-sm-12">
                     <input type="checkbox" id="chkMostrarArticulosDesactivados" />
-                    <label for="chkMostrarArticulosDesactivados" >Mostrar artículos desactivados</label>
+                    <label for="chkMostrarArticulosDesactivados" >Mostrar artículos eliminados</label>
                 </div>
             </div>
             <div class="row create-article">
