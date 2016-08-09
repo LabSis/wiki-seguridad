@@ -151,7 +151,7 @@ try{
                     <?php require_once $SERVER_PATH . $TEMPLATES_REL_PATH . 'maquetado/mensajes.tmpl.php' ?>
                     <h1><?php echo (isset($tmpl_tecnica["nombre"]))?$tmpl_tecnica["nombre"]:""; ?></h1>
                     <div id="divSecciones">
-                        <?php if(isset($tmpl_tecnica["articulos"])): ?>
+                        <?php if(isset($tmpl_tecnica["articulos"]) && count($tmpl_tecnica["articulos"]) > 0): ?>
                             <?php foreach ($tmpl_tecnica["articulos"] as $articulo): ?>
                                 <section data-id="<?php echo $articulo["id"]?>">
                                     <h3 class="titulo">
@@ -164,6 +164,8 @@ try{
                                     </div>
                                 </section>
                             <?php endforeach; ?>
+                        <?php else: ?>
+                            <p style="font-style: italic">No hay información disponible</p>
                         <?php endif; ?>
                     </div>
                 </div>
