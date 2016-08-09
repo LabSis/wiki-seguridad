@@ -168,12 +168,14 @@ try{
                     </div>
                 </div>
             </div>
-            <div class="row deactivate-article">
-                <div class="col-sm-12">
-                    <input type="checkbox" id="chkMostrarArticulosDesactivados" />
-                    <label for="chkMostrarArticulosDesactivados" >Mostrar artículos eliminados</label>
+            <?php if (isset($tmpl_tecnica) && isset($tmpl_tecnica["cantidad_eliminados"]) && $tmpl_tecnica["cantidad_eliminados"] > 0): ?>
+                <div class="row deactivate-article">
+                    <div class="col-sm-12">
+                        <input type="checkbox" id="chkMostrarArticulosDesactivados" />
+                        <label for="chkMostrarArticulosDesactivados" >Mostrar artículos eliminados</label>
+                    </div>
                 </div>
-            </div>
+            <?php endif; ?>
             <div class="row create-article">
                 <form role="form" action="guardar_articulo.php?id=<?php echo $id_tecnica ?>" method="post">
                     <div class="form-group">

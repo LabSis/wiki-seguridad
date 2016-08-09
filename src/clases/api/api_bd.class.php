@@ -94,9 +94,26 @@ class ApiBd {
         }
         $o_tecnica["articulos"] = $o_articulos;
         self::cerrar();
+        $o_tecnica["cantidad_eliminados"] = self::obtener_cantidad_articulos_eliminados($id_tecnica);
         return $o_tecnica;
     }
-    
+
+    /**
+     * Retorna la cantidad de artículos eliminados en una técnica.
+     */
+    public static function obtener_cantidad_articulos_eliminados($id_tecnica) {
+        self::iniciar();
+        $cantidad = 0;
+        $id_tecnica = self::sanitizar($id_tecnica);
+        $consulta = "SELECT COUNT(*) AS c FROM articulos WHERE activada=FALSE AND id_tecnica={$id_tecnica}";
+        $cantidad_articulos = self::$conexion->consultar_simple($consulta);
+        if(isset($cantidad_articulos)){
+            $cantidad = $cantidad_articulos[0]["c"];
+        }
+        self::cerrar();
+        return $cantidad;
+    }
+
     public static function existe_tecnica($id_tecnica) {
         try {
             self::obtener_tecnica($id_tecnica);
