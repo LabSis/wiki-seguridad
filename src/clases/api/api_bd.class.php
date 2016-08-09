@@ -194,16 +194,22 @@ SQL;
      * Tener en cuenta que si la versión es muy vieja, este método va aplicando
      * los difs consecutivamente hacia atrás.
      *
+     * Si el id_version es -1 retorna la versión actual del artículo.
+     *
      * @param string $id_version es el id de versión que se desea recuperar.
      * @param string $id_articulo es el id del artículo del cual se desea
      * recuperar la versión.
-     * @return string la versión de un artículo.
+     * @return array[string] donde el primer elemento es la versión del
+     * artículo y el segundo elemento es el título del artículo.
      */
     public static function obtener_version_articulo($id_version, $id_articulo){
         self::iniciar();
         $id_version = self::sanitizar($id_version);
         $id_articulo = self::sanitizar($id_articulo);
-        $version = null;
+        if($id_articulo <= 0){
+            throw new InvalidArgumentException("Argumento inválido: $id_articulo");
+        }
+        $version = null; // Texto de la versión
         $titulo = null;
 
         if($id_version == "-1"){
@@ -231,12 +237,11 @@ SQL;
             if(isset($respuesta) && is_array($respuesta)){
                 $len_respuesta = count($respuesta);
                 for($i = 0; $i < $len_respuesta; $i++){
-                    $id_articulo = null;
                     $patch = $respuesta[$i]["diff"];
                     $patch_titulo = $respuesta[$i]["diff_titulo"];
                     $id_articulo = $respuesta[$i]["id_articulo"];
                     if(isset($id_articulo)){
-                        // Cargo el contenido
+                        // Cargo el contenido de la versión
                         if(is_null($version)){
                             $consulta = <<<SQL
                                 SELECT contenido
@@ -251,7 +256,7 @@ SQL;
                         } else {
                             $version = xdiff_string_bpatch($version, $patch);
                         }
-                        // Cargo el título
+                        // Cargo el título de la versión
                         if(is_null($titulo)){
                             $consulta = <<<SQL
                                 SELECT nombre
@@ -274,6 +279,19 @@ SQL;
         return array("version" => $version, "titulo" => $titulo);
     }
 
+    /**
+     * Edita un artículo a través de su id.
+     *
+     * Modifica el titulo y el contenido. Ambos o, al menos, uno de los dos.
+     *
+     * Además de modificar el título y el contenido, crea una nueva versión del
+     * artículo almacenando las diferencias.
+     *
+     * @param int $id_articulo
+     * @param string $titulo
+     * @param string $contenido
+     * @return bool
+     */
     public static function editar_articulo($id_articulo, $titulo, $contenido){
         self::iniciar();
         $id_articulo = self::sanitizar($id_articulo);
@@ -289,7 +307,7 @@ SQL;
         $articulo = self::$conexion->consultar_simple($consulta);
         if(isset($articulo) && is_array($articulo) && count($articulo) > 0){
             $contenido_articulo_anterior = $articulo[0]["contenido"];
-            $titulo_articulo_anterior = $articulo[0]["titulo"];
+            $titulo_articulo_anterior = $articulo[0]["nombre"];
             $dif = xdiff_string_bdiff($contenido, $contenido_articulo_anterior);
             $diff_titulo = xdiff_string_bdiff($titulo, $titulo_articulo_anterior);
             $actualizacion_historial = <<<SQL
