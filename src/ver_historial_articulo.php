@@ -93,9 +93,13 @@ if (strcasecmp($metodo, "POST") === 0) {
             <ul class="historico">
                 <?php foreach($historial_articulos as $cambio): ?>
                     <?php if($cambio['fecha_hora'] === "Actual") :?>
-                        <li class="seleccionado" data-id-version="<?php echo $cambio["id"] ?>" ><?php echo $cambio['fecha_hora'] ?></li>
+                        <li class="seleccionado" data-id-version="<?php echo $cambio["id"] ?>" >
+                            <?php echo $cambio['fecha_hora'] ?>
+                        </li>
                     <?php else: ?>
-                        <li data-id-version="<?php echo $cambio["id"] ?>" ><?php echo $cambio['fecha_hora'] ?></li>
+                        <li data-id-version="<?php echo $cambio["id"] ?>" >
+                            <?php echo $cambio['fecha_hora'] ?>
+                        </li>
                     <?php endif; ?>
                 <?php endforeach; ?>
             </ul>

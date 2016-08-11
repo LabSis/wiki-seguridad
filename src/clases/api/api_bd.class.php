@@ -164,12 +164,22 @@ SQL;
         return false;
     }
 
+    /**
+     * Retorna un array con el historial de un artículo.
+     *
+     * Cada elemento del array contiene:
+     *      fecha_hora
+     *      id
+     *      id_articulo
+     *      activada
+     *
+     */
     public static function obtener_historial_articulos($id_articulo){
         self::iniciar();
         $id_articulo = self::sanitizar($id_articulo);
         $consulta = <<<SQL
-            SELECT *
-            FROM historial_articulos
+            SELECT ha.fecha_hora, ha.id AS id, ha.id_articulo
+            FROM historial_articulos AS ha
             WHERE id_articulo=$id_articulo
             ORDER BY fecha_hora DESC
 SQL;
@@ -282,7 +292,7 @@ SQL;
     /**
      * Edita un artículo a través de su id.
      *
-     * Modifica el titulo y el contenido. Ambos o, al menos, uno de los dos.
+     * Modifica el titulo y el contenido. Ambos, o al menos, uno de los dos.
      *
      * Además de modificar el título y el contenido, crea una nueva versión del
      * artículo almacenando las diferencias.
@@ -302,7 +312,7 @@ SQL;
 
         // Obtengo artículo anterior
         $consulta = <<<SQL
-        SELECT id, nombre, contenido, nombre FROM articulos WHERE activada=TRUE AND id={$id_articulo}
+        SELECT id, nombre, contenido, nombre FROM articulos WHERE id={$id_articulo}
 SQL;
         $articulo = self::$conexion->consultar_simple($consulta);
         if(isset($articulo) && is_array($articulo) && count($articulo) > 0){
@@ -319,7 +329,7 @@ SQL;
 		    }
         }
         $actualizacion = <<<SQL
-        UPDATE articulos AS a SET nombre='$titulo', contenido='$contenido'
+        UPDATE articulos AS a SET nombre='$titulo', contenido='$contenido', activada=1
         WHERE a.id=$id_articulo
 SQL;
         if (!self::$conexion->actualizar_simple($actualizacion)) {
