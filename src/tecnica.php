@@ -109,8 +109,8 @@ try{
                                 var tituloHtml = '<h3 class="titulo">';
                                 var contenidoHtml = '<div class="contenido">';
 
-                                tituloHtml += articulo.nombre;
-                                contenidoHtml += articulo.contenido;
+                                tituloHtml += articulo.contenido.titulo;
+                                contenidoHtml += articulo.contenido.version;
 
                                 tituloHtml += "</h3>";
                                 contenidoHtml += '<i class="editar glyphicon glyphicon-edit" title="Editar"></i></div>';

@@ -12,7 +12,6 @@ if (strcasecmp($metodo, "POST") === 0) {
         $articulos = array();
         foreach($articulos_respuesta as $articulo){
             $art = ApiBd::obtener_anteultima_version($articulo["id"]);
-            $articulo["nombre"] = $art["nombre"];
             $articulo["contenido"] = $art["contenido"];
             $articulos[] = $articulo;
         }

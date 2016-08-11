@@ -366,7 +366,6 @@ SQL;
         $articulo["contenido"] = null;
         if(isset($respuesta) && !empty($respuesta)){
             $id_version = $respuesta[0]["id_version"];
-            $articulo["nombre"] = $id_version;
             $articulo["contenido"] = self::obtener_version_articulo($id_version, $id_articulo);
         }
         self::cerrar();
