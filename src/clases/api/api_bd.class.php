@@ -381,4 +381,26 @@ SQL;
         self::cerrar();
         return $articulo;
     }
+
+    /**
+     * Agrega una técnica.
+     *
+     * Si $technique_parent_id es null entonces se inserta como técnica padre.
+     * Es decir, con id_padre nulo.
+     *
+     */
+    public static function add_technique($technique_name, $technique_parent_id = null){
+        self::iniciar();
+        $ok = true;
+        $insercion = <<<SQL
+            INSERT INTO tecnicas (nombre, id_padre)
+            VALUES ('$technique_name', '$technique_parent_id')
+SQL;
+        $respuesta = self::$conexion->insertar_simple($insercion);
+        if(!$respuesta){
+            $ok = false;
+        }
+        self::cerrar();
+        return $ok;
+    }
 }

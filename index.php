@@ -17,6 +17,15 @@ $tmpl_tecnicas = ApiBd::obtener_tecnicas();
         <script src="js/jquery.js"></script>
         <script src="css/bootstrap/js/bootstrap.min.js"></script>
         <title>LabSis - Seg</title>
+        <script type="text/javascript">
+            $(document).ready(function(){
+                $(".add").click(function(){
+                    var techniqueId = $(this).data("techniqueId");
+                    $("#hidTechniqueParentId").val(techniqueId);
+                    $("#modalAddTechnique").modal("show");
+                });
+            });
+        </script>
     </head>
     <body>
         <main class="container">
@@ -32,7 +41,10 @@ $tmpl_tecnicas = ApiBd::obtener_tecnicas();
                         <div class="col-sm-3">
                             <div class="panel panel-default">
                                 <div class="panel-heading">
-                                    <h3 class="panel-title"><?php echo $tmpl_tecnica["nombre"]; ?></h3>
+                                    <h3 class="panel-title">
+                                        <?php echo $tmpl_tecnica["nombre"]; ?>
+                                        <i class="add glyphicon glyphicon-plus" title="Agregar" data-technique-id="<?php echo $tmpl_tecnica["id"] ?>"></i>
+                                    </h3>
                                 </div>
                                 <div class="panel-body">
                                     <ul>
@@ -55,5 +67,28 @@ $tmpl_tecnicas = ApiBd::obtener_tecnicas();
                 </div>
             </div>
         </main>
+        <div class="modal fade" id="modalAddTechnique" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <form action="<?php echo $WEB_PATH ?>src/add_technique.php" method="POST">
+                        <input type="hidden" value="" name="hidTechniqueParentId" id="hidTechniqueParentId" />
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title">Agregar técnica</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="comment">Nombre:</label>
+                                <input type="text" class="form-control" name="txtTechniqueName" id="txtTechniqueName">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                            <button type="submit" class="btn btn-primary">Crear</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </body>
 </html>

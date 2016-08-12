@@ -8,3 +8,8 @@ section{
 .division-line-menu{
     border: 4px solid steelblue;
 }
+.add{
+    cursor: pointer;
+    position: relative;
+    float: right;
+}
