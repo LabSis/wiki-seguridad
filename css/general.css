@@ -13,3 +13,8 @@ section{
     position: relative;
     float: right;
 }
+.edit{
+    cursor: pointer;
+    position: relative;
+    float: right;
+}

@@ -391,12 +391,37 @@ SQL;
      */
     public static function add_technique($technique_name, $technique_parent_id = null){
         self::iniciar();
+        $technique_name = self::sanitizar($technique_name);
+        $technique_parent_id = self::sanitizar($technique_parent_id);
         $ok = true;
         $insercion = <<<SQL
             INSERT INTO tecnicas (nombre, id_padre)
             VALUES ('$technique_name', '$technique_parent_id')
 SQL;
         $respuesta = self::$conexion->insertar_simple($insercion);
+        if(!$respuesta){
+            $ok = false;
+        }
+        self::cerrar();
+        return $ok;
+    }
+
+    /**
+     * Editar una técnica.
+     *
+     * Edita el nombre de una técnica.
+     *
+     */
+    public static function edit_technique($technique_name, $technique_id){
+        self::iniciar();
+        $technique_name = self::sanitizar($technique_name);
+        $technique_id = self::sanitizar($technique_id);
+        $ok = true;
+        $actualizacion = <<<SQL
+            UPDATE tecnicas SET nombre='$technique_name'
+            WHERE id='$technique_id'
+SQL;
+        $respuesta = self::$conexion->actualizar_simple($actualizacion);
         if(!$respuesta){
             $ok = false;
         }
