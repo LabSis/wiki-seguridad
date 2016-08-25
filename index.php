@@ -23,6 +23,7 @@ $tmpl_tecnicas = ApiBd::obtener_tecnicas();
                     var techniqueId = $(this).data("techniqueId");
                     var webPath = $("#webPath").val();
 
+                    $("#modalTitle").text("Agregar técnica");
                     $("#hidTechniqueParentId").val(techniqueId);
                     $("#txtTechniqueName").val("");
                     $("#modalTechnique").find("form").attr("action", webPath + "src/add_technique.php");
@@ -35,6 +36,7 @@ $tmpl_tecnicas = ApiBd::obtener_tecnicas();
                     var techniqueName = $(this).data("techniqueName");
                     var webPath = $("#webPath").val();
 
+                    $("#modalTitle").text("Editar técnica");
                     $("#hidTechniqueId").val(techniqueId);
                     $("#txtTechniqueName").val(techniqueName);
                     $("#modalTechnique").find("form").attr("action", webPath + "src/edit_technique.php");
@@ -63,6 +65,7 @@ $tmpl_tecnicas = ApiBd::obtener_tecnicas();
                                     <h3 class="panel-title">
                                         <?php echo $tmpl_tecnica["nombre"]; ?>
                                         <i class="add glyphicon glyphicon-plus" title="Agregar" data-technique-id="<?php echo $tmpl_tecnica["id"] ?>"></i>
+                                        <i class="edit glyphicon glyphicon-edit" title="Editar" data-technique-id="<?php echo $tmpl_tecnica["id"] ?>" data-technique-name="<?php echo $tmpl_tecnica["nombre"] ?>"></i>
                                     </h3>
                                 </div>
                                 <div class="panel-body">
@@ -96,7 +99,7 @@ $tmpl_tecnicas = ApiBd::obtener_tecnicas();
                         <input type="hidden" value="" name="hidTechniqueParentId" id="hidTechniqueParentId" />
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <h4 class="modal-title">Agregar técnica</h4>
+                            <h4 class="modal-title" id="modalTitle" >Agregar técnica</h4>
                         </div>
                         <div class="modal-body">
                             <div class="form-group">
