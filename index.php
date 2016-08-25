@@ -51,7 +51,7 @@ $tmpl_tecnicas = ApiBd::obtener_tecnicas();
         <input type="hidden" value="<?php echo $WEB_PATH ?>" name="webPath" id="webPath" />
         <main class="container">
             <h1>LabSis - Seg</h1>
-            <h3>Técnicas de ataques</h3>
+            <h3>Técnicas de ataques<i class="add glyphicon glyphicon-plus" title="Agregar" ></i></h3>
             <div class="row">
                 <div class="col-sm-12">
                     <?php $i = 1 ?>

@@ -10,7 +10,11 @@ if (strcasecmp($method, "POST") === 0) {
 
     $ok = true;
     if (isset($technique_parent_id) && isset($technique_name)) {
-        $ok = ApiBd::add_technique($technique_name, $technique_parent_id);
+        if($technique_parent_id == ""){
+            $ok = ApiBd::add_technique($technique_name, null);
+        } else {
+            $ok = ApiBd::add_technique($technique_name, $technique_parent_id);
+        }
     } else {
         $ok = false;
     }

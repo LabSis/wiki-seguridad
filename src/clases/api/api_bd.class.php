@@ -392,12 +392,19 @@ SQL;
     public static function add_technique($technique_name, $technique_parent_id = null){
         self::iniciar();
         $technique_name = self::sanitizar($technique_name);
-        $technique_parent_id = self::sanitizar($technique_parent_id);
         $ok = true;
-        $insercion = <<<SQL
-            INSERT INTO tecnicas (nombre, id_padre)
-            VALUES ('$technique_name', '$technique_parent_id')
+        if(isset($technique_parent_id)){
+            $technique_parent_id = self::sanitizar($technique_parent_id);
+            $insercion = <<<SQL
+                INSERT INTO tecnicas (nombre, id_padre)
+                VALUES ('$technique_name', '$technique_parent_id')
 SQL;
+        } else {
+            $insercion = <<<SQL
+                INSERT INTO tecnicas (nombre)
+                VALUES ('$technique_name')
+SQL;
+        }
         $respuesta = self::$conexion->insertar_simple($insercion);
         if(!$respuesta){
             $ok = false;
