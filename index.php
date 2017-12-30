@@ -6,6 +6,7 @@ $sesion = Session::get_instance();
 
 ini_set("display_errors", 1);
 $tmpl_tecnicas = ApiBd::obtener_tecnicas();
+$tmpl_vulnerabilidades = ApiBd::obtener_vulnerabilidades();
 ?>
 <!DOCTYPE html>
 <html>
@@ -51,6 +52,33 @@ $tmpl_tecnicas = ApiBd::obtener_tecnicas();
         <input type="hidden" value="<?php echo $WEB_PATH ?>" name="webPath" id="webPath" />
         <main class="container">
             <h1>LabSis - Seg</h1>
+            <h3>Vulnerabilidades</h3>
+            <p>
+                La siguiente clasificación de vulnerabildades está basada en el top 10 de OWASP (<a href='https://www.owasp.org/index.php/Top_10_2013-Top_10'>2013</a> y <a href='https://www.owasp.org/images/7/72/OWASP_Top_10-2017_%28en%29.pdf.pdf'>2017</a>).
+                Los datos fueron extraídos de experiencias realizadas por el equipo de desarrollo y seguridad informática del LabSis de UTN-FRC.
+            </p>
+            <table class="table table-striped" style="width: auto !important;" align="center">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Cantidad</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($tmpl_vulnerabilidades as $tmpl_vulnerabilidad): ?>
+                        <tr>
+                            <td>
+                                <a href="src/vulnerabilidad.php?id=<?php echo $tmpl_vulnerabilidad["id"] ?>">
+                                    <?php echo $tmpl_vulnerabilidad["nombre"] ?>
+                                </a>
+                            </td>
+                            <td>
+                                <?php echo $tmpl_vulnerabilidad["cantidad"] ?>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
             <h3>Técnicas de ataques<i class="add glyphicon glyphicon-plus" title="Agregar" ></i></h3>
             <div class="row">
                 <div class="col-sm-12">

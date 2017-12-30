@@ -55,6 +55,22 @@ class ApiBd {
         return $o_tecnicas;
     }
 
+    public static function obtener_vulnerabilidades() {
+        self::iniciar();
+        $consulta = "SELECT id, nombre, cantidad FROM vulnerabilidades";
+        $vulnerabilidades = self::$conexion->consultar_simple($consulta);
+        $o_vulnerabilidades = array();
+        foreach ($vulnerabilidades as $vulnerabilidad) {
+            $o_vulnerabilidades[] = array(
+                "nombre" => $vulnerabilidad["nombre"],
+                "id" => $vulnerabilidad["id"],
+                "cantidad" => $vulnerabilidad["cantidad"]
+            );
+        }
+        self::cerrar();
+        return $o_vulnerabilidades;
+    }
+
     public static function obtener_tecnicas_raiz() {
         self::iniciar();
         $consulta = "SELECT id, nombre, id_padre FROM tecnicas WHERE id_padre IS NULL";
@@ -96,6 +112,36 @@ class ApiBd {
         self::cerrar();
         $o_tecnica["cantidad_eliminados"] = self::obtener_cantidad_articulos_eliminados($id_tecnica);
         return $o_tecnica;
+    }
+
+    public static function obtener_vulnerabilidad($id_vulnerabilidad) {
+        self::iniciar();
+        $consulta = "SELECT id, nombre, cantidad FROM vulnerabilidades WHERE id={$id_vulnerabilidad}";
+        $vulnerabilidad = self::$conexion->consultar_simple($consulta);
+        if ($vulnerabilidad !== false && !empty($vulnerabilidad)) {
+            $o_vulnerabilidad = array(
+                "nombre" => $vulnerabilidad[0]["nombre"],
+                "id" => $vulnerabilidad[0]["id"],
+                "cantidad" => $vulnerabilidad[0]["cantidad"]
+            );
+        } else {
+            throw new InvalidArgumentException("Página no encontrada");
+        }
+        $consulta = "SELECT id, nombre, contenido FROM articulos WHERE activada=TRUE AND id_vulnerabilidad={$id_vulnerabilidad}";
+        $articulos = self::$conexion->consultar_simple($consulta);
+        $o_articulos = array();
+        foreach ($articulos as $articulo) {
+            $o_articulos[] = array(
+                "id" => $articulo["id"],
+                "titulo" => $articulo["nombre"],
+                "fecha" => "",
+                "contenido" => $articulo["contenido"]
+            );
+        }
+        $o_vulnerabilidad["articulos"] = $o_articulos;
+        self::cerrar();
+        //$o_vulnerabilidad["cantidad_eliminados"] = self::obtener_cantidad_articulos_eliminados($id_tecnica);
+        return $o_vulnerabilidad;
     }
 
     /**
