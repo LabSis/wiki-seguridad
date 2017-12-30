@@ -180,6 +180,7 @@ try{
             <?php endif; ?>
             <div class="row create-article">
                 <form role="form" action="guardar_articulo.php?id=<?php echo $id_tecnica ?>" method="post">
+                    <input type="hidden" name="tipo" value="tecnica" />
                     <div class="form-group">
                         <label for="txtTitulo">Título:</label>
                         <input type="text" class="form-control" name="txtTitulo" id="txtTitulo">

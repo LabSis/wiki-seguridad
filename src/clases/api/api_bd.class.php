@@ -169,12 +169,18 @@ class ApiBd {
         return true;
     }
 
-    public static function crear_articulo($titulo, $id_tecnica, $contenido) {
+    public static function crear_articulo($titulo, $id_tecnica, $contenido, $tipo) {
         if (self::existe_tecnica($id_tecnica)) {
             self::iniciar();
             $titulo = self::sanitizar($titulo);
             $contenido = self::sanitizar($contenido, "<a><strong><em><ol><li><ul><p><span>");
-            $insercion = "INSERT INTO articulos (nombre,id_tecnica,contenido, fecha_hora) VALUES ('{$titulo}',{$id_tecnica},'{$contenido}', NOW())";
+            if ($tipo === "tecnica") {
+                $insercion = "INSERT INTO articulos (nombre, id_tecnica, contenido, fecha_hora) VALUES ('{$titulo}',{$id_tecnica},'{$contenido}', NOW())";
+            } else if ($tipo === "vulnerabilidad") {
+                $insercion = "INSERT INTO articulos (nombre, id_vulnerabilidad, contenido, fecha_hora) VALUES ('{$titulo}',{$id_tecnica},'{$contenido}', NOW())";
+            } else {
+                throw InvalidArgumentException("Tipo incorrecto.");
+            }
             if (self::$conexion->insertar_simple($insercion)) {
                 self::cerrar();
                 return true;

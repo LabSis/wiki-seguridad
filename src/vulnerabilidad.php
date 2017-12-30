@@ -179,7 +179,8 @@ try{
                 </div>
             <?php endif; ?>
             <div class="row create-article">
-                <form role="form" action="guardar_articulo.php?id=<?php echo $id_tecnica ?>" method="post">
+                <form role="form" action="guardar_articulo.php?id=<?php echo $id_vulnerabilidad ?>" method="post">
+                    <input type="hidden" name="tipo" value="vulnerabilidad" />
                     <div class="form-group">
                         <label for="txtTitulo">Título:</label>
                         <input type="text" class="form-control" name="txtTitulo" id="txtTitulo">
