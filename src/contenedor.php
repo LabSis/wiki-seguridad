@@ -31,12 +31,12 @@ try{
     <head>
         <meta charset="utf-8" />
         <title>LabSis - Seg</title>
-        <link href="<?php echo $WEB_PATH ?>/css/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
-        <link href="<?php echo $WEB_PATH ?>/css/general.css" rel="stylesheet" />
-        <link href="<?php echo $WEB_PATH ?>/css/tecnica.css" rel="stylesheet" />
-        <script type="text/javascript" src="<?php echo $WEB_PATH ?>/js/jquery.js"></script>
-        <script type="text/javascript" src="<?php echo $WEB_PATH ?>/js/ckeditor/ckeditor.js"></script>
-        <script type="text/javascript" src="<?php echo $WEB_PATH ?>/css/bootstrap/js/bootstrap.min.js"></script>
+        <link href="<?php echo $WEB_PATH ?>css/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+        <link href="<?php echo $WEB_PATH ?>css/general.css" rel="stylesheet" />
+        <link href="<?php echo $WEB_PATH ?>css/contenedor.css" rel="stylesheet" />
+        <script type="text/javascript" src="<?php echo $WEB_PATH ?>js/jquery.js"></script>
+        <script type="text/javascript" src="<?php echo $WEB_PATH ?>js/ckeditor/ckeditor.js"></script>
+        <script type="text/javascript" src="<?php echo $WEB_PATH ?>css/bootstrap/js/bootstrap.min.js"></script>
         <script type="text/javascript">
             $(document).ready(function(){
                 CKEDITOR.replace("txtContenido");
