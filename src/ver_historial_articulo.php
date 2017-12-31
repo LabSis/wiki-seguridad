@@ -6,10 +6,11 @@ $sesion = Session::get_instance();
 $metodo = filter_input(INPUT_SERVER, "REQUEST_METHOD");
 if (strcasecmp($metodo, "POST") === 0) {
 
-    //header("Location: tecnica.php?id=$id_tecnica");
+    //header("Location: tecnica.php?id=$id_contenedor");
 } else if (strcasecmp($metodo, "GET") === 0) {
     $id_articulo = filter_input(INPUT_GET, "id_articulo");
-    $id_tecnica = filter_input(INPUT_GET, "id_tecnica");
+    $id_contenedor = filter_input(INPUT_GET, "id_contenedor");
+    $tipo = filter_input(INPUT_GET, "tipo_contenedor");
     if(isset($id_articulo) && is_numeric($id_articulo)){
         $historial_articulos = ApiBd::obtener_historial_articulos($id_articulo);
         array_unshift($historial_articulos, array("fecha_hora" => "Actual", "id" => "-1"));
@@ -81,7 +82,7 @@ if (strcasecmp($metodo, "POST") === 0) {
     </head>
     <body>
         <main class="container">
-            <?php $LINK_VOLVER = "{$WEB_PATH}{$CTRL_REL_PATH}tecnica.php?id=$id_tecnica"?>
+            <?php $LINK_VOLVER = "{$WEB_PATH}{$CTRL_REL_PATH}contenedor.php?id=$id_contenedor&tipo=$tipo"?>
             <?php require_once $SERVER_PATH . $TEMPLATES_REL_PATH . 'maquetado/menu.tmpl.php' ?>
             <div class="row">
                 <div class="col-sm-12">
@@ -105,8 +106,8 @@ if (strcasecmp($metodo, "POST") === 0) {
             </ul>
             <div class="editor row" >
                 <form role="form" action="<?php echo $WEB_PATH . $CTRL_REL_PATH ?>editar_articulo.php" method="POST">
-                
-                    <input type="hidden" value="<?php echo $id_tecnica ?>" name="hidIdTecnicaModalEditar" id="hidIdTecnicaModalEditar" />
+                    <input type="hidden" value="<?php echo $id_contenedor ?>" name="id_contenedor" id="id_contenedor" />
+                    <input type="hidden" name="tipo" value="<?php echo $tipo ?>" />
                     <input type="hidden" value="<?php echo $id_articulo ?>" name="hidIdArticuloModalEditar" id="hidIdArticuloModalEditar" />
 
                     <h4>Edición de la versión de <span id="spanTituloEdicion"></span></h4>

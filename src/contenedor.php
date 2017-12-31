@@ -3,13 +3,26 @@ require_once '../config.php';
 
 $sesion = Session::get_instance();
 
-$id_vulnerabilidad = filter_input(INPUT_GET, "id");
+$id_contenedor = filter_input(INPUT_GET, "id");
+$tipo_contenedor = filter_input(INPUT_GET, "tipo");
 
-$tmpl_vulnerabilidad = array();
+$tmpl_contenedor = array();
 try{
-    $tmpl_vulnerabilidad = ApiBd::obtener_vulnerabilidad($id_vulnerabilidad);
+    $tmpl_contenedor = null;
+    if (isset($tipo_contenedor) && isset($id_contenedor)) {
+        if ($tipo_contenedor === "tecnica") {
+            $tipo_contenedor = "tecnica";
+            $tmpl_contenedor = ApiBd::obtener_tecnica($id_contenedor);
+        } else if ($tipo_contenedor === "vulnerabilidad") {
+            $tmpl_contenedor = ApiBd::obtener_vulnerabilidad($id_contenedor);
+            $tipo_contenedor = "vulnerabilidad";
+        }
+    }
+    if (!isset($tmpl_contenedor)) {
+        $sesion->add_error_message("Página no encontrada.");
+    }
 } catch(Exception $ex) {
-    $sesion->add_success_message($ex->getMessage());
+    $sesion->add_error_message($ex->getMessage());
 }
 
 ?>
@@ -33,8 +46,8 @@ try{
                 var articuloABorrarJQuery = null;
                 function mostrarModalConfirmacionBorrar(idArticulo){
                     $("#hidIdArticulo").val(idArticulo);
-                    var idTecnica = $("#hidIdTecnica").val();
-                    $("#hidIdTecnicaModalBorrado").val(idTecnica);
+                    var idContenedor = $("#hidIdContenedor").val();
+                    $("#hidIdContenedorModalBorrado").val(idContenedor);
                     $("#modalConfirmarBorrado").modal("show");
                 }
 
@@ -79,23 +92,24 @@ try{
                 });
 
                 // Ver historial
-                function verHistorial(idArticulo, idTecnica){
-                    location.href = "<?php echo $WEB_PATH ?><?php echo $CTRL_REL_PATH ?>ver_historial_articulo.php?id_articulo=" + idArticulo + "&id_tecnica=" + idTecnica;
+                function verHistorial(idArticulo, idContenedor, tipoContenedor){
+                    location.href = "<?php echo $WEB_PATH ?><?php echo $CTRL_REL_PATH ?>ver_historial_articulo.php?id_articulo=" + idArticulo + "&id_contenedor=" + idContenedor + "&tipo_contenedor=" + tipoContenedor;
                 }
 
                 $("#btnVerHistorial").click(function(){
                     var idArticulo = $(this).data("id-articulo");
-                    var idTecnica = $("#hidIdTecnica").val();
-                    verHistorial(idArticulo, idTecnica);
+                    var idContenedor = $("#hidIdContenedor").val();
+                    var tipoContenedor = $("#hidTipoContenedor").val();
+                    verHistorial(idArticulo, idContenedor, tipoContenedor);
                 });
 
                 // Ver artículos desactivados
-                function mostrarArticulosDesactivados(idTecnica){
+                function mostrarArticulosDesactivados(idContenedor){
                     $.ajax({
                         url: "ajax/consultar_articulos_desactivados.php",
                         type: "post",
                         data: {
-                            id_tecnica: idTecnica
+                            id_tecnica: idContenedor
                         }
                     }).done(function(r){
                         var articulosDesactivados = JSON.parse(r);
@@ -127,16 +141,16 @@ try{
                     });
                 }
 
-                function ocultarArticulosDesactivados(idTecnica){
+                function ocultarArticulosDesactivados(idContenedor){
                     $(".articulo-desactivado").remove();
                 }
 
                 $("#chkMostrarArticulosDesactivados").change(function(){
-                    var idTecnica = $("#hidIdTecnica").val();
+                    var idContenedor = $("#hidIdContenedor").val();
                     if($(this).prop("checked")){
-                        mostrarArticulosDesactivados(idTecnica);
+                        mostrarArticulosDesactivados(idContenedor);
                     } else {
-                        ocultarArticulosDesactivados(idTecnica);
+                        ocultarArticulosDesactivados(idContenedor);
                     }
                 });
             });
@@ -144,15 +158,16 @@ try{
     </head>
     <body>
         <main class="container">
-            <input type="hidden" value="<?php echo $tmpl_vulnerabilidad["id"] ?>" name="id_tecnica" id="hidIdTecnica" />
+            <input type="hidden" value="<?php echo $tmpl_contenedor["id"] ?>" id="hidIdContenedor" />
+            <input type="hidden" value="<?php echo $tipo_contenedor ?>" id="hidTipoContenedor" />
             <?php require_once $SERVER_PATH . $TEMPLATES_REL_PATH . 'maquetado/menu.tmpl.php' ?>
             <div class="row">
                 <div class="col-sm-12">
                     <?php require_once $SERVER_PATH . $TEMPLATES_REL_PATH . 'maquetado/mensajes.tmpl.php' ?>
-                    <h1><?php echo (isset($tmpl_vulnerabilidad["nombre"]))?$tmpl_vulnerabilidad["nombre"]:""; ?></h1>
+                    <h1><?php echo (isset($tmpl_contenedor["nombre"]))?$tmpl_contenedor["nombre"]:""; ?></h1>
                     <div id="divSecciones">
-                        <?php if(isset($tmpl_vulnerabilidad["articulos"]) && count($tmpl_vulnerabilidad["articulos"]) > 0): ?>
-                            <?php foreach ($tmpl_vulnerabilidad["articulos"] as $articulo): ?>
+                        <?php if(isset($tmpl_contenedor["articulos"]) && count($tmpl_contenedor["articulos"]) > 0): ?>
+                            <?php foreach ($tmpl_contenedor["articulos"] as $articulo): ?>
                                 <section data-id="<?php echo $articulo["id"]?>">
                                     <h3 class="titulo">
                                         <?php echo $articulo["titulo"] ?>
@@ -170,7 +185,7 @@ try{
                     </div>
                 </div>
             </div>
-            <?php if (isset($tmpl_vulnerabilidad) && isset($tmpl_vulnerabilidad["cantidad_eliminados"]) && $tmpl_vulnerabilidad["cantidad_eliminados"] > 0): ?>
+            <?php if (isset($tmpl_contenedor) && isset($tmpl_contenedor["cantidad_eliminados"]) && $tmpl_contenedor["cantidad_eliminados"] > 0): ?>
                 <div class="row deactivate-article">
                     <div class="col-sm-12">
                         <input type="checkbox" id="chkMostrarArticulosDesactivados" />
@@ -178,9 +193,10 @@ try{
                     </div>
                 </div>
             <?php endif; ?>
+            <?php if (isset($tmpl_contenedor)): ?>
             <div class="row create-article">
-                <form role="form" action="guardar_articulo.php?id=<?php echo $id_vulnerabilidad ?>" method="post">
-                    <input type="hidden" name="tipo" value="vulnerabilidad" />
+                <form role="form" action="guardar_articulo.php?id_contenedor=<?php echo $id_contenedor ?>" method="post">
+                    <input type="hidden" name="tipo" value="<?php echo $tipo_contenedor ?>" />
                     <div class="form-group">
                         <label for="txtTitulo">Título:</label>
                         <input type="text" class="form-control" name="txtTitulo" id="txtTitulo">
@@ -195,12 +211,14 @@ try{
                     <button type="submit" class="btn btn-primary pull-right">Crear artículo</button>
                 </form>
             </div>
+            <?php endif; ?>
         </main>
         <div class="modal fade" id="modalConfirmarBorrado" tabindex="-1" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <form action="<?php echo $WEB_PATH ?>/src/desactivar_articulo.php" method="POST">
-                        <input type="hidden" value="<?php echo $tmpl_vulnerabilidad["id"] ?>" name="id_tecnica" id="hidIdTecnicaModalBorrado" />
+                        <input type="hidden" value="<?php echo $tmpl_contenedor["id"] ?>" name="id_contenedor" id="hidIdContenedorModalBorrado" />
+                        <input type="hidden" name="tipo" value="<?php echo $tipo_contenedor ?>" />
                         <input type="hidden" name="id_articulo" id="hidIdArticulo" />
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -221,7 +239,8 @@ try{
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <form action="<?php echo $WEB_PATH ?>src/editar_articulo.php" method="POST">
-                        <input type="hidden" value="<?php echo $tmpl_vulnerabilidad["id"] ?>" name="hidIdTecnicaModalEditar" id="hidIdTecnicaModalEditar" />
+                        <input type="hidden" value="<?php echo $tmpl_contenedor["id"] ?>" name="id_contenedor" />
+                        <input type="hidden" name="tipo" value="<?php echo $tipo_contenedor ?>" />
                         <input type="hidden" name="hidIdArticuloModalEditar" id="hidIdArticuloModalEditar" />
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>

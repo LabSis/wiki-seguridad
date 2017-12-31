@@ -4,7 +4,7 @@ require_once '../config.php';
 $sesion = Session::get_instance();
 
 try {
-    $id = filter_input(INPUT_GET, "id");
+    $id_contenedor = filter_input(INPUT_GET, "id_contenedor");
     $metodo = filter_input(INPUT_SERVER, "REQUEST_METHOD");
     if (strcasecmp($metodo, "POST") === 0) {
         $hubo_error = false;
@@ -24,7 +24,7 @@ try {
             $hubo_error = true;
         }
         if (!$hubo_error) {
-            $ok = ApiBd::crear_articulo($titulo, $id, $contenido, $tipo);
+            $ok = ApiBd::crear_articulo($titulo, $id_contenedor, $contenido, $tipo);
             if ($ok){
                 $sesion->add_success_message("El artículo fue guardado con éxito");
             } else {
@@ -33,11 +33,13 @@ try {
         }
     }
     if ($tipo === "tecnica") {
-        header("Location: tecnica.php?id=$id");
+        header("Location: contenedor.php?id=$id_contenedor&tipo=tecnica");
     } else if ($tipo === "vulnerabilidad") {
-        header("Location: vulnerabilidad.php?id=$id");
-    }    
+        header("Location: contenedor.php?id=$id_contenedor&tipo=vulnerabilidad");
+    } else {
+        echo "Error.";
+    }
 } catch (\InvalidArgumentException $ex) {
     $sesion->add_error_message($ex->getMessage());
-    header("Location: tecnica.php?id=$id");
+    echo "Error.";
 }

@@ -68,7 +68,7 @@ $tmpl_vulnerabilidades = ApiBd::obtener_vulnerabilidades();
                     <?php foreach ($tmpl_vulnerabilidades as $tmpl_vulnerabilidad): ?>
                         <tr>
                             <td>
-                                <a href="src/vulnerabilidad.php?id=<?php echo $tmpl_vulnerabilidad["id"] ?>">
+                                <a href="src/contenedor.php?id=<?php echo $tmpl_vulnerabilidad["id"] ?>&tipo=vulnerabilidad">
                                     <?php echo $tmpl_vulnerabilidad["nombre"] ?>
                                 </a>
                             </td>
@@ -100,7 +100,7 @@ $tmpl_vulnerabilidades = ApiBd::obtener_vulnerabilidades();
                                     <ul>
                                         <?php foreach ($tmpl_tecnica["links"] as $link): ?>
                                             <li>
-                                                <a href="src/tecnica.php?id=<?php echo $link["href"]; ?>">
+                                                <a href="src/contenedor.php?id=<?php echo $link["href"]; ?>&tipo=tecnica">
                                                     <?php echo $link["nombre"]; ?>
                                                 </a>
                                                 <i class="edit glyphicon glyphicon-edit" title="Editar" data-technique-id="<?php echo $link["href"] ?>" data-technique-name="<?php echo $link["nombre"] ?>"></i>
