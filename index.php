@@ -18,7 +18,8 @@ $tmpl_vulnerabilidades = ApiBd::obtener_vulnerabilidades();
         <link href='css/footer-distributed.css' rel="stylesheet"/>
         <script src="js/jquery.js"></script>
         <script src="css/bootstrap/js/bootstrap.min.js"></script>
-        <title>LabSis - Seg</title>
+        <script src="js/chart.js"></script>
+        <title>LabSis - Pentesting</title>
         <script type="text/javascript">
             $(document).ready(function(){
                 $(".add").click(function(){
@@ -46,6 +47,58 @@ $tmpl_vulnerabilidades = ApiBd::obtener_vulnerabilidades();
                     
                     $("#modalTechnique").modal("show");
                 });
+
+                // Calcular la columna total de vulnerabilidades.
+                var filasCantidades = [];
+                var filasEtiquetas = [];
+                $(".total-fila").each(function() {
+                    var $this = $(this);
+                    var $tr = $this.parent("tr");
+                    var cantidadDisenio = parseInt($tr.find(".cantidad-disenio").text());
+                    var cantidadCodigo = parseInt($tr.find(".cantidad-codigo").text());
+                    var cantidadConfiguracion = parseInt($tr.find(".cantidad-configuracion").text());
+                    var cantidadTotal = cantidadDisenio + cantidadCodigo + cantidadConfiguracion;
+                    $this.text(cantidadTotal);
+                    filasCantidades.push(cantidadTotal);
+                    filasEtiquetas.push("ok");
+                });
+                $(".total-columna").each(function(){
+                    var $this = $(this);
+                    var $tbody = $this.parents("table").find("tbody");
+                    var cantidad = 0;
+                    $tbody.find("tr td:nth-child(" + ($this.index() + 1) + ")").each(function(){
+                        cantidad += parseInt($(this).text());
+                    });
+                    $this.text(cantidad);
+                });
+                
+                // Gráficos.
+                function generarGraficoDeDimensiones(ctx) {
+                    
+                    var data = {
+                        datasets: [{
+                            data: filasCantidades,
+                            backgroundColor: [
+                                '#E14828',
+                                '#2318A6',
+                                '#47760E'
+                            ]
+                        }],
+
+                        // These labels appear in the legend and in the tooltips when hovering different arcs
+                        labels: filasEtiquetas,
+                    };
+                    
+                    var myPieChart = new Chart(ctx,{
+                        type: 'pie',
+                        data: data,
+                        options: []
+                    });
+                }
+                var ctx1 = $("#canvas1");
+                generarGraficoDeDimensiones(ctx1);
+                var ctx2 = $("#canvas2");
+                generarGraficoDeDimensiones(ctx2);
             });
         </script>
     </head>
@@ -58,28 +111,62 @@ $tmpl_vulnerabilidades = ApiBd::obtener_vulnerabilidades();
                 La siguiente clasificación de vulnerabildades está basada en el top 10 de OWASP (<a href='https://www.owasp.org/index.php/Top_10_2013-Top_10'>2013</a> y <a href='https://www.owasp.org/images/7/72/OWASP_Top_10-2017_%28en%29.pdf.pdf'>2017</a>).
                 Los datos fueron extraídos de experiencias realizadas por el equipo de desarrollo y seguridad informática del LabSis de UTN-FRC.
             </p>
-            <table class="table table-striped" style="width: auto !important;" align="center">
-                <thead>
-                    <tr>
-                        <th>Nombre</th>
-                        <th>Cantidad</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($tmpl_vulnerabilidades as $tmpl_vulnerabilidad): ?>
+            <div class="row">
+                <table class="table table-striped col-sm-8" style="width: auto !important;">
+                    <thead>
                         <tr>
-                            <td>
-                                <a href="src/contenedor.php?id=<?php echo $tmpl_vulnerabilidad["id"] ?>&tipo=vulnerabilidad">
-                                    <?php echo $tmpl_vulnerabilidad["nombre"] ?>
-                                </a>
-                            </td>
-                            <td>
-                                <?php echo $tmpl_vulnerabilidad["cantidad"] ?>
-                            </td>
+                            <th>Categoría</th>
+                            <th>Diseño</th>
+                            <th>Código</th>
+                            <th>Configuración</th>
+                            <th>Total</th>
                         </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($tmpl_vulnerabilidades as $tmpl_vulnerabilidad): ?>
+                            <tr>
+                                <td>
+                                    <a href="src/contenedor.php?id=<?php echo $tmpl_vulnerabilidad["id"] ?>&tipo=vulnerabilidad">
+                                        <?php echo $tmpl_vulnerabilidad["nombre"] ?>
+                                    </a>
+                                </td>
+                                <td class="cantidad-disenio">
+                                    <?php echo $tmpl_vulnerabilidad["disenio"] ?>
+                                </td>
+                                <td class="cantidad-codigo">
+                                    <?php echo $tmpl_vulnerabilidad["codigo"] ?>
+                                </td>
+                                <td class="cantidad-configuracion">
+                                    <?php echo $tmpl_vulnerabilidad["configuracion"] ?>
+                                </td>
+                                <td class="total-fila">
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td>Total</td>
+                            <td class="total-columna"></td>
+                            <td class="total-columna"></td>
+                            <td class="total-columna"></td>
+                            <td class="total-columna"></td>
+                        </tr>
+                    </tfoot>
+                </table>
+                <div class="col-sm-4">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <canvas id="canvas1" height="250" width="520"></canvas>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <canvas id="canvas2" height="250" width="520"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <h3>Técnicas de ataques<i class="add glyphicon glyphicon-plus" title="Agregar" ></i></h3>
             <div class="row">
                 <div class="col-sm-12">

@@ -57,14 +57,16 @@ class ApiBd {
 
     public static function obtener_vulnerabilidades() {
         self::iniciar();
-        $consulta = "SELECT id, nombre, cantidad FROM vulnerabilidades";
+        $consulta = "SELECT id, nombre, disenio, codigo, configuracion FROM vulnerabilidades";
         $vulnerabilidades = self::$conexion->consultar_simple($consulta);
         $o_vulnerabilidades = array();
         foreach ($vulnerabilidades as $vulnerabilidad) {
             $o_vulnerabilidades[] = array(
                 "nombre" => $vulnerabilidad["nombre"],
                 "id" => $vulnerabilidad["id"],
-                "cantidad" => $vulnerabilidad["cantidad"]
+                "disenio" => $vulnerabilidad["disenio"],
+                "codigo" => $vulnerabilidad["codigo"],
+                "configuracion" => $vulnerabilidad["configuracion"]
             );
         }
         self::cerrar();
