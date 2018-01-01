@@ -15,6 +15,7 @@ $tmpl_vulnerabilidades = ApiBd::obtener_vulnerabilidades();
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link href="css/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
         <link href="css/general.css" rel="stylesheet" />
+        <link href='css/footer-distributed.css' rel="stylesheet"/>
         <script src="js/jquery.js"></script>
         <script src="css/bootstrap/js/bootstrap.min.js"></script>
         <title>LabSis - Seg</title>
@@ -50,8 +51,8 @@ $tmpl_vulnerabilidades = ApiBd::obtener_vulnerabilidades();
     </head>
     <body>
         <input type="hidden" value="<?php echo $WEB_PATH ?>" name="webPath" id="webPath" />
+        <?php require_once('header.php') ?>
         <main class="container">
-            <h1>LabSis - Seg</h1>
             <h3>Vulnerabilidades</h3>
             <p>
                 La siguiente clasificación de vulnerabildades está basada en el top 10 de OWASP (<a href='https://www.owasp.org/index.php/Top_10_2013-Top_10'>2013</a> y <a href='https://www.owasp.org/images/7/72/OWASP_Top_10-2017_%28en%29.pdf.pdf'>2017</a>).
@@ -118,6 +119,7 @@ $tmpl_vulnerabilidades = ApiBd::obtener_vulnerabilidades();
                 </div>
             </div>
         </main>
+        <?php require_once 'footer.php' ?>
 
         <div class="modal fade" id="modalTechnique" tabindex="-1" role="dialog">
             <div class="modal-dialog modal-sm">

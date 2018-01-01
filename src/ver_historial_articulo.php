@@ -25,8 +25,9 @@ if (strcasecmp($metodo, "POST") === 0) {
     <head>
         <meta charset="utf-8" />
         <title>Historial de artículo</title>
-        <link href="<?php echo $WEB_PATH ?>/css/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
-        <link href="<?php echo $WEB_PATH ?>/css/general.css" rel="stylesheet" />
+        <link href="<?php echo $WEB_PATH ?>css/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+        <link href="<?php echo $WEB_PATH ?>css/general.css" rel="stylesheet" />
+        <link href='<?php echo $WEB_PATH ?>css/footer-distributed.css' rel="stylesheet"/>
         <style>
             .historico{
                 position: float;
@@ -81,6 +82,7 @@ if (strcasecmp($metodo, "POST") === 0) {
         </script>
     </head>
     <body>
+        <?php require_once('../header.php') ?>
         <main class="container">
             <?php $LINK_VOLVER = "{$WEB_PATH}{$CTRL_REL_PATH}contenedor.php?id=$id_contenedor&tipo=$tipo"?>
             <?php require_once $SERVER_PATH . $TEMPLATES_REL_PATH . 'maquetado/menu.tmpl.php' ?>
@@ -122,6 +124,7 @@ if (strcasecmp($metodo, "POST") === 0) {
                 </form>
             </div>
         </main>
+        <?php require_once '../footer.php' ?>
     </body>
 </html>
 

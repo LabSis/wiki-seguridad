@@ -34,6 +34,7 @@ try{
         <link href="<?php echo $WEB_PATH ?>css/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
         <link href="<?php echo $WEB_PATH ?>css/general.css" rel="stylesheet" />
         <link href="<?php echo $WEB_PATH ?>css/contenedor.css" rel="stylesheet" />
+        <link href='<?php echo $WEB_PATH ?>css/footer-distributed.css' rel="stylesheet"/>
         <script type="text/javascript" src="<?php echo $WEB_PATH ?>js/jquery.js"></script>
         <script type="text/javascript" src="<?php echo $WEB_PATH ?>js/ckeditor/ckeditor.js"></script>
         <script type="text/javascript" src="<?php echo $WEB_PATH ?>css/bootstrap/js/bootstrap.min.js"></script>
@@ -157,6 +158,7 @@ try{
         </script>
     </head>
     <body>
+        <?php require_once('../header.php') ?>
         <main class="container">
             <input type="hidden" value="<?php echo $tmpl_contenedor["id"] ?>" id="hidIdContenedor" />
             <input type="hidden" value="<?php echo $tipo_contenedor ?>" id="hidTipoContenedor" />
@@ -213,6 +215,7 @@ try{
             </div>
             <?php endif; ?>
         </main>
+        <?php require_once('../footer.php') ?>
         <div class="modal fade" id="modalConfirmarBorrado" tabindex="-1" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
