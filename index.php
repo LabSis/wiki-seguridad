@@ -144,7 +144,7 @@ $tmpl_vulnerabilidades = ApiBd::obtener_vulnerabilidades();
         <main class="container">
             <h3>Vulnerabilidades</h3>
             <p>
-                La siguiente clasificación de vulnerabildades está basada en el top 10 de OWASP (<a href='https://www.owasp.org/index.php/Top_10_2013-Top_10'>2013</a> y <a href='https://www.owasp.org/images/7/72/OWASP_Top_10-2017_%28en%29.pdf.pdf'>2017</a>).
+                La siguiente tabla muestra una clasificación de vulnerabildades de acuerdo a una categorización basada en el top 10 de OWASP (<a href='https://www.owasp.org/index.php/Top_10_2013-Top_10'>2013</a> y <a href='https://www.owasp.org/images/7/72/OWASP_Top_10-2017_%28en%29.pdf.pdf'>2017</a>) y a la etapa en la cual esa vulnerabilidad fue generada.
                 Los datos fueron extraídos de experiencias realizadas por el equipo de desarrollo y seguridad informática del LabSis de UTN-FRC.
             </p>
             <div class="row">
@@ -153,8 +153,8 @@ $tmpl_vulnerabilidades = ApiBd::obtener_vulnerabilidades();
                         <tr>
                             <th>Categoría</th>
                             <th>Diseño</th>
-                            <th>Código</th>
-                            <th>Configuración</th>
+                            <th>Desarrollo</th>
+                            <th>Despliegue</th>
                             <th>Total</th>
                         </tr>
                     </thead>
@@ -241,6 +241,30 @@ $tmpl_vulnerabilidades = ApiBd::obtener_vulnerabilidades();
                     <?php endforeach; ?>
                 </div>
             </div>
+
+            <h3>Glosario</h3>
+            <dl>
+                <dt>Vulnerabilidad</dt>
+                <dd>...</dd>
+                <dt>Técnica de ataque</dt>
+                <dd>...</dd>
+                <dt>Metodología de pentesting</dt>
+                <dd>...</dd>
+                <dt>Herramienta de ataque</dt>
+                <dd>...</dd>
+                <dt>Herramienta de defensa</dt>
+                <dd>...</dd>
+                <dt>Riesgo</dt>
+                <dd>...</dd>
+                <dt>Amenaza</dt>
+                <dd>...</dd>
+                <dt>Caso de abuso</dt>
+                <dd>...</dd>
+                <dt>Principios</dt>
+                <dd>...</dd>
+                <dt>Controles de defensa</dt>
+                <dd>...</dd>
+            </dl>
         </main>
         <?php require_once 'footer.php' ?>
 

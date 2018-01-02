@@ -118,13 +118,12 @@ class ApiBd {
 
     public static function obtener_vulnerabilidad($id_vulnerabilidad) {
         self::iniciar();
-        $consulta = "SELECT id, nombre, cantidad FROM vulnerabilidades WHERE id={$id_vulnerabilidad}";
+        $consulta = "SELECT id, nombre FROM vulnerabilidades WHERE id={$id_vulnerabilidad}";
         $vulnerabilidad = self::$conexion->consultar_simple($consulta);
         if ($vulnerabilidad !== false && !empty($vulnerabilidad)) {
             $o_vulnerabilidad = array(
                 "nombre" => $vulnerabilidad[0]["nombre"],
-                "id" => $vulnerabilidad[0]["id"],
-                "cantidad" => $vulnerabilidad[0]["cantidad"]
+                "id" => $vulnerabilidad[0]["id"]
             );
         } else {
             throw new InvalidArgumentException("Página no encontrada");
