@@ -243,28 +243,60 @@ $tmpl_vulnerabilidades = ApiBd::obtener_vulnerabilidades();
             </div>
 
             <h3>Glosario</h3>
-            <dl>
+            <dl class="dl-horizontal">
                 <dt>Vulnerabilidad</dt>
-                <dd>...</dd>
+                <dd>Una vulnerabilidad es una debilidad de una aplicación, la cual, puede ser una falla de diseño, un error de desarrollo o una mala configuración en el despliegue que puede provocar o ayudar a provocar un daño a los interesados de la misma. Los interesados incluyen al propietario de la aplicación, usuarios de la aplicación y a otras entidades que confían en la aplicación.</dd>
+
                 <dt>Técnica de ataque</dt>
-                <dd>...</dd>
-                <dt>Metodología de pentesting</dt>
-                <dd>...</dd>
+                <dd>Es una abstracción que abarca uno o más pasos para encontrar o explotar una vulnerabilidad en una aplicación.</dd>
+
+                <dt>Vector de ataque</dt>
+                <dd>Es la implementación de una técnica de ataque teniendo en cuenta el contexto de la aplicación objetivo.</dd>
+
+                <dt>Pentesting</dt>
+                <dd>Son ataques simulados a una aplicación lo que permite evaluar la seguridad de la misma. Debe haber un acuerdo entre ambas partes (pentester y cliente) y se debe definir los lineamientos del pentesting. [LINK]</dd>
+
+                <dt>Metodología</dt>
+                <dd>Es un conjunto de procedimientos ordenados que permiten ejecutar un pentesting.</dd>
+
                 <dt>Herramienta de ataque</dt>
-                <dd>...</dd>
+                <dd>Permite automatizar parcial o totalmente la ejecución de una o más técnicas de ataque.</dd>
+
                 <dt>Herramienta de defensa</dt>
-                <dd>...</dd>
+                <dd>Permite defender una aplicación contra técnicas de ataque ya sea detectando, disminuyendo o evitando el impacto de la misma.</dd>
+
                 <dt>Riesgo</dt>
-                <dd>...</dd>
+                <dd>El riesgo es el producto del impacto y de la probabilidad para una determinada vulnerabilidad.</dd>
+
                 <dt>Amenaza</dt>
-                <dd>...</dd>
+                <dd>Es un posible riesgo que no se sabe si técnicamente se pudiera cumplir.</dd>
+
+                <dt>Agentes de amenaza</dt>
+                <dd>Es el interesado en atacar a la aplicación. La detección de este rol es crucial para determinar el nivel de defensa necesario.</dd>
+
                 <dt>Caso de abuso</dt>
-                <dd>...</dd>
+                <dd>Es un escenario no común de uno o más casos de uso que un usuario con conocimientos avanzados podría ejecutar.</dd>
+
                 <dt>Principios</dt>
                 <dd>...</dd>
-                <dt>Controles de defensa</dt>
+
+                <dt>Controles de seguridad</dt>
+                <dd>...</dd>
+
+                <dt>Impacto técnico</dt>
+                <dd>...</dd>
+
+                <dt>Impacto en el negocio</dt>
+                <dd>...</dd>
+
+                <dt>CVSS</dt>
                 <dd>...</dd>
             </dl>
+
+            <h3>Enlaces de interés</h3>
+            <ul>
+                <li><a href="https://www.owasp.org">OWASP: The Open Web Application Security Project</a></li>
+            </ul>
         </main>
         <?php require_once 'footer.php' ?>
 
