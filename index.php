@@ -135,6 +135,40 @@ $tmpl_vulnerabilidades = ApiBd::obtener_vulnerabilidades();
                 generarGraficoDeDimensiones(ctx1, dimensionesCantidades, dimensionesEtiquetas);
                 var ctx2 = $("#canvas2");
                 generarGraficoDeCategorias(ctx2, categoriasCantidades, categoriasEtiquetas);
+
+                // Botón para disminuir o aumentar en uno la cantidad.
+                function cambiarCantidadVulnerabilidad(idVulnerabilidad, etapa, cantidad) {
+                    $.ajax({
+                        url: "src/cambiar_cantidad_vulnerabilidad.php",
+                        type: "POST",
+                        data: {
+                            id_vulnerabilidad: idVulnerabilidad,
+                            etapa: etapa,
+                            cantidad: cantidad
+                        },
+                        success: function(r) {
+                            if (r === "Ok") {
+                                location.href = "";
+                            }
+                        },
+                        error: function(r) {
+                            if (r === "Ok") {
+                                location.href = "";
+                            }
+                        }
+                    });
+                }
+                $(".btn-disminuir").click(function() {
+                    var id = $(this).parents("tr").attr("id");
+                    var etapa = $(this).parent().data("etapa");
+                    cambiarCantidadVulnerabilidad(id, etapa, -1);
+                });
+
+                $(".btn-aumentar").click(function() {
+                    var id = $(this).parents("tr").attr("id");
+                    var etapa = $(this).parent().data("etapa");
+                    cambiarCantidadVulnerabilidad(id, etapa, 1);
+                });
             });
         </script>
     </head>
@@ -160,20 +194,26 @@ $tmpl_vulnerabilidades = ApiBd::obtener_vulnerabilidades();
                     </thead>
                     <tbody>
                         <?php foreach ($tmpl_vulnerabilidades as $tmpl_vulnerabilidad): ?>
-                            <tr>
+                            <tr id="<?php echo $tmpl_vulnerabilidad["id"] ?>">
                                 <td class="titulo-categoria">
                                     <a href="src/contenedor.php?id=<?php echo $tmpl_vulnerabilidad["id"] ?>&tipo=vulnerabilidad">
                                         <?php echo $tmpl_vulnerabilidad["nombre"] ?>
                                     </a>
                                 </td>
-                                <td class="cantidad-disenio">
+                                <td class="cantidad-disenio" data-etapa="disenio">
                                     <?php echo $tmpl_vulnerabilidad["disenio"] ?>
+                                    <input type="button" value="-" class="btn btn-primary btn-xs btn-disminuir" />
+                                    <input type="button" value="+" class="btn btn-primary btn-xs btn-aumentar" />
                                 </td>
-                                <td class="cantidad-codigo">
+                                <td class="cantidad-codigo" data-etapa="desarrollo">
                                     <?php echo $tmpl_vulnerabilidad["codigo"] ?>
+                                    <input type="button" value="-" class="btn btn-primary btn-xs btn-disminuir" />
+                                    <input type="button" value="+" class="btn btn-primary btn-xs btn-aumentar" />
                                 </td>
-                                <td class="cantidad-configuracion">
+                                <td class="cantidad-configuracion" data-etapa="despliegue">
                                     <?php echo $tmpl_vulnerabilidad["configuracion"] ?>
+                                    <input type="button" value="-" class="btn btn-primary btn-xs btn-disminuir" />
+                                    <input type="button" value="+" class="btn btn-primary btn-xs btn-aumentar" />
                                 </td>
                                 <td class="total-fila">
                                 </td>

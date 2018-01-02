@@ -216,6 +216,45 @@ SQL;
         }
         return false;
     }
+    
+    /**
+     * Cambia la cantidad de una vulnerabilidad, sumando uno o restando uno.
+     *
+     *
+     */
+    public static function cambiar_cantidad_vulnerabilidad($id_vulnerabilidad, $etapa, $cantidad) {
+        self::iniciar();
+        $id_vulnerabilidad = self::sanitizar($id_vulnerabilidad);
+        $etapa = self::sanitizar($etapa);
+        $cantidad = self::sanitizar($cantidad);
+        if ($etapa === "disenio") {
+            $actualizacion = <<<SQL
+            UPDATE vulnerabilidades AS v SET disenio=disenio+$cantidad
+            WHERE v.id=$id_vulnerabilidad
+SQL;
+        } else if ($etapa === "desarrollo"){
+            $actualizacion = <<<SQL
+            UPDATE vulnerabilidades AS v SET codigo=codigo+$cantidad
+            WHERE v.id=$id_vulnerabilidad
+SQL;
+        } else if ($etapa === "despliegue"){
+            $actualizacion = <<<SQL
+            UPDATE vulnerabilidades AS v SET configuracion=configuracion+$cantidad
+            WHERE v.id=$id_vulnerabilidad
+SQL;
+        } else {
+            self::cerrar();
+            return false;
+        }
+        if (self::$conexion->actualizar_simple($actualizacion)) {
+            self::cerrar();
+            return true;
+        } else {
+            self::cerrar();
+            return false;
+        }
+        return false;
+    }
 
     /**
      * Retorna un array con el historial de un artículo.
