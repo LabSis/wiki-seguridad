@@ -254,7 +254,7 @@ $tmpl_vulnerabilidades = ApiBd::obtener_vulnerabilidades();
                 <dd>Es la implementación de una técnica de ataque teniendo en cuenta el contexto de la aplicación objetivo.</dd>
 
                 <dt>Pentesting</dt>
-                <dd>Son ataques simulados a una aplicación lo que permite evaluar la seguridad de la misma. Debe haber un acuerdo entre ambas partes (pentester y cliente) y se debe definir los lineamientos del pentesting. [LINK]</dd>
+                <dd>Son ataques simulados a una aplicación lo que permite evaluar la seguridad de la misma. Debe haber un acuerdo entre ambas partes (pentester y cliente) y se debe definir los lineamientos del pentesting.</dd>
 
                 <dt>Metodología</dt>
                 <dd>Es un conjunto de procedimientos ordenados que permiten ejecutar un pentesting.</dd>
@@ -266,7 +266,10 @@ $tmpl_vulnerabilidades = ApiBd::obtener_vulnerabilidades();
                 <dd>Permite defender una aplicación contra técnicas de ataque ya sea detectando, disminuyendo o evitando el impacto de la misma.</dd>
 
                 <dt>Riesgo</dt>
-                <dd>El riesgo es el producto del impacto y de la probabilidad para una determinada vulnerabilidad.</dd>
+                <dd>El riesgo es el producto del impacto y de la probabilidad para una determinada vulnerabilidad. El impacto puede ser diferente desde el punto de vista técnico como al negocio, por eso, puede ser necesario diferenciar el impacto técnico del impacto al negocio.</dd>
+
+                <dt>Score de vulnerabilidad</dt>
+                <dd>Cada vulnerabilidad debe ser puntuada, de esa manera se puede establecer una lista de prioridades. Por ejemplo, un sistema de puntuación es el <a href="https://www.first.org/cvss/calculator/3.0">CVSS</a> (Common Vulnerability Scoring System).</dd>
 
                 <dt>Amenaza</dt>
                 <dd>Es un posible riesgo que no se sabe si técnicamente se pudiera cumplir.</dd>
@@ -276,26 +279,12 @@ $tmpl_vulnerabilidades = ApiBd::obtener_vulnerabilidades();
 
                 <dt>Caso de abuso</dt>
                 <dd>Es un escenario no común de uno o más casos de uso que un usuario con conocimientos avanzados podría ejecutar.</dd>
-
-                <dt>Principios</dt>
-                <dd>...</dd>
-
-                <dt>Controles de seguridad</dt>
-                <dd>...</dd>
-
-                <dt>Impacto técnico</dt>
-                <dd>...</dd>
-
-                <dt>Impacto en el negocio</dt>
-                <dd>...</dd>
-
-                <dt>CVSS</dt>
-                <dd>...</dd>
             </dl>
 
             <h3>Enlaces de interés</h3>
             <ul>
                 <li><a href="https://www.owasp.org">OWASP: The Open Web Application Security Project</a></li>
+                <li><a href="https://www.first.org/cvss/calculator/3.0">Calculadora CVSS v3.0</a></li>
             </ul>
         </main>
         <?php require_once 'footer.php' ?>
