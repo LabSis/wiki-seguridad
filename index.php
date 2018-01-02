@@ -49,8 +49,10 @@ $tmpl_vulnerabilidades = ApiBd::obtener_vulnerabilidades();
                 });
 
                 // Calcular la columna total de vulnerabilidades.
-                var filasCantidades = [];
-                var filasEtiquetas = [];
+                var dimensionesCantidades = [];
+                var dimensionesEtiquetas = [];
+                var categoriasCantidades = [];
+                var categoriasEtiquetas = [];
                 $(".total-fila").each(function() {
                     var $this = $(this);
                     var $tr = $this.parent("tr");
@@ -59,8 +61,12 @@ $tmpl_vulnerabilidades = ApiBd::obtener_vulnerabilidades();
                     var cantidadConfiguracion = parseInt($tr.find(".cantidad-configuracion").text());
                     var cantidadTotal = cantidadDisenio + cantidadCodigo + cantidadConfiguracion;
                     $this.text(cantidadTotal);
-                    filasCantidades.push(cantidadTotal);
-                    filasEtiquetas.push("ok");
+                    categoriasCantidades.push(cantidadTotal);
+
+                    // Pongo en un array las etiquetas.
+                    var etiqueta = $tr.find(".titulo-categoria").text().trim();
+                    etiqueta = etiqueta.substring(0, 12);
+                    categoriasEtiquetas.push(etiqueta);
                 });
                 $(".total-columna").each(function(){
                     var $this = $(this);
@@ -70,35 +76,65 @@ $tmpl_vulnerabilidades = ApiBd::obtener_vulnerabilidades();
                         cantidad += parseInt($(this).text());
                     });
                     $this.text(cantidad);
+
+                    // Pongo en un array las etiquetas.
+                    var $thead = $this.parents("table").find("thead");
+                    $thead.find("tr");
+                    var etiqueta = $thead.find("tr th:nth-child(" + ($this.index() + 1) + ")").text().trim();
+                    if (etiqueta !== "Total") {
+                        dimensionesEtiquetas.push(etiqueta);
+                        dimensionesCantidades.push(cantidad);
+                    }
                 });
                 
                 // Gráficos.
-                function generarGraficoDeDimensiones(ctx) {
-                    
+                function generarGraficoDeDimensiones(ctx, cantidades, etiquetas) {
                     var data = {
                         datasets: [{
-                            data: filasCantidades,
+                            data: cantidades,
                             backgroundColor: [
                                 '#E14828',
                                 '#2318A6',
                                 '#47760E'
                             ]
                         }],
-
-                        // These labels appear in the legend and in the tooltips when hovering different arcs
-                        labels: filasEtiquetas,
+                        labels: etiquetas
                     };
-                    
-                    var myPieChart = new Chart(ctx,{
+                    var torta = new Chart(ctx,{
                         type: 'pie',
                         data: data,
                         options: []
                     });
                 }
+                function generarGraficoDeCategorias(ctx, cantidades, etiquetas) {
+                    var data = {
+                        datasets: [{
+                            data: cantidades
+                        }],
+                        labels: etiquetas
+                    };
+                    var barra = new Chart(ctx,{
+                        type: 'bar',
+                        data: data,
+                        options: {
+                            legend: {
+                                display: false
+                            },
+                            scales: {
+                                yAxes: [{
+                                    display: true,
+                                    ticks: {
+                                        beginAtZero: true
+                                    }
+                                }]
+                            }
+                        }
+                    });
+                }
                 var ctx1 = $("#canvas1");
-                generarGraficoDeDimensiones(ctx1);
+                generarGraficoDeDimensiones(ctx1, dimensionesCantidades, dimensionesEtiquetas);
                 var ctx2 = $("#canvas2");
-                generarGraficoDeDimensiones(ctx2);
+                generarGraficoDeCategorias(ctx2, categoriasCantidades, categoriasEtiquetas);
             });
         </script>
     </head>
@@ -125,7 +161,7 @@ $tmpl_vulnerabilidades = ApiBd::obtener_vulnerabilidades();
                     <tbody>
                         <?php foreach ($tmpl_vulnerabilidades as $tmpl_vulnerabilidad): ?>
                             <tr>
-                                <td>
+                                <td class="titulo-categoria">
                                     <a href="src/contenedor.php?id=<?php echo $tmpl_vulnerabilidad["id"] ?>&tipo=vulnerabilidad">
                                         <?php echo $tmpl_vulnerabilidad["nombre"] ?>
                                     </a>
@@ -162,7 +198,7 @@ $tmpl_vulnerabilidades = ApiBd::obtener_vulnerabilidades();
                     </div>
                     <div class="row">
                         <div class="col-sm-12">
-                            <canvas id="canvas2" height="250" width="520"></canvas>
+                            <canvas id="canvas2" height="600" width="820"></canvas>
                         </div>
                     </div>
                 </div>
