@@ -19,6 +19,7 @@ $tmpl_vulnerabilidades = ApiBd::obtener_vulnerabilidades();
         <script src="js/jquery.js"></script>
         <script src="css/bootstrap/js/bootstrap.min.js"></script>
         <script src="js/chart.js"></script>
+        <script src="js/modulo_ventana.js"></script>
         <title>LabSis - Pentesting</title>
         <script type="text/javascript">
             $(document).ready(function(){
@@ -138,24 +139,34 @@ $tmpl_vulnerabilidades = ApiBd::obtener_vulnerabilidades();
 
                 // Botón para disminuir o aumentar en uno la cantidad.
                 function cambiarCantidadVulnerabilidad(idVulnerabilidad, etapa, cantidad) {
-                    $.ajax({
-                        url: "src/cambiar_cantidad_vulnerabilidad.php",
-                        type: "POST",
-                        data: {
-                            id_vulnerabilidad: idVulnerabilidad,
-                            etapa: etapa,
-                            cantidad: cantidad
+                    ModuloVentana.mostrar({
+                        titulo: "Atención",
+                        contenido: "¿Está seguro que desea cambiar la cantidad?",
+                        tipo: ModuloVentana.TIPO.SI_NO,
+                        callbacks: {
+                            si: function () {
+                                $.ajax({
+                                    url: "src/cambiar_cantidad_vulnerabilidad.php",
+                                    type: "POST",
+                                    data: {
+                                        id_vulnerabilidad: idVulnerabilidad,
+                                        etapa: etapa,
+                                        cantidad: cantidad
+                                    },
+                                    success: function(r) {
+                                        if (r === "Ok") {
+                                            location.href = "";
+                                        }
+                                    },
+                                    error: function(r) {
+                                        if (r === "Ok") {
+                                            location.href = "";
+                                        }
+                                    }
+                                });
+                            },
                         },
-                        success: function(r) {
-                            if (r === "Ok") {
-                                location.href = "";
-                            }
-                        },
-                        error: function(r) {
-                            if (r === "Ok") {
-                                location.href = "";
-                            }
-                        }
+                        cerrar: [ModuloVentana.CERRAR.BOTON_CIERRE, ModuloVentana.CERRAR.TECLA_ESCAPE, ModuloVentana.CERRAR.FUERA_MODAL, ModuloVentana.CERRAR.CADA_ACCION]
                     });
                 }
                 $(".btn-disminuir").click(function() {
