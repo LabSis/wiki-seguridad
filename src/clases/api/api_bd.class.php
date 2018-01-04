@@ -89,12 +89,17 @@ class ApiBd {
 
     public static function obtener_tecnica($id_tecnica) {
         self::iniciar();
-        $consulta = "SELECT id, nombre FROM tecnicas WHERE id={$id_tecnica}";
+        
+        $actualizacion = "UPDATE tecnicas SET visitas=visitas+1 WHERE id=$id_tecnica";
+        self::$conexion->actualizar_simple($actualizacion);
+        
+        $consulta = "SELECT id, nombre, visitas FROM tecnicas WHERE id={$id_tecnica}";
         $tecnica = self::$conexion->consultar_simple($consulta);
         if ($tecnica !== false && !empty($tecnica)) {
             $o_tecnica = array(
                 "nombre" => $tecnica[0]["nombre"],
-                "id" => $tecnica[0]["id"]
+                "id" => $tecnica[0]["id"],
+                "visitas" => $tecnica[0]["visitas"]
             );
         } else {
             throw new InvalidArgumentException("Página no encontrada");
@@ -111,6 +116,7 @@ class ApiBd {
             );
         }
         $o_tecnica["articulos"] = $o_articulos;
+        
         self::cerrar();
         $o_tecnica["cantidad_eliminados"] = self::obtener_cantidad_articulos_eliminados($id_tecnica);
         return $o_tecnica;
@@ -118,12 +124,17 @@ class ApiBd {
 
     public static function obtener_vulnerabilidad($id_vulnerabilidad) {
         self::iniciar();
-        $consulta = "SELECT id, nombre FROM vulnerabilidades WHERE id={$id_vulnerabilidad}";
+
+        $actualizacion = "UPDATE vulnerabilidades SET visitas=visitas+1 WHERE id=$id_vulnerabilidad";
+        self::$conexion->actualizar_simple($actualizacion);
+
+        $consulta = "SELECT id, nombre, visitas FROM vulnerabilidades WHERE id={$id_vulnerabilidad}";
         $vulnerabilidad = self::$conexion->consultar_simple($consulta);
         if ($vulnerabilidad !== false && !empty($vulnerabilidad)) {
             $o_vulnerabilidad = array(
                 "nombre" => $vulnerabilidad[0]["nombre"],
-                "id" => $vulnerabilidad[0]["id"]
+                "id" => $vulnerabilidad[0]["id"],
+                "visitas" => $vulnerabilidad[0]["visitas"]
             );
         } else {
             throw new InvalidArgumentException("Página no encontrada");
@@ -140,8 +151,8 @@ class ApiBd {
             );
         }
         $o_vulnerabilidad["articulos"] = $o_articulos;
+
         self::cerrar();
-        //$o_vulnerabilidad["cantidad_eliminados"] = self::obtener_cantidad_articulos_eliminados($id_tecnica);
         return $o_vulnerabilidad;
     }
 

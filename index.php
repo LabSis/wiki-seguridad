@@ -258,7 +258,7 @@ $tmpl_vulnerabilidades = ApiBd::obtener_vulnerabilidades();
                     </div>
                 </div>
             </div>
-            <h3>Técnicas de ataques<i class="add glyphicon glyphicon-plus" title="Agregar" ></i></h3>
+            <h3>Técnicas de ataques</h3>
             <div class="row">
                 <div class="col-sm-12">
                     <?php $i = 1 ?>
