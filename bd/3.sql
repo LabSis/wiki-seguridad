@@ -7,4 +7,4 @@ CREATE TABLE usuarios(
     PRIMARY KEY(id)
 )ENGINE MyISAM DEFAULT CHARACTER SET=utf8;
 
-INSERT INTO usuarios (nombre, clave) VALUES('admin', AES_ENCRYPT('admin', '__labsis__'));
+INSERT INTO usuarios (nombre, clave) VALUES('admin', SHA2('admin', 256));

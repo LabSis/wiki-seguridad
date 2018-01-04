@@ -1,3 +1,4 @@
+<script src="<?php echo $WEB_PATH ?>js/modulo_ventana.js"></script>
 <script>
     $(document).ready(function() {
         var webPath = $("#webPath").val();
@@ -15,6 +16,7 @@
                     if (r === "Ok") {
                         location.href = "";
                     } else {
+                        $("#modal-inicio-sesion").modal("hide");
                         ModuloVentana.mostrar({
                             titulo: "Error",
                             contenido: "Usuario incorrecto",

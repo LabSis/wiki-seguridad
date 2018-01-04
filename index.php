@@ -18,7 +18,6 @@ $tmpl_vulnerabilidades = ApiBd::obtener_vulnerabilidades();
         <script src="js/jquery.js"></script>
         <script src="css/bootstrap/js/bootstrap.min.js"></script>
         <script src="js/chart.js"></script>
-        <script src="js/modulo_ventana.js"></script>
         <title>LabSis - Pentesting</title>
         <script type="text/javascript">
             $(document).ready(function(){

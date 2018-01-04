@@ -543,7 +543,7 @@ SQL;
         self::iniciar();
         $usuario = self::sanitizar($usuario);
         $clave = self::sanitizar($clave);
-        $consulta = "SELECT COUNT(*) AS cantidad FROM usuarios WHERE nombre='$usuario' AND clave=AES_ENCRYPT('$clave', '__labsis__')";
+        $consulta = "SELECT COUNT(*) AS cantidad FROM usuarios WHERE nombre='$usuario' AND clave=SHA2('$clave', 256)";
         $resultado = self::$conexion->consultar_simple($consulta);
         if (!empty($resultado)) {
             if ($resultado[0]["cantidad"] === "1") {
