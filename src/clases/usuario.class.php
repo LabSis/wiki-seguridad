@@ -2,19 +2,20 @@
 
 class Usuario extends SessionUser {
 
-    private $id = 1;
-    private $name = "";
+    public function __construct($id, $name) {
+        $this->_id = $id;
+        $this->_name = $name;
+    }
 
     public function get_id() {
-        return $this->id;
+        return $this->_id;
     }
 
     public function get_name() {
-        return $this->name;
+        return $this->_name;
     }
 
     public function update_user() {
-        $this->name = "T";
         return $this;
     }
 

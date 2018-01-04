@@ -27,6 +27,21 @@
                 }
             });
         });
+        
+        $("#btn-cerrar-sesion").click(function() {
+            $.ajax({
+                url: "src/cerrar_sesion.php",
+                type: "POST",
+                success: function(r) {
+                    if (r === "Ok") {
+                        location.href = "";
+                    }
+                },
+                error: function(r) {
+                    console.log(r);
+                }
+            });
+        });
     });
 </script>
 
@@ -41,9 +56,9 @@
                 $sesion = Session::get_instance();
 
                 ?><?php if (!$sesion->is_active()): ?>
-                    <a class="nav navbar-nav navbar-right" data-toggle="modal" data-target="#modal-inicio-sesion" style="cursor: pointer">Iniciar</a>
+                    <a class="nav navbar-nav navbar-right" data-toggle="modal" data-target="#modal-inicio-sesion" style="cursor: pointer">Iniciar sesión</a>
                 <?php else: ?>
-                    <a class="nav navbar-nav navbar-right" data-toggle="modal" data-target="#modal-inicio-sesion" style="cursor: pointer">Cerrar</a>
+                    <a class="nav navbar-nav navbar-right" style="cursor: pointer" id="btn-cerrar-sesion">Cerrar sesión</a>
                 <?php endif; ?>
                 </li>
             </ul>

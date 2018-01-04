@@ -529,20 +529,16 @@ SQL;
     }
     
     public static function iniciar_sesion($usuario, $clave) {
-        return true;
-        /*self::iniciar();
-        $consulta = "SELECT id, nombre, disenio, codigo, configuracion FROM vulnerabilidades";
-        $vulnerabilidades = self::$conexion->consultar_simple($consulta);
-        $o_vulnerabilidades = array();
-        foreach ($vulnerabilidades as $vulnerabilidad) {
-            $o_vulnerabilidades[] = array(
-                "nombre" => $vulnerabilidad["nombre"],
-                "id" => $vulnerabilidad["id"],
-                "disenio" => $vulnerabilidad["disenio"],
-                "codigo" => $vulnerabilidad["codigo"],
-                "configuracion" => $vulnerabilidad["configuracion"]
-            );
+        self::iniciar();
+        $usuario = self::sanitizar($usuario);
+        $clave = self::sanitizar($clave);
+        $consulta = "SELECT COUNT(*) AS cantidad FROM usuarios WHERE nombre='$usuario' AND clave=AES_ENCRYPT('$clave', '__labsis__')";
+        $resultado = self::$conexion->consultar_simple($consulta);
+        if (!empty($resultado)) {
+            if ($resultado[0]["cantidad"] === "1") {
+                return true;
+            }
         }
-        self::cerrar();*/
+        return false;
     }
 }
