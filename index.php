@@ -145,7 +145,7 @@ $tmpl_vulnerabilidades = ApiBd::obtener_vulnerabilidades();
                         callbacks: {
                             si: function () {
                                 $.ajax({
-                                    url: "src/cambiar_cantidad_vulnerabilidad.php",
+                                    url: "src/ajax/cambiar_cantidad_vulnerabilidad.php",
                                     type: "POST",
                                     data: {
                                         id_vulnerabilidad: idVulnerabilidad,

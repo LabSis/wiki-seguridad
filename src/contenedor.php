@@ -195,7 +195,7 @@ try{
                     </div>
                 </div>
             </div>
-            <?php if (isset($tmpl_contenedor) && isset($tmpl_contenedor["cantidad_eliminados"]) && $tmpl_contenedor["cantidad_eliminados"] > 0): ?>
+            <?php if (isset($tmpl_contenedor) && isset($tmpl_contenedor["cantidad_eliminados"]) && $tmpl_contenedor["cantidad_eliminados"] > 0 && $sesion->is_active()): ?>
                 <div class="row deactivate-article">
                     <div class="col-sm-12">
                         <input type="checkbox" id="chkMostrarArticulosDesactivados" />

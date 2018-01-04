@@ -37,9 +37,9 @@ try {
         }
     }
     if ($tipo === "tecnica") {
-        header("Location: contenedor.php?id=$id_contenedor&tipo=tecnica");
+        $sesion->redirect("contenedor.php?id=$id_contenedor&tipo=tecnica");
     } else if ($tipo === "vulnerabilidad") {
-        header("Location: contenedor.php?id=$id_contenedor&tipo=vulnerabilidad");
+        $sesion->redirect("contenedor.php?id=$id_contenedor&tipo=vulnerabilidad");
     } else {
         echo "Error.";
     }

@@ -24,9 +24,9 @@ if (strcasecmp($metodo, "POST") === 0) {
         $sesion->add_error_message("Error al borrar el artículo");
     }
     if ($tipo === "tecnica") {
-        header("Location: contenedor.php?id=$id_contenedor&tipo=tecnica");
+        $sesion->redirect("contenedor.php?id=$id_contenedor&tipo=tecnica");
     } else if ($tipo === "vulnerabilidad") {
-        header("Location: contenedor.php?id=$id_contenedor&tipo=vulnerabilidad");
+        $sesion->redirect("contenedor.php?id=$id_contenedor&tipo=vulnerabilidad");
     } else {
         echo "Error.";
     }
