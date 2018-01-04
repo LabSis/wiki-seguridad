@@ -40,8 +40,14 @@ try{
         <script type="text/javascript" src="<?php echo $WEB_PATH ?>css/bootstrap/js/bootstrap.min.js"></script>
         <script type="text/javascript">
             $(document).ready(function(){
-                CKEDITOR.replace("txtContenido");
-                CKEDITOR.replace("txtContenidoModalEditar");
+                var txtContenido = document.getElementById("txtContenido");
+                if (txtContenido !== null) {
+                    CKEDITOR.replace("txtContenido");
+                }
+                var txtContenidoModalEditar = document.getElementById("txtContenidoModalEditar");
+                if (txtContenidoModalEditar !== null) {
+                    CKEDITOR.replace("txtContenidoModalEditar");
+                }
 
                 // Borrado de artículo
                 var articuloABorrarJQuery = null;
@@ -176,8 +182,10 @@ try{
                                     </h3>
                                     <div class="contenido">
                                         <?php echo $articulo["contenido"] ?>
-                                        <i class="borrar glyphicon glyphicon-trash" title="Borrar"></i>
-                                        <i class="editar glyphicon glyphicon-edit" title="Editar"></i>
+                                        <?php if($sesion->is_active()): ?>
+                                            <i class="borrar glyphicon glyphicon-trash" title="Borrar"></i>
+                                            <i class="editar glyphicon glyphicon-edit" title="Editar"></i>
+                                        <?php endif; ?>
                                     </div>
                                 </section>
                             <?php endforeach; ?>
@@ -195,7 +203,7 @@ try{
                     </div>
                 </div>
             <?php endif; ?>
-            <?php if (isset($tmpl_contenedor)): ?>
+            <?php if (isset($tmpl_contenedor) && $sesion->is_active()): ?>
             <div class="row create-article">
                 <form role="form" action="guardar_articulo.php?id_contenedor=<?php echo $id_contenedor ?>" method="post">
                     <input type="hidden" name="tipo" value="<?php echo $tipo_contenedor ?>" />

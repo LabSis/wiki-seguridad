@@ -7,20 +7,24 @@ try {
     $id_contenedor = filter_input(INPUT_GET, "id_contenedor");
     $metodo = filter_input(INPUT_SERVER, "REQUEST_METHOD");
     if (strcasecmp($metodo, "POST") === 0) {
-        $hubo_error = false;
-        // Guardar sección o artículo...
-        $tipo = filter_input(INPUT_POST, "tipo");
-        $titulo = filter_input(INPUT_POST, "txtTitulo", FILTER_SANITIZE_STRING);
-        $titulo = trim($titulo);
-        if (strlen($titulo) === 0) {
-            $sesion->add_error_message("El título no puede ser vacío");
-            $hubo_error = true;
-        }
+        if ($sesion->is_active()) {
+            $hubo_error = false;
+            // Guardar sección o artículo...
+            $tipo = filter_input(INPUT_POST, "tipo");
+            $titulo = filter_input(INPUT_POST, "txtTitulo", FILTER_SANITIZE_STRING);
+            $titulo = trim($titulo);
+            if (strlen($titulo) === 0) {
+                $sesion->add_error_message("El título no puede ser vacío");
+                $hubo_error = true;
+            }
 
-        $contenido = filter_input(INPUT_POST, "txtContenido");
-        $contenido = trim($contenido);
-        if (strlen($contenido) === 0) {
-            $sesion->add_error_message("El contenido no puede ser vacío");
+            $contenido = filter_input(INPUT_POST, "txtContenido");
+            $contenido = trim($contenido);
+            if (strlen($contenido) === 0) {
+                $sesion->add_error_message("El contenido no puede ser vacío");
+                $hubo_error = true;
+            }
+        } else {
             $hubo_error = true;
         }
         if (!$hubo_error) {

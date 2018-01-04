@@ -120,7 +120,9 @@ if (strcasecmp($metodo, "POST") === 0) {
                     <div class="form-group">
                         <textarea class="form-control" rows="20" id="txtEdicion" name="txtContenidoModalEditar" ><?php echo $version_actual ?></textarea>
                     </div>
-                    <button type="submit" class="btn btn-primary pull-right">Guardar nueva versión</button>
+                    <?php if ($sesion->is_active()): ?>
+                        <button type="submit" class="btn btn-primary pull-right">Guardar nueva versión</button>
+                    <?php endif; ?>
                 </form>
             </div>
         </main>

@@ -183,7 +183,6 @@ $tmpl_vulnerabilidades = ApiBd::obtener_vulnerabilidades();
         </script>
     </head>
     <body>
-        <input type="hidden" value="<?php echo $WEB_PATH ?>" name="webPath" id="webPath" />
         <?php require_once('header.php') ?>
         <main class="container">
             <h3>Vulnerabilidades</h3>
@@ -212,18 +211,24 @@ $tmpl_vulnerabilidades = ApiBd::obtener_vulnerabilidades();
                                 </td>
                                 <td class="cantidad-disenio" data-etapa="disenio">
                                     <?php echo $tmpl_vulnerabilidad["disenio"] ?>
-                                    <input type="button" value="-" class="btn btn-primary btn-xs btn-disminuir" />
-                                    <input type="button" value="+" class="btn btn-primary btn-xs btn-aumentar" />
+                                    <?php if($sesion->is_active()): ?>
+                                        <input type="button" value="-" class="btn btn-primary btn-xs btn-disminuir" />
+                                        <input type="button" value="+" class="btn btn-primary btn-xs btn-aumentar" />
+                                    <?php endif; ?>
                                 </td>
                                 <td class="cantidad-codigo" data-etapa="desarrollo">
                                     <?php echo $tmpl_vulnerabilidad["codigo"] ?>
-                                    <input type="button" value="-" class="btn btn-primary btn-xs btn-disminuir" />
-                                    <input type="button" value="+" class="btn btn-primary btn-xs btn-aumentar" />
+                                    <?php if($sesion->is_active()): ?>
+                                        <input type="button" value="-" class="btn btn-primary btn-xs btn-disminuir" />
+                                        <input type="button" value="+" class="btn btn-primary btn-xs btn-aumentar" />
+                                    <?php endif; ?>
                                 </td>
                                 <td class="cantidad-configuracion" data-etapa="despliegue">
                                     <?php echo $tmpl_vulnerabilidad["configuracion"] ?>
-                                    <input type="button" value="-" class="btn btn-primary btn-xs btn-disminuir" />
-                                    <input type="button" value="+" class="btn btn-primary btn-xs btn-aumentar" />
+                                    <?php if($sesion->is_active()): ?>
+                                        <input type="button" value="-" class="btn btn-primary btn-xs btn-disminuir" />
+                                        <input type="button" value="+" class="btn btn-primary btn-xs btn-aumentar" />
+                                    <?php endif; ?>
                                 </td>
                                 <td class="total-fila">
                                 </td>
@@ -266,8 +271,10 @@ $tmpl_vulnerabilidades = ApiBd::obtener_vulnerabilidades();
                                 <div class="panel-heading">
                                     <h3 class="panel-title">
                                         <?php echo $tmpl_tecnica["nombre"]; ?>
-                                        <i class="add glyphicon glyphicon-plus" title="Agregar" data-technique-id="<?php echo $tmpl_tecnica["id"] ?>"></i>
-                                        <i class="edit glyphicon glyphicon-edit" title="Editar" data-technique-id="<?php echo $tmpl_tecnica["id"] ?>" data-technique-name="<?php echo $tmpl_tecnica["nombre"] ?>"></i>
+                                        <?php if ($sesion->is_active()): ?>
+                                            <i class="add glyphicon glyphicon-plus" title="Agregar" data-technique-id="<?php echo $tmpl_tecnica["id"] ?>"></i>
+                                            <i class="edit glyphicon glyphicon-edit" title="Editar" data-technique-id="<?php echo $tmpl_tecnica["id"] ?>" data-technique-name="<?php echo $tmpl_tecnica["nombre"] ?>"></i>
+                                        <?php endif; ?>
                                     </h3>
                                 </div>
                                 <div class="panel-body">
@@ -277,7 +284,9 @@ $tmpl_vulnerabilidades = ApiBd::obtener_vulnerabilidades();
                                                 <a href="src/contenedor.php?id=<?php echo $link["href"]; ?>&tipo=tecnica">
                                                     <?php echo $link["nombre"]; ?>
                                                 </a>
-                                                <i class="edit glyphicon glyphicon-edit" title="Editar" data-technique-id="<?php echo $link["href"] ?>" data-technique-name="<?php echo $link["nombre"] ?>"></i>
+                                                <?php if ($sesion->is_active()): ?>
+                                                    <i class="edit glyphicon glyphicon-edit" title="Editar" data-technique-id="<?php echo $link["href"] ?>" data-technique-name="<?php echo $link["nombre"] ?>"></i>
+                                                <?php endif; ?>
                                             </li>
                                         <?php endforeach; ?>
                                     </ul>

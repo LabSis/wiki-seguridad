@@ -1,10 +1,11 @@
 <script>
     $(document).ready(function() {
-        $("#btn-iniciar-sesion").click(function() {
+        var webPath = $("#webPath").val();
+        function iniciarSesion() {
             var usuario = $("#usuario").val();
             var clave = $("#clave").val();
             $.ajax({
-                url: "src/iniciar_sesion.php",
+                url: webPath + "src/iniciar_sesion.php",
                 type: "POST",
                 data: {
                     usuario: usuario,
@@ -26,11 +27,19 @@
                     console.log(r);
                 }
             });
+        }
+        $("#btn-iniciar-sesion").click(function() {
+            iniciarSesion();
+        });
+        $("#clave").keypress(function(e) {
+            if (e.which === 13) {
+                iniciarSesion();
+            }
         });
         
         $("#btn-cerrar-sesion").click(function() {
             $.ajax({
-                url: "src/cerrar_sesion.php",
+                url: webPath + "src/cerrar_sesion.php",
                 type: "POST",
                 success: function(r) {
                     if (r === "Ok") {
@@ -44,6 +53,8 @@
         });
     });
 </script>
+
+<input type="hidden" value="<?php echo $WEB_PATH ?>" name="webPath" id="webPath" />
 
 <nav class="navbar navbar-toggleable-md navbar-inverse bg-inverse fixed-top">
     <div class="container-fluid">
