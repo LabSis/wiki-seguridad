@@ -10,8 +10,10 @@ if (strcasecmp($metodo, "POST") === 0) {
     $ok = true;
     if (isset($usuario) && isset($clave)) {
         $ok = ApiBd::iniciar_sesion($usuario, $clave);
-        $usuario = new Usuario(1, $usuario);
-        $sesion->log_in($usuario);
+        if ($ok) {
+            $usuario = new Usuario(1, $usuario);
+            $sesion->log_in($usuario);
+        }
     } else {
         $ok = false;
     }
