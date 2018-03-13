@@ -34,22 +34,24 @@ class ApiBd {
         $consulta = "SELECT id, nombre, id_padre FROM tecnicas WHERE id_padre IS NULL";
         $tecnicas = self::$conexion->consultar_simple($consulta);
         $o_tecnicas = array();
-        foreach ($tecnicas as $tecnica) {
-            $consulta = "SELECT id, nombre, id_padre FROM tecnicas WHERE id_padre = {$tecnica["id"]}";
-            $subtecnicas = self::$conexion->consultar_simple($consulta);
-            $o_tecnica = array(
-                "nombre" => $tecnica["nombre"],
-                "id" => $tecnica["id"]
-            );
-            $links = array();
-            foreach ($subtecnicas as $subtecnica) {
-                $links[] = array(
-                    "href" => $subtecnica["id"],
-                    "nombre" => $subtecnica["nombre"]
+        if ($tecnicas !== false && isset($tecnicas)) {
+            foreach ($tecnicas as $tecnica) {
+                $consulta = "SELECT id, nombre, id_padre FROM tecnicas WHERE id_padre = {$tecnica["id"]}";
+                $subtecnicas = self::$conexion->consultar_simple($consulta);
+                $o_tecnica = array(
+                    "nombre" => $tecnica["nombre"],
+                    "id" => $tecnica["id"]
                 );
+                $links = array();
+                foreach ($subtecnicas as $subtecnica) {
+                    $links[] = array(
+                        "href" => $subtecnica["id"],
+                        "nombre" => $subtecnica["nombre"]
+                    );
+                }
+                $o_tecnica["links"] = $links;
+                $o_tecnicas[] = $o_tecnica;
             }
-            $o_tecnica["links"] = $links;
-            $o_tecnicas[] = $o_tecnica;
         }
         self::cerrar();
         return $o_tecnicas;
@@ -60,14 +62,16 @@ class ApiBd {
         $consulta = "SELECT id, nombre, disenio, codigo, configuracion FROM vulnerabilidades";
         $vulnerabilidades = self::$conexion->consultar_simple($consulta);
         $o_vulnerabilidades = array();
-        foreach ($vulnerabilidades as $vulnerabilidad) {
-            $o_vulnerabilidades[] = array(
-                "nombre" => $vulnerabilidad["nombre"],
-                "id" => $vulnerabilidad["id"],
-                "disenio" => $vulnerabilidad["disenio"],
-                "codigo" => $vulnerabilidad["codigo"],
-                "configuracion" => $vulnerabilidad["configuracion"]
-            );
+        if ($vulnerabilidades !== false && isset($vulnerabilidades)) {
+            foreach ($vulnerabilidades as $vulnerabilidad) {
+                $o_vulnerabilidades[] = array(
+                    "nombre" => $vulnerabilidad["nombre"],
+                    "id" => $vulnerabilidad["id"],
+                    "disenio" => $vulnerabilidad["disenio"],
+                    "codigo" => $vulnerabilidad["codigo"],
+                    "configuracion" => $vulnerabilidad["configuracion"]
+                );
+            }
         }
         self::cerrar();
         return $o_vulnerabilidades;
