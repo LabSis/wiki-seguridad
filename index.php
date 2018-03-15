@@ -108,7 +108,17 @@ $tmpl_vulnerabilidades = ApiBd::obtener_vulnerabilidades();
                 function generarGraficoDeCategorias(ctx, cantidades, etiquetas) {
                     var data = {
                         datasets: [{
-                            data: cantidades
+                            data: cantidades,
+                            backgroundColor: [
+                                '#FF7F50',
+                                '#FF7F50',
+                                '#FF7F50',
+                                '#FF7F50',
+                                '#FF7F50',
+                                '#FF7F50',
+                                '#FF7F50',
+                                '#FF7F50'
+                            ]
                         }],
                         labels: etiquetas
                     };
@@ -118,6 +128,13 @@ $tmpl_vulnerabilidades = ApiBd::obtener_vulnerabilidades();
                         options: {
                             legend: {
                                 display: false
+                            },
+                            tooltips: {
+                                callbacks: {
+                                    label: function (args) {
+                                        return "Cantidad: " + args.yLabel;
+                                    }
+                                }
                             },
                             scales: {
                                 yAxes: [{
