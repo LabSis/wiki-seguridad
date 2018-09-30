@@ -28,7 +28,7 @@ $tmpl_vulnerabilidades = ApiBd::obtener_vulnerabilidades();
                     $("#modalTitle").text("Agregar técnica");
                     $("#hidTechniqueParentId").val(techniqueId);
                     $("#txtTechniqueName").val("");
-                    $("#modalTechnique").find("form").attr("action", webPath + "src/add_technique.php");
+                    $("#modalTechnique").find("form").attr("action", webPath + "src/agregar_tecnica.php");
                     $("#modalTechnique").find("#submit").text("Crear");
 
                     $("#modalTechnique").modal("show");

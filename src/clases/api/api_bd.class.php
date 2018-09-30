@@ -184,6 +184,19 @@ class ApiBd {
         }
         return true;
     }
+    
+    public static function crear_tecnica($nombre_tecnica, $id_padre) {
+        self::iniciar();
+        $nombre_tecnica = self::sanitizar($nombre_tecnica);
+        $id_padre = self::sanitizar($id_padre);
+        $insercion = "INSERT INTO tecnicas (nombre, id_padre) VALUES ('{$nombre_tecnica}',{$id_padre})";
+        if (self::$conexion->insertar_simple($insercion)) {
+            self::cerrar();
+            return true;
+        }
+        self::cerrar();
+        return false;
+    }
 
     public static function crear_articulo($titulo, $id_tecnica, $contenido, $tipo) {
         if (self::existe_tecnica($id_tecnica)) {
