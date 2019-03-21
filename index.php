@@ -347,13 +347,13 @@ $tmpl_vulnerabilidades = ApiBd::obtener_vulnerabilidades();
                 <dd>Cada vulnerabilidad debe ser puntuada, de esa manera se puede establecer una lista de prioridades. Por ejemplo, un sistema de puntuación es el <a href="https://www.first.org/cvss/calculator/3.0">CVSS</a> (Common Vulnerability Scoring System).</dd>
 
                 <dt>Amenaza</dt>
-                <dd>Es un posible riesgo que no se sabe si técnicamente se pudiera cumplir.</dd>
+                <dd>Es una posible interacción entre el software y uno o más actores donde los resultados de la ejecución es dañina para el sistema, para uno o varios de los actores o para los stakeholders pero sin saber exactamente cómo podría suceder dicha interacción.</dd>
 
                 <dt>Agentes de amenaza</dt>
                 <dd>Es el interesado en atacar a la aplicación. La detección de este rol es crucial para determinar el nivel de defensa necesario.</dd>
 
                 <dt>Caso de abuso</dt>
-                <dd>Es un escenario no común de uno o más casos de uso que un usuario con conocimientos avanzados podría ejecutar.</dd>
+                <dd>Es una especificación de la interacción entre el sistema y uno o más actores donde los resultados de la ejecución es dañina para el sistema, para uno o varios de los actores o para los stakeholders.</dd>
             </dl>
 
             <h3>Enlaces de interés</h3>
