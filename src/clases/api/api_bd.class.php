@@ -569,4 +569,15 @@ SQL;
         }
         return false;
     }
+
+   public static function crear_usuario($usuario, $clave) {
+       self::iniciar();
+       $usuario = self::sanitizar($usuario);
+       $clave = self::sanitizar($clave);
+       $insert = <<<SQL
+       INSERT INTO usuarios (nombre, clave) VALUES ('$usuario', SHA2('$clave', 256))
+SQL;
+       $ok = self::$conexion->insertar_simple($insert);
+       return $ok;
+   }
 }
