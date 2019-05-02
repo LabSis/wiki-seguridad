@@ -188,8 +188,12 @@ class ApiBd {
     public static function crear_tecnica($nombre_tecnica, $id_padre) {
         self::iniciar();
         $nombre_tecnica = self::sanitizar($nombre_tecnica);
-        $id_padre = self::sanitizar($id_padre);
-        $insercion = "INSERT INTO tecnicas (nombre, id_padre) VALUES ('{$nombre_tecnica}',{$id_padre})";
+        if (isset($id_padre)) {
+            $id_padre = self::sanitizar($id_padre);
+            $insercion = "INSERT INTO tecnicas (nombre, id_padre) VALUES ('{$nombre_tecnica}',{$id_padre})";
+        } else {
+            $insercion = "INSERT INTO tecnicas (nombre) VALUES ('{$nombre_tecnica}')";
+        }
         if (self::$conexion->insertar_simple($insercion)) {
             self::cerrar();
             return true;
