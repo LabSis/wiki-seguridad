@@ -67,7 +67,7 @@ $tmpl_vulnerabilidades = ApiBd::obtener_vulnerabilidades();
                     $("#modalTitle").text("Editar técnica");
                     $("#hidTechniqueId").val(techniqueId);
                     $("#txtTechniqueName").val(techniqueName);
-                    $("#modalTechnique").find("form").attr("action", webPath + "src/edit_technique.php?tipo=tecnica");
+                    $("#modalTechnique").find("form").attr("action", webPath + "src/editar_tecnica.php?tipo=tecnica");
                     $("#modalTechnique").find("#submit").text("Editar");
                     
                     $("#modalTechnique").modal("show");
@@ -83,6 +83,21 @@ $tmpl_vulnerabilidades = ApiBd::obtener_vulnerabilidades();
                     $("#modalTechnique").find("form").attr("action", webPath + "src/agregar_tecnica.php?tipo=algoritmo");
                     $("#modalTechnique").find("#submit").text("Crear");
 
+                    $("#modalTechnique").modal("show");
+                });
+                
+                $(".editar-sub-algoritmo").click(function(){
+                    var techniqueId = $(this).data("algorithmId");
+                    console.log(techniqueId);
+                    var techniqueName = $(this).data("algorithmName");
+                    var webPath = $("#webPath").val();
+
+                    $("#modalTitle").text("Editar algoritmo, mecanismo o programa");
+                    $("#hidTechniqueId").val(techniqueId);
+                    $("#txtTechniqueName").val(techniqueName);
+                    $("#modalTechnique").find("form").attr("action", webPath + "src/editar_tecnica.php?tipo=algoritmo");
+                    $("#modalTechnique").find("#submit").text("Editar");
+                    
                     $("#modalTechnique").modal("show");
                 });
 

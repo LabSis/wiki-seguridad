@@ -605,6 +605,29 @@ SQL;
         return $ok;
     }
     
+    /**
+     * Editar una técnica.
+     *
+     * Edita el nombre de una técnica.
+     *
+     */
+    public static function edit_algorithm($algorithm_name, $algorithm_id){
+        self::iniciar();
+        $algorithm_name = self::sanitizar($algorithm_name);
+        $algorithm_id = self::sanitizar($algorithm_id);
+        $ok = true;
+        $actualizacion = <<<SQL
+            UPDATE algoritmos SET nombre='$algorithm_name'
+            WHERE id='$algorithm_id'
+SQL;
+        $respuesta = self::$conexion->actualizar_simple($actualizacion);
+        if(!$respuesta){
+            $ok = false;
+        }
+        self::cerrar();
+        return $ok;
+    }
+    
     public static function iniciar_sesion($usuario, $clave) {
         self::iniciar();
         $usuario = self::sanitizar($usuario);
