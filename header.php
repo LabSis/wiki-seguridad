@@ -61,7 +61,7 @@
 <nav class="navbar navbar-toggleable-md navbar-inverse bg-inverse fixed-top">
     <div class="container-fluid">
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <a class="navbar-brand" href="<?php echo $WEB_PATH ?>">LabSis - Pentesting</a>
+            <a class="navbar-brand" href="<?php echo $WEB_PATH ?>">LabSis - Wiki de seguridad</a>
             <ul class="nav navbar-nav navbar-right">
                 <li>
                 <?php 

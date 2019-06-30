@@ -18,7 +18,7 @@ $tmpl_vulnerabilidades = ApiBd::obtener_vulnerabilidades();
         <script src="js/jquery.js"></script>
         <script src="css/bootstrap/js/bootstrap.min.js"></script>
         <script src="js/chart.js"></script>
-        <title>LabSis - Pentesting</title>
+        <title>LabSis - Wiki de seguridad</title>
         <script type="text/javascript">
             $(document).ready(function(){
                 $(".add").click(function(){
@@ -201,6 +201,51 @@ $tmpl_vulnerabilidades = ApiBd::obtener_vulnerabilidades();
     <body>
         <?php require_once('header.php') ?>
         <main class="container">
+            <h3>Técnicas de ataques</h3>
+            <div class="row">
+                <div class="col-sm-12">
+                    <?php $i = 1 ?>
+                    <?php foreach ($tmpl_tecnicas as $tmpl_tecnica): ?>
+                        <?php if ($i % 4 == 1): ?>
+                            <div class="row">
+                        <?php endif; ?>
+                        <div class="col-sm-3">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">
+                                        <?php echo $tmpl_tecnica["nombre"]; ?>
+                                        <?php if ($sesion->is_active()): ?>
+                                            <i class="add glyphicon glyphicon-plus" title="Agregar" data-technique-id="<?php echo $tmpl_tecnica["id"] ?>"></i>
+                                            <i class="edit glyphicon glyphicon-edit" title="Editar" data-technique-id="<?php echo $tmpl_tecnica["id"] ?>" data-technique-name="<?php echo $tmpl_tecnica["nombre"] ?>"></i>
+                                        <?php endif; ?>
+                                    </h3>
+                                </div>
+                                <div class="panel-body">
+                                    <ul>
+                                        <?php foreach ($tmpl_tecnica["links"] as $link): ?>
+                                            <li>
+                                                <a href="src/contenedor.php?id=<?php echo $link["href"]; ?>&tipo=tecnica">
+                                                    <?php echo $link["nombre"]; ?>
+                                                </a>
+                                                <?php if ($sesion->is_active()): ?>
+                                                    <i class="edit glyphicon glyphicon-edit" title="Editar" data-technique-id="<?php echo $link["href"] ?>" data-technique-name="<?php echo $link["nombre"] ?>"></i>
+                                                <?php endif; ?>
+                                            </li>
+                                        <?php endforeach; ?>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <?php if ($i % 4 == 0): ?>
+                            </div>
+                        <?php endif; ?>
+                        <?php $i++ ?>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+        
+            <h3>Algoritmos, mecanismos y programas</h3>
+        
             <h3>Vulnerabilidades</h3>
             <p>
                 La siguiente tabla muestra una clasificación de vulnerabildades de acuerdo a una categorización basada en el top 10 de OWASP (<a href='https://www.owasp.org/index.php/Top_10_2013-Top_10'>2013</a> y <a href='https://www.owasp.org/images/7/72/OWASP_Top_10-2017_%28en%29.pdf.pdf'>2017</a>) y a la etapa en la cual esa vulnerabilidad fue generada.
@@ -274,49 +319,7 @@ $tmpl_vulnerabilidades = ApiBd::obtener_vulnerabilidades();
                     </div>
                 </div>
             </div>
-            <h3>Técnicas de ataques</h3>
-            <div class="row">
-                <div class="col-sm-12">
-                    <?php $i = 1 ?>
-                    <?php foreach ($tmpl_tecnicas as $tmpl_tecnica): ?>
-                        <?php if ($i % 4 == 1): ?>
-                            <div class="row">
-                        <?php endif; ?>
-                        <div class="col-sm-3">
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <h3 class="panel-title">
-                                        <?php echo $tmpl_tecnica["nombre"]; ?>
-                                        <?php if ($sesion->is_active()): ?>
-                                            <i class="add glyphicon glyphicon-plus" title="Agregar" data-technique-id="<?php echo $tmpl_tecnica["id"] ?>"></i>
-                                            <i class="edit glyphicon glyphicon-edit" title="Editar" data-technique-id="<?php echo $tmpl_tecnica["id"] ?>" data-technique-name="<?php echo $tmpl_tecnica["nombre"] ?>"></i>
-                                        <?php endif; ?>
-                                    </h3>
-                                </div>
-                                <div class="panel-body">
-                                    <ul>
-                                        <?php foreach ($tmpl_tecnica["links"] as $link): ?>
-                                            <li>
-                                                <a href="src/contenedor.php?id=<?php echo $link["href"]; ?>&tipo=tecnica">
-                                                    <?php echo $link["nombre"]; ?>
-                                                </a>
-                                                <?php if ($sesion->is_active()): ?>
-                                                    <i class="edit glyphicon glyphicon-edit" title="Editar" data-technique-id="<?php echo $link["href"] ?>" data-technique-name="<?php echo $link["nombre"] ?>"></i>
-                                                <?php endif; ?>
-                                            </li>
-                                        <?php endforeach; ?>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <?php if ($i % 4 == 0): ?>
-                            </div>
-                        <?php endif; ?>
-                        <?php $i++ ?>
-                    <?php endforeach; ?>
-                </div>
-            </div>
-
+            
             <h3>Glosario</h3>
             <dl class="dl-horizontal">
                 <dt>Vulnerabilidad</dt>
