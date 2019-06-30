@@ -212,24 +212,24 @@ $tmpl_vulnerabilidades = ApiBd::obtener_vulnerabilidades();
                         <div class="col-sm-3">
                             <div class="panel panel-default">
                                 <div class="panel-heading">
+                                    <?php if ($sesion->is_active()): ?>
+                                        <i class="add glyphicon glyphicon-plus" title="Agregar" data-technique-id="<?php echo $tmpl_tecnica["id"] ?>"></i>
+                                        <i class="edit glyphicon glyphicon-edit" title="Editar" data-technique-id="<?php echo $tmpl_tecnica["id"] ?>" data-technique-name="<?php echo $tmpl_tecnica["nombre"] ?>"></i>
+                                    <?php endif; ?>
                                     <h3 class="panel-title">
-                                        <?php echo $tmpl_tecnica["nombre"]; ?>
-                                        <?php if ($sesion->is_active()): ?>
-                                            <i class="add glyphicon glyphicon-plus" title="Agregar" data-technique-id="<?php echo $tmpl_tecnica["id"] ?>"></i>
-                                            <i class="edit glyphicon glyphicon-edit" title="Editar" data-technique-id="<?php echo $tmpl_tecnica["id"] ?>" data-technique-name="<?php echo $tmpl_tecnica["nombre"] ?>"></i>
-                                        <?php endif; ?>
+                                        <span><?php echo $tmpl_tecnica["nombre"]; ?></span>
                                     </h3>
                                 </div>
                                 <div class="panel-body">
                                     <ul>
                                         <?php foreach ($tmpl_tecnica["links"] as $link): ?>
                                             <li>
-                                                <a href="src/contenedor.php?id=<?php echo $link["href"]; ?>&tipo=tecnica">
-                                                    <?php echo $link["nombre"]; ?>
-                                                </a>
                                                 <?php if ($sesion->is_active()): ?>
                                                     <i class="edit glyphicon glyphicon-edit" title="Editar" data-technique-id="<?php echo $link["href"] ?>" data-technique-name="<?php echo $link["nombre"] ?>"></i>
                                                 <?php endif; ?>
+                                                <a href="src/contenedor.php?id=<?php echo $link["href"]; ?>&tipo=tecnica">
+                                                    <?php echo $link["nombre"]; ?>
+                                                </a>
                                             </li>
                                         <?php endforeach; ?>
                                     </ul>
