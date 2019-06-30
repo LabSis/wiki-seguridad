@@ -56,6 +56,34 @@ class ApiBd {
         self::cerrar();
         return $o_tecnicas;
     }
+    
+    public static function obtener_algoritmos() {
+        self::iniciar();
+        $consulta = "SELECT id, nombre, id_padre FROM algoritmos WHERE id_padre IS NULL";
+        $algoritmos = self::$conexion->consultar_simple($consulta);
+        $o_algoritmos = array();
+        if ($algoritmos !== false && isset($algoritmos)) {
+            foreach ($algoritmos as $algoritmo) {
+                $consulta = "SELECT id, nombre, id_padre FROM algoritmos WHERE id_padre = {$algoritmo["id"]}";
+                $subalgoritmos = self::$conexion->consultar_simple($consulta);
+                $o_algoritmo = array(
+                    "nombre" => $algoritmo["nombre"],
+                    "id" => $algoritmo["id"]
+                );
+                $links = array();
+                foreach ($subalgoritmos as $subalgoritmo) {
+                    $links[] = array(
+                        "href" => $subalgoritmo["id"],
+                        "nombre" => $subalgoritmo["nombre"]
+                    );
+                }
+                $o_algoritmo["links"] = $links;
+                $o_algoritmos[] = $o_algoritmo;
+            }
+        }
+        self::cerrar();
+        return $o_algoritmos;
+    }
 
     public static function obtener_vulnerabilidades() {
         self::iniciar();
@@ -193,6 +221,23 @@ class ApiBd {
             $insercion = "INSERT INTO tecnicas (nombre, id_padre) VALUES ('{$nombre_tecnica}',{$id_padre})";
         } else {
             $insercion = "INSERT INTO tecnicas (nombre) VALUES ('{$nombre_tecnica}')";
+        }
+        if (self::$conexion->insertar_simple($insercion)) {
+            self::cerrar();
+            return true;
+        }
+        self::cerrar();
+        return false;
+    }
+    
+    public static function crear_algoritmo($nombre_algoritmo, $id_padre) {
+        self::iniciar();
+        $nombre_algoritmo = self::sanitizar($nombre_algoritmo);
+        if (isset($id_padre)) {
+            $id_padre = self::sanitizar($id_padre);
+            $insercion = "INSERT INTO algoritmos (nombre, id_padre) VALUES ('{$nombre_algoritmo}',{$id_padre})";
+        } else {
+            $insercion = "INSERT INTO algoritmos (nombre) VALUES ('{$nombre_algoritmo}')";
         }
         if (self::$conexion->insertar_simple($insercion)) {
             self::cerrar();

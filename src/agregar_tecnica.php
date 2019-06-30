@@ -26,8 +26,17 @@ try {
         }
 
         if (!$hubo_error) {
-            // Registrar técnica
-            $ok = ApiBd::crear_tecnica($nombre_tecnica, $id_padre);
+            $tipo = filter_input(INPUT_GET, "tipo", FILTER_SANITIZE_STRING);
+            if ($tipo === "tecnica") {
+                // Registrar técnica
+                $ok = ApiBd::crear_tecnica($nombre_tecnica, $id_padre);
+            } else if ($tipo === "algoritmo") {
+                // Registrar algoritmo
+                $ok = ApiBd::crear_algoritmo($nombre_tecnica, $id_padre);
+            } else {
+                $ok = false;
+            }
+
             if ($ok){
                 $sesion->add_success_message("El artículo fue guardado con éxito");
             } else {

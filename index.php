@@ -5,6 +5,7 @@ require_once 'config.php';
 $sesion = Session::get_instance();
 
 $tmpl_tecnicas = ApiBd::obtener_tecnicas();
+$tmpl_algoritmos = ApiBd::obtener_algoritmos();
 $tmpl_vulnerabilidades = ApiBd::obtener_vulnerabilidades();
 ?>
 <!DOCTYPE html>
@@ -27,13 +28,24 @@ $tmpl_vulnerabilidades = ApiBd::obtener_vulnerabilidades();
                     $("#modalTitle").text("Agregar técnica");
                     $("#hidTechniqueParentId").val("");
                     $("#txtTechniqueName").val("");
-                    $("#modalTechnique").find("form").attr("action", webPath + "src/agregar_tecnica.php");
+                    $("#modalTechnique").find("form").attr("action", webPath + "src/agregar_tecnica.php?tipo=tecnica");
                     $("#modalTechnique").find("#submit").text("Crear");
                     
                     $("#modalTechnique").modal("show");
                 });
-            
-            
+
+                $(".agregar-algoritmo").click(function(){
+                    var webPath = $("#webPath").val();
+                    
+                    $("#modalTitle").text("Agregar algoritmo, mecanismo o programa");
+                    $("#hidTechniqueParentId").val("");
+                    $("#txtTechniqueName").val("");
+                    $("#modalTechnique").find("form").attr("action", webPath + "src/agregar_tecnica.php?tipo=algoritmo");
+                    $("#modalTechnique").find("#submit").text("Crear");
+                    
+                    $("#modalTechnique").modal("show");
+                });
+
                 $(".agregar-sub-tecnica").click(function(){
                     var techniqueId = $(this).data("techniqueId");
                     var webPath = $("#webPath").val();
@@ -41,11 +53,12 @@ $tmpl_vulnerabilidades = ApiBd::obtener_vulnerabilidades();
                     $("#modalTitle").text("Agregar técnica");
                     $("#hidTechniqueParentId").val(techniqueId);
                     $("#txtTechniqueName").val("");
-                    $("#modalTechnique").find("form").attr("action", webPath + "src/agregar_tecnica.php");
+                    $("#modalTechnique").find("form").attr("action", webPath + "src/agregar_tecnica.php?tipo=tecnica");
                     $("#modalTechnique").find("#submit").text("Crear");
 
                     $("#modalTechnique").modal("show");
                 });
+                
                 $(".editar-sub-tecnica").click(function(){
                     var techniqueId = $(this).data("techniqueId");
                     var techniqueName = $(this).data("techniqueName");
@@ -54,9 +67,22 @@ $tmpl_vulnerabilidades = ApiBd::obtener_vulnerabilidades();
                     $("#modalTitle").text("Editar técnica");
                     $("#hidTechniqueId").val(techniqueId);
                     $("#txtTechniqueName").val(techniqueName);
-                    $("#modalTechnique").find("form").attr("action", webPath + "src/edit_technique.php");
+                    $("#modalTechnique").find("form").attr("action", webPath + "src/edit_technique.php?tipo=tecnica");
                     $("#modalTechnique").find("#submit").text("Editar");
                     
+                    $("#modalTechnique").modal("show");
+                });
+                
+                $(".agregar-sub-algoritmo").click(function(){
+                    var techniqueId = $(this).data("algorithmId");
+                    var webPath = $("#webPath").val();
+
+                    $("#modalTitle").text("Agregar algoritmo, mecanismo o programa");
+                    $("#hidTechniqueParentId").val(techniqueId);
+                    $("#txtTechniqueName").val("");
+                    $("#modalTechnique").find("form").attr("action", webPath + "src/agregar_tecnica.php?tipo=algoritmo");
+                    $("#modalTechnique").find("#submit").text("Crear");
+
                     $("#modalTechnique").modal("show");
                 });
 
@@ -215,7 +241,7 @@ $tmpl_vulnerabilidades = ApiBd::obtener_vulnerabilidades();
         <?php require_once('header.php') ?>
         <main class="container">
             <h3>
-                <i class="agregar-tecnica glyphicon glyphicon-plus" title="Agregar" data-technique-id=""></i>
+                <i class="agregar-tecnica boton-agregar glyphicon glyphicon-plus" title="Agregar" data-technique-id=""></i>
                 Técnicas de ataques
             </h3>
             <br/>
@@ -230,8 +256,8 @@ $tmpl_vulnerabilidades = ApiBd::obtener_vulnerabilidades();
                             <div class="panel panel-default">
                                 <div class="panel-heading">
                                     <?php if ($sesion->is_active()): ?>
-                                        <i class="agregar-sub-tecnica glyphicon glyphicon-plus" title="Agregar" data-technique-id="<?php echo $tmpl_tecnica["id"] ?>"></i>
-                                        <i class="editar-sub-tecnica glyphicon glyphicon-edit" title="Editar" data-technique-id="<?php echo $tmpl_tecnica["id"] ?>" data-technique-name="<?php echo $tmpl_tecnica["nombre"] ?>"></i>
+                                        <i class="agregar-sub-tecnica boton-agregar glyphicon glyphicon-plus" title="Agregar" data-technique-id="<?php echo $tmpl_tecnica["id"] ?>"></i>
+                                        <i class="editar-sub-tecnica boton-editar glyphicon glyphicon-edit" title="Editar" data-technique-id="<?php echo $tmpl_tecnica["id"] ?>" data-technique-name="<?php echo $tmpl_tecnica["nombre"] ?>"></i>
                                     <?php endif; ?>
                                     <h3 class="panel-title">
                                         <span><?php echo $tmpl_tecnica["nombre"]; ?></span>
@@ -242,7 +268,7 @@ $tmpl_vulnerabilidades = ApiBd::obtener_vulnerabilidades();
                                         <?php foreach ($tmpl_tecnica["links"] as $link): ?>
                                             <li>
                                                 <?php if ($sesion->is_active()): ?>
-                                                    <i class="editar-sub-tecnica glyphicon glyphicon-edit" title="Editar" data-technique-id="<?php echo $link["href"] ?>" data-technique-name="<?php echo $link["nombre"] ?>"></i>
+                                                    <i class="editar-sub-tecnica boton-editar glyphicon glyphicon-edit" title="Editar" data-technique-id="<?php echo $link["href"] ?>" data-technique-name="<?php echo $link["nombre"] ?>"></i>
                                                 <?php endif; ?>
                                                 <a href="src/contenedor.php?id=<?php echo $link["href"]; ?>&tipo=tecnica">
                                                     <?php echo $link["nombre"]; ?>
@@ -261,8 +287,52 @@ $tmpl_vulnerabilidades = ApiBd::obtener_vulnerabilidades();
                 </div>
             </div>
 
-            <h3>Algoritmos, mecanismos y programas</h3>
+            <h3>
+                <i class="agregar-algoritmo boton-agregar glyphicon glyphicon-plus" title="Agregar" data-algorithm-id=""></i>
+                Algoritmos, mecanismos y programas
+            </h3>
             <br/>
+            <div class="row">
+                <div class="col-sm-12">
+                    <?php $i = 1 ?>
+                    <?php foreach ($tmpl_algoritmos as $tmpl_algoritmo): ?>
+                        <?php if ($i % 4 == 1): ?>
+                            <div class="row">
+                        <?php endif; ?>
+                        <div class="col-sm-3">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <?php if ($sesion->is_active()): ?>
+                                        <i class="agregar-sub-algoritmo boton-agregar glyphicon glyphicon-plus" title="Agregar" data-algorithm-id="<?php echo $tmpl_algoritmo["id"] ?>"></i>
+                                        <i class="editar-sub-algoritmo boton-editar glyphicon glyphicon-edit" title="Editar" data-algorithm-id="<?php echo $tmpl_algoritmo["id"] ?>" data-algorithm-name="<?php echo $tmpl_algoritmo["nombre"] ?>"></i>
+                                    <?php endif; ?>
+                                    <h3 class="panel-title">
+                                        <span><?php echo $tmpl_algoritmo["nombre"]; ?></span>
+                                    </h3>
+                                </div>
+                                <div class="panel-body">
+                                    <ul>
+                                        <?php foreach ($tmpl_algoritmo["links"] as $link): ?>
+                                            <li>
+                                                <?php if ($sesion->is_active()): ?>
+                                                    <i class="editar-sub-algoritmo boton-editar glyphicon glyphicon-edit" title="Editar" data-algorithm-id="<?php echo $link["href"] ?>" data-algorithm-name="<?php echo $link["nombre"] ?>"></i>
+                                                <?php endif; ?>
+                                                <a href="src/contenedor.php?id=<?php echo $link["href"]; ?>&tipo=tecnica">
+                                                    <?php echo $link["nombre"]; ?>
+                                                </a>
+                                            </li>
+                                        <?php endforeach; ?>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <?php if ($i % 4 == 0): ?>
+                            </div>
+                        <?php endif; ?>
+                        <?php $i++ ?>
+                    <?php endforeach; ?>
+                </div>
+            </div>
             
         
             <h3>Vulnerabilidades</h3>
