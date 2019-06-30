@@ -21,7 +21,20 @@ $tmpl_vulnerabilidades = ApiBd::obtener_vulnerabilidades();
         <title>LabSis - Wiki de seguridad</title>
         <script type="text/javascript">
             $(document).ready(function(){
-                $(".add").click(function(){
+                $(".agregar-tecnica").click(function(){
+                    var webPath = $("#webPath").val();
+                    
+                    $("#modalTitle").text("Agregar técnica");
+                    $("#hidTechniqueParentId").val("");
+                    $("#txtTechniqueName").val("");
+                    $("#modalTechnique").find("form").attr("action", webPath + "src/agregar_tecnica.php");
+                    $("#modalTechnique").find("#submit").text("Crear");
+                    
+                    $("#modalTechnique").modal("show");
+                });
+            
+            
+                $(".agregar-sub-tecnica").click(function(){
                     var techniqueId = $(this).data("techniqueId");
                     var webPath = $("#webPath").val();
 
@@ -33,7 +46,7 @@ $tmpl_vulnerabilidades = ApiBd::obtener_vulnerabilidades();
 
                     $("#modalTechnique").modal("show");
                 });
-                $(".edit").click(function(){
+                $(".editar-sub-tecnica").click(function(){
                     var techniqueId = $(this).data("techniqueId");
                     var techniqueName = $(this).data("techniqueName");
                     var webPath = $("#webPath").val();
@@ -201,7 +214,11 @@ $tmpl_vulnerabilidades = ApiBd::obtener_vulnerabilidades();
     <body>
         <?php require_once('header.php') ?>
         <main class="container">
-            <h3>Técnicas de ataques</h3>
+            <h3>
+                <i class="agregar-tecnica glyphicon glyphicon-plus" title="Agregar" data-technique-id=""></i>
+                Técnicas de ataques
+            </h3>
+            <br/>
             <div class="row">
                 <div class="col-sm-12">
                     <?php $i = 1 ?>
@@ -213,8 +230,8 @@ $tmpl_vulnerabilidades = ApiBd::obtener_vulnerabilidades();
                             <div class="panel panel-default">
                                 <div class="panel-heading">
                                     <?php if ($sesion->is_active()): ?>
-                                        <i class="add glyphicon glyphicon-plus" title="Agregar" data-technique-id="<?php echo $tmpl_tecnica["id"] ?>"></i>
-                                        <i class="edit glyphicon glyphicon-edit" title="Editar" data-technique-id="<?php echo $tmpl_tecnica["id"] ?>" data-technique-name="<?php echo $tmpl_tecnica["nombre"] ?>"></i>
+                                        <i class="agregar-sub-tecnica glyphicon glyphicon-plus" title="Agregar" data-technique-id="<?php echo $tmpl_tecnica["id"] ?>"></i>
+                                        <i class="editar-sub-tecnica glyphicon glyphicon-edit" title="Editar" data-technique-id="<?php echo $tmpl_tecnica["id"] ?>" data-technique-name="<?php echo $tmpl_tecnica["nombre"] ?>"></i>
                                     <?php endif; ?>
                                     <h3 class="panel-title">
                                         <span><?php echo $tmpl_tecnica["nombre"]; ?></span>
@@ -225,7 +242,7 @@ $tmpl_vulnerabilidades = ApiBd::obtener_vulnerabilidades();
                                         <?php foreach ($tmpl_tecnica["links"] as $link): ?>
                                             <li>
                                                 <?php if ($sesion->is_active()): ?>
-                                                    <i class="edit glyphicon glyphicon-edit" title="Editar" data-technique-id="<?php echo $link["href"] ?>" data-technique-name="<?php echo $link["nombre"] ?>"></i>
+                                                    <i class="editar-sub-tecnica glyphicon glyphicon-edit" title="Editar" data-technique-id="<?php echo $link["href"] ?>" data-technique-name="<?php echo $link["nombre"] ?>"></i>
                                                 <?php endif; ?>
                                                 <a href="src/contenedor.php?id=<?php echo $link["href"]; ?>&tipo=tecnica">
                                                     <?php echo $link["nombre"]; ?>
@@ -243,10 +260,13 @@ $tmpl_vulnerabilidades = ApiBd::obtener_vulnerabilidades();
                     <?php endforeach; ?>
                 </div>
             </div>
-        
+
             <h3>Algoritmos, mecanismos y programas</h3>
+            <br/>
+            
         
             <h3>Vulnerabilidades</h3>
+            <br/>
             <p>
                 La siguiente tabla muestra una clasificación de vulnerabildades de acuerdo a una categorización basada en el top 10 de OWASP (<a href='https://www.owasp.org/index.php/Top_10_2013-Top_10'>2013</a> y <a href='https://www.owasp.org/images/7/72/OWASP_Top_10-2017_%28en%29.pdf.pdf'>2017</a>) y a la etapa en la cual esa vulnerabilidad fue generada.
                 Los datos fueron extraídos de experiencias realizadas por el equipo de desarrollo y seguridad informática del LabSis de UTN-FRC.
@@ -321,6 +341,7 @@ $tmpl_vulnerabilidades = ApiBd::obtener_vulnerabilidades();
             </div>
             
             <h3>Glosario</h3>
+            <br/>
             <dl class="dl-horizontal">
                 <dt>Vulnerabilidad</dt>
                 <dd>Una vulnerabilidad es una debilidad de una aplicación, la cual, puede ser una falla de diseño, un error de desarrollo o una mala configuración en el despliegue que puede provocar o ayudar a provocar un daño a los interesados de la misma. Los interesados incluyen al propietario de la aplicación, usuarios de la aplicación y a otras entidades que confían en la aplicación.</dd>
@@ -360,6 +381,7 @@ $tmpl_vulnerabilidades = ApiBd::obtener_vulnerabilidades();
             </dl>
 
             <h3>Enlaces de interés</h3>
+            <br/>
             <ul>
                 <li><a href="https://www.owasp.org">OWASP: The Open Web Application Security Project</a></li>
                 <li><a href="https://www.first.org/cvss/calculator/3.0">Calculadora CVSS v3.0</a></li>

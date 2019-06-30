@@ -19,8 +19,7 @@ try {
 
             $id_padre = filter_input(INPUT_POST, "hidTechniqueParentId", FILTER_SANITIZE_STRING);
             if (!is_numeric($id_padre)) {
-                $sesion->add_error_message("El id_padre no es un número o un string numérico");
-                $hubo_error = true;
+                $id_padre = null;
             }
         } else {
             $hubo_error = true;
@@ -34,6 +33,8 @@ try {
             } else {
                 $sesion->add_error_message("Hubo un error al guardar el artículo");
             }
+        } else {
+            $sesion->add_error_message("Hubo un error al guardar el artículo");
         }
     }
     $sesion->redirect($WEB_PATH);
