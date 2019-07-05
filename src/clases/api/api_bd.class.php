@@ -153,6 +153,41 @@ class ApiBd {
         $o_tecnica["cantidad_eliminados"] = self::obtener_cantidad_articulos_eliminados($id_tecnica);
         return $o_tecnica;
     }
+    
+    public static function obtener_algoritmo($id_algoritmo) {
+        self::iniciar();
+        
+        $actualizacion = "UPDATE algoritmos SET visitas=visitas+1 WHERE id=$id_algoritmo";
+        self::$conexion->actualizar_simple($actualizacion);
+        
+        $consulta = "SELECT id, nombre, visitas FROM algoritmos WHERE id={$id_algoritmo}";
+        $algoritmo = self::$conexion->consultar_simple($consulta);
+        if ($algoritmo !== false && !empty($algoritmo)) {
+            $o_algoritmo = array(
+                "nombre" => $algoritmo[0]["nombre"],
+                "id" => $algoritmo[0]["id"],
+                "visitas" => $algoritmo[0]["visitas"]
+            );
+        } else {
+            throw new InvalidArgumentException("Página no encontrada");
+        }
+        $consulta = "SELECT id, nombre, contenido FROM articulos WHERE activada=TRUE AND id_algoritmo={$id_algoritmo}";
+        $articulos = self::$conexion->consultar_simple($consulta);
+        $o_articulos = array();
+        foreach ($articulos as $articulo) {
+            $o_articulos[] = array(
+                "id" => $articulo["id"],
+                "titulo" => $articulo["nombre"],
+                "fecha" => "",
+                "contenido" => $articulo["contenido"]
+            );
+        }
+        $o_tecnica["articulos"] = $o_articulos;
+        
+        self::cerrar();
+        //$o_tecnica["cantidad_eliminados"] = self::obtener_cantidad_articulos_eliminados($id_tecnica);
+        return $o_algoritmo;
+    }
 
     public static function obtener_vulnerabilidad($id_vulnerabilidad) {
         self::iniciar();

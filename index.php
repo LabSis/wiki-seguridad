@@ -332,7 +332,7 @@ $tmpl_vulnerabilidades = ApiBd::obtener_vulnerabilidades();
                                                 <?php if ($sesion->is_active()): ?>
                                                     <i class="editar-sub-algoritmo boton-editar glyphicon glyphicon-edit" title="Editar" data-algorithm-id="<?php echo $link["href"] ?>" data-algorithm-name="<?php echo $link["nombre"] ?>"></i>
                                                 <?php endif; ?>
-                                                <a href="src/contenedor.php?id=<?php echo $link["href"]; ?>&tipo=tecnica">
+                                                <a href="src/contenedor.php?id=<?php echo $link["href"]; ?>&tipo=algoritmo">
                                                     <?php echo $link["nombre"]; ?>
                                                 </a>
                                             </li>

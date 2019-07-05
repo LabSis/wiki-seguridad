@@ -16,6 +16,9 @@ try{
         } else if ($tipo_contenedor === "vulnerabilidad") {
             $tmpl_contenedor = ApiBd::obtener_vulnerabilidad($id_contenedor);
             $tipo_contenedor = "vulnerabilidad";
+        } else if ($tipo_contenedor === "algoritmo") {
+            $tmpl_contenedor = ApiBd::obtener_algoritmo($id_contenedor);
+            $tipo_contenedor = "algoritmo";
         }
     }
     if (!isset($tmpl_contenedor)) {
