@@ -273,7 +273,7 @@ try{
                         <div class="modal-footer">
                             <a data-id-articulo="" id="btnVerHistorial" class="btn btn-default" >Ver historial</a>
                             <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                            <button type="submit" class="btn btn-primary">Aceptar</button>
+                            <button type="submit" class="btn btn-primary">Guardar</button>
                         </div>
                     </form>
                 </div>
