@@ -182,7 +182,7 @@ class ApiBd {
                 "contenido" => $articulo["contenido"]
             );
         }
-        $o_tecnica["articulos"] = $o_articulos;
+        $o_algoritmo["articulos"] = $o_articulos;
         
         self::cerrar();
         //$o_tecnica["cantidad_eliminados"] = self::obtener_cantidad_articulos_eliminados($id_tecnica);
@@ -248,6 +248,24 @@ class ApiBd {
         return true;
     }
     
+    public static function existe_algoritmo($id_algoritmo) {
+        try {
+            self::obtener_algoritmo($id_algoritmo);
+        } catch (InvalidArgumentException $ex) {
+            return false;
+        }
+        return true;
+    }
+    
+    public static function existe_vulnerabilidad($id_tecnica) {
+        try {
+            self::obtener_vulnerabilidad($id_tecnica);
+        } catch (InvalidArgumentException $ex) {
+            return false;
+        }
+        return true;
+    }
+    
     public static function crear_tecnica($nombre_tecnica, $id_padre) {
         self::iniciar();
         $nombre_tecnica = self::sanitizar($nombre_tecnica);
@@ -283,23 +301,38 @@ class ApiBd {
     }
 
     public static function crear_articulo($titulo, $id_tecnica, $contenido, $tipo) {
-        if (self::existe_tecnica($id_tecnica)) {
-            self::iniciar();
-            $titulo = self::sanitizar($titulo);
-            $contenido = self::sanitizar($contenido, "<a><strong><em><ol><li><ul><p><span>");
-            if ($tipo === "tecnica") {
+        self::iniciar();
+        $titulo = self::sanitizar($titulo);
+        $contenido = self::sanitizar($contenido, "<a><strong><em><ol><li><ul><p><span>");
+        if ($tipo === "tecnica") {
+            if (self::existe_tecnica($id_tecnica)) {
                 $insercion = "INSERT INTO articulos (nombre, id_tecnica, contenido, fecha_hora) VALUES ('{$titulo}',{$id_tecnica},'{$contenido}', NOW())";
-            } else if ($tipo === "vulnerabilidad") {
+            } else {
+                self::cerrar();
+                return false;
+            }
+        } else if ($tipo === "vulnerabilidad") {
+            if (self::existe_vulnerabilidad($id_tecnica)) {
                 $insercion = "INSERT INTO articulos (nombre, id_vulnerabilidad, contenido, fecha_hora) VALUES ('{$titulo}',{$id_tecnica},'{$contenido}', NOW())";
             } else {
-                throw InvalidArgumentException("Tipo incorrecto.");
-            }
-            if (self::$conexion->insertar_simple($insercion)) {
                 self::cerrar();
-                return true;
+                return false;
             }
-            self::cerrar();
+        } else if ($tipo === "algoritmo") {
+            if (self::existe_algoritmo($id_tecnica)) {
+                $insercion = "INSERT INTO articulos (nombre, id_algoritmo, contenido, fecha_hora) VALUES ('{$titulo}',{$id_tecnica},'{$contenido}', NOW())";
+            } else {
+                self::cerrar();
+                return false;
+            }
+        } else {
+            throw InvalidArgumentException("Tipo incorrecto.");
         }
+        if (self::$conexion->insertar_simple($insercion)) {
+            self::cerrar();
+            return true;
+        }
+        self::cerrar();
         return false;
     }
 

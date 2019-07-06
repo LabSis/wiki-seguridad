@@ -40,6 +40,8 @@ try {
         $sesion->redirect("contenedor.php?id=$id_contenedor&tipo=tecnica");
     } else if ($tipo === "vulnerabilidad") {
         $sesion->redirect("contenedor.php?id=$id_contenedor&tipo=vulnerabilidad");
+    } else if ($tipo === "algoritmo") {
+        $sesion->redirect("contenedor.php?id=$id_contenedor&tipo=algoritmo");
     } else {
         echo "Error.";
     }
