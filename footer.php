@@ -9,5 +9,9 @@
                 GitHub
             </a>
         </p>
+        <br>
+        <p style="text-align: center">
+            Versión del sitio 1.0.1
+        </p>
     </div>
 </footer>
