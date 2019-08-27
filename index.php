@@ -354,61 +354,63 @@ $tmpl_vulnerabilidades = ApiBd::obtener_vulnerabilidades();
                 Los datos fueron extraídos de experiencias realizadas por el equipo de desarrollo y seguridad informática del LabSis de UTN-FRC.
             </p>
             <div class="row">
-                <table class="table table-striped col-sm-8" style="width: auto !important;">
-                    <thead>
-                        <tr>
-                            <th>Categoría</th>
-                            <th>Diseño</th>
-                            <th>Desarrollo</th>
-                            <th>Despliegue</th>
-                            <th>Total</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($tmpl_vulnerabilidades as $tmpl_vulnerabilidad): ?>
-                            <tr id="<?php echo $tmpl_vulnerabilidad["id"] ?>">
-                                <td class="titulo-categoria">
-                                    <a href="src/contenedor.php?id=<?php echo $tmpl_vulnerabilidad["id"] ?>&tipo=vulnerabilidad">
-                                        <?php echo $tmpl_vulnerabilidad["nombre"] ?>
-                                    </a>
-                                </td>
-                                <td class="cantidad-disenio" data-etapa="disenio">
-                                    <?php echo $tmpl_vulnerabilidad["disenio"] ?>
-                                    <?php if($sesion->is_active()): ?>
-                                        <input type="button" value="-" class="btn btn-primary btn-xs btn-disminuir" />
-                                        <input type="button" value="+" class="btn btn-primary btn-xs btn-aumentar" />
-                                    <?php endif; ?>
-                                </td>
-                                <td class="cantidad-codigo" data-etapa="desarrollo">
-                                    <?php echo $tmpl_vulnerabilidad["codigo"] ?>
-                                    <?php if($sesion->is_active()): ?>
-                                        <input type="button" value="-" class="btn btn-primary btn-xs btn-disminuir" />
-                                        <input type="button" value="+" class="btn btn-primary btn-xs btn-aumentar" />
-                                    <?php endif; ?>
-                                </td>
-                                <td class="cantidad-configuracion" data-etapa="despliegue">
-                                    <?php echo $tmpl_vulnerabilidad["configuracion"] ?>
-                                    <?php if($sesion->is_active()): ?>
-                                        <input type="button" value="-" class="btn btn-primary btn-xs btn-disminuir" />
-                                        <input type="button" value="+" class="btn btn-primary btn-xs btn-aumentar" />
-                                    <?php endif; ?>
-                                </td>
-                                <td class="total-fila">
-                                </td>
+                <div class="col-sm-7">
+                    <table class="table table-striped" style="width: auto !important;">
+                        <thead>
+                            <tr>
+                                <th>Categoría</th>
+                                <th>Diseño</th>
+                                <th>Desarrollo</th>
+                                <th>Despliegue</th>
+                                <th>Total</th>
                             </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <td>Total</td>
-                            <td class="total-columna"></td>
-                            <td class="total-columna"></td>
-                            <td class="total-columna"></td>
-                            <td class="total-columna"></td>
-                        </tr>
-                    </tfoot>
-                </table>
-                <div class="col-sm-4">
+                        </thead>
+                        <tbody>
+                            <?php foreach ($tmpl_vulnerabilidades as $tmpl_vulnerabilidad): ?>
+                                <tr id="<?php echo $tmpl_vulnerabilidad["id"] ?>">
+                                    <td class="titulo-categoria">
+                                        <a href="src/contenedor.php?id=<?php echo $tmpl_vulnerabilidad["id"] ?>&tipo=vulnerabilidad">
+                                            <?php echo $tmpl_vulnerabilidad["nombre"] ?>
+                                        </a>
+                                    </td>
+                                    <td class="cantidad-disenio" data-etapa="disenio">
+                                        <?php echo $tmpl_vulnerabilidad["disenio"] ?>
+                                        <?php if($sesion->is_active()): ?>
+                                            <input type="button" value="-" class="btn btn-primary btn-xs btn-disminuir" />
+                                            <input type="button" value="+" class="btn btn-primary btn-xs btn-aumentar" />
+                                        <?php endif; ?>
+                                    </td>
+                                    <td class="cantidad-codigo" data-etapa="desarrollo">
+                                        <?php echo $tmpl_vulnerabilidad["codigo"] ?>
+                                        <?php if($sesion->is_active()): ?>
+                                            <input type="button" value="-" class="btn btn-primary btn-xs btn-disminuir" />
+                                            <input type="button" value="+" class="btn btn-primary btn-xs btn-aumentar" />
+                                        <?php endif; ?>
+                                    </td>
+                                    <td class="cantidad-configuracion" data-etapa="despliegue">
+                                        <?php echo $tmpl_vulnerabilidad["configuracion"] ?>
+                                        <?php if($sesion->is_active()): ?>
+                                            <input type="button" value="-" class="btn btn-primary btn-xs btn-disminuir" />
+                                            <input type="button" value="+" class="btn btn-primary btn-xs btn-aumentar" />
+                                        <?php endif; ?>
+                                    </td>
+                                    <td class="total-fila">
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td>Total</td>
+                                <td class="total-columna"></td>
+                                <td class="total-columna"></td>
+                                <td class="total-columna"></td>
+                                <td class="total-columna"></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <div class="col-sm-5">
                     <div class="row">
                         <div class="col-sm-12">
                             <canvas id="canvas1" height="250" width="520"></canvas>
