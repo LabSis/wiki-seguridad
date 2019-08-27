@@ -163,16 +163,7 @@ $tmpl_vulnerabilidades = ApiBd::obtener_vulnerabilidades();
                     var data = {
                         datasets: [{
                             data: cantidades,
-                            backgroundColor: [
-                                '#FF7F50',
-                                '#FF7F50',
-                                '#FF7F50',
-                                '#FF7F50',
-                                '#FF7F50',
-                                '#FF7F50',
-                                '#FF7F50',
-                                '#FF7F50'
-                            ]
+                            backgroundColor: '#FF7F50'
                         }],
                         labels: etiquetas
                     };
