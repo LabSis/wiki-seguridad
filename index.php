@@ -246,8 +246,12 @@ $tmpl_vulnerabilidades = ApiBd::obtener_vulnerabilidades();
     <body>
         <?php require_once('header.php') ?>
         <main class="container">
+
             <h3>
-                <i class="agregar-tecnica boton-agregar glyphicon glyphicon-plus" title="Agregar" data-technique-id=""></i>
+                <?php if ($sesion->is_active()): ?>
+                    <i class="agregar-tecnica boton-agregar glyphicon glyphicon-plus" title="Agregar" data-technique-id=""></i>
+                <?php endif; ?>
+
                 Técnicas de ataques
             </h3>
             <br/>
@@ -294,7 +298,9 @@ $tmpl_vulnerabilidades = ApiBd::obtener_vulnerabilidades();
             </div>
 
             <h3>
-                <i class="agregar-algoritmo boton-agregar glyphicon glyphicon-plus" title="Agregar" data-algorithm-id=""></i>
+                <?php if ($sesion->is_active()): ?>
+                    <i class="agregar-algoritmo boton-agregar glyphicon glyphicon-plus" title="Agregar" data-algorithm-id=""></i>
+                <?php endif; ?>
                 Algoritmos, mecanismos y programas
             </h3>
             <br/>
