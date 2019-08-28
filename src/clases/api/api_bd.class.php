@@ -266,6 +266,18 @@ class ApiBd {
         return true;
     }
     
+    public static function crear_vulnerabilidad($nombre_tecnica) {
+        self::iniciar();
+        $nombre_tecnica = self::sanitizar($nombre_tecnica);
+        $insercion = "INSERT INTO vulnerabilidades (nombre, disenio, codigo, configuracion, visitas) VALUES ('{$nombre_tecnica}',0, 0, 0, 0)";
+        if (self::$conexion->insertar_simple($insercion)) {
+            self::cerrar();
+            return true;
+        }
+        self::cerrar();
+        return false;
+    }
+    
     public static function crear_tecnica($nombre_tecnica, $id_padre) {
         self::iniciar();
         $nombre_tecnica = self::sanitizar($nombre_tecnica);
