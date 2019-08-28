@@ -11,7 +11,7 @@
         </p>
         <br>
         <p style="text-align: center">
-            Versión del sitio 1.0.1
+            Versión del sitio 1.0.2
         </p>
     </div>
 </footer>
