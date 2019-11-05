@@ -78,7 +78,7 @@ try{
                 // Edición de artículo
                 function mostrarModalEditar(idArticulo, titulo, contenido){
                     /*$.ajax({
-                        url: "<?php echo $WEB_PATH ?><?php echo $CTRL_REL_PATH ?>consultar_versiones_articulo.php",
+                        url: "<?php echo $WEB_PATH ?><?php echo $CTRL_REL_PATH; ?>consultar_versiones_articulo.php",
                         type: "post",
                         data: {
                             idArticulo: idArticulo
@@ -205,6 +205,27 @@ try{
                         <label for="chkMostrarArticulosDesactivados" >Mostrar artículos eliminados</label>
                     </div>
                 </div>
+            <?php endif; ?>
+
+            <?php if (isset($tmpl_contenedor)): ?>
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <h1>Autores</h1>
+                        <div id="divAutores">
+                            <?php if(isset($tmpl_contenedor["autores"]) && count($tmpl_contenedor["autores"]) > 0): ?>
+                                <ul>
+                                <?php foreach ($tmpl_contenedor["autores"] as $autor): ?>
+                                        <li><?php echo $autor['nombre']?></li>
+                                <?php endforeach; ?>
+                                </ul>
+                            <?php else: ?>
+                                <p style="font-style: italic">No hay autores registrados</p>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
+
             <?php endif; ?>
             <?php if (isset($tmpl_contenedor) && $sesion->is_active()): ?>
             <div class="row create-article">

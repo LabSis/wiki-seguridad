@@ -13,7 +13,8 @@ if (strcasecmp($metodo, "POST") === 0) {
         $txt_contenido = trim(filter_input(INPUT_POST, "txtContenidoModalEditar"));
         $ok = true;
         if (isset($id_contenedor) && isset($id_articulo) && isset($txt_titulo) && isset($txt_contenido)) {
-            $ok = ApiBd::editar_articulo($id_articulo, $txt_titulo, $txt_contenido);
+            $id_autor = ApiBd::consultar_autor_por_usuario($sesion->get_user()->get_name())['id']; // en caso de que el autor sea obligatorio verificar acá si es null o no
+            $ok = ApiBd::editar_articulo($id_articulo, $txt_titulo, $txt_contenido, $id_autor);
         } else {
             $ok = false;
         }

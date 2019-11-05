@@ -148,8 +148,28 @@ class ApiBd {
             );
         }
         $o_tecnica["articulos"] = $o_articulos;
+
+
+        $consulta_autores = <<<SQL
+        SELECT DISTINCT  * FROM
+        (
+            SELECT aut.id, aut.nombre FROM autores aut JOIN  articulos art ON aut.id = art.autor_creador WHERE art.id_tecnica = $id_tecnica 
+            UNION
+            SELECT aut.id, aut.nombre FROM autores aut JOIN  historial_articulos ha ON ha.id_autor = aut.id JOIN articulos art ON art.id = ha.id_articulo WHERE art.id_tecnica = $id_tecnica
+        ) a       
+SQL;
+        $autores = self::$conexion->consultar_simple($consulta_autores);
+        $o_autores = array();
+        foreach ($autores as $autor) {
+            $o_autores[] = array(
+                "id" => $autor["id"],
+                "nombre" => $autor["nombre"]
+            );
+        }
+        $o_tecnica['autores'] = $o_autores;
         
         self::cerrar();
+
         $o_tecnica["cantidad_eliminados"] = self::obtener_cantidad_articulos_eliminados($id_tecnica);
         return $o_tecnica;
     }
@@ -183,6 +203,24 @@ class ApiBd {
             );
         }
         $o_algoritmo["articulos"] = $o_articulos;
+
+        $consulta_autores = <<<SQL
+        SELECT DISTINCT  * FROM
+        (
+            SELECT aut.id, aut.nombre FROM autores aut JOIN  articulos art ON aut.id = art.autor_creador WHERE art.id_algoritmo = $id_algoritmo
+            UNION
+            SELECT aut.id, aut.nombre FROM autores aut JOIN  historial_articulos ha ON ha.id_autor = aut.id JOIN articulos art ON art.id = ha.id_articulo WHERE art.id_algoritmo = $id_algoritmo
+        ) a       
+SQL;
+        $autores = self::$conexion->consultar_simple($consulta_autores);
+        $o_autores = array();
+        foreach ($autores as $autor) {
+            $o_autores[] = array(
+                "id" => $autor["id"],
+                "nombre" => $autor["nombre"]
+            );
+        }
+        $o_algoritmo['autores'] = $o_autores;
         
         self::cerrar();
         //$o_tecnica["cantidad_eliminados"] = self::obtener_cantidad_articulos_eliminados($id_tecnica);
@@ -218,6 +256,27 @@ class ApiBd {
             );
         }
         $o_vulnerabilidad["articulos"] = $o_articulos;
+
+        /*
+         * $consulta_autores = <<<SQL
+        SELECT DISTINCT  * FROM
+        (
+            SELECT aut.id, aut.nombre FROM autores aut JOIN  articulos art ON aut.id = art.autor_creador WHERE art.id_vulnerabilidad = $id_vulnerabilidad
+            UNION
+            SELECT aut.id, aut.nombre FROM autores aut JOIN  historial_articulos ha ON ha.id_autor = aut.id JOIN articulos art ON art.id = ha.id_articulo WHERE art.id_vulnerabilidad = $id_vulnerabilidad
+        ) a       
+SQL;
+        $autores = self::$conexion->consultar_simple($consulta_autores);
+        $o_autores = array();
+        foreach ($autores as $autor) {
+            $o_autores[] = array(
+                "id" => $autor["id"],
+                "nombre" => $autor["nombre"]
+            );
+        }
+        $o_vulnerabilidad['autores'] = $o_autores;
+        */
+
 
         self::cerrar();
         return $o_vulnerabilidad;
@@ -312,27 +371,35 @@ class ApiBd {
         return false;
     }
 
-    public static function crear_articulo($titulo, $id_tecnica, $contenido, $tipo) {
+    public static function crear_articulo($titulo, $id_tecnica, $contenido, $tipo, $id_autor=null) {
+        if(isset($id_autor) && $id_autor != null){
+            if (!self::existe_autor($id_autor)){
+                return false;
+            }
+        }
         self::iniciar();
         $titulo = self::sanitizar($titulo);
         $contenido = self::sanitizar($contenido, "<a><strong><em><ol><li><ul><p><span>");
+
+
+
         if ($tipo === "tecnica") {
             if (self::existe_tecnica($id_tecnica)) {
-                $insercion = "INSERT INTO articulos (nombre, id_tecnica, contenido, fecha_hora) VALUES ('{$titulo}',{$id_tecnica},'{$contenido}', NOW())";
+                $insercion = "INSERT INTO articulos (nombre, id_tecnica, contenido, fecha_hora, autor_creador) VALUES ('{$titulo}',{$id_tecnica},'{$contenido}', NOW(), {$id_autor})";
             } else {
                 self::cerrar();
                 return false;
             }
         } else if ($tipo === "vulnerabilidad") {
             if (self::existe_vulnerabilidad($id_tecnica)) {
-                $insercion = "INSERT INTO articulos (nombre, id_vulnerabilidad, contenido, fecha_hora) VALUES ('{$titulo}',{$id_tecnica},'{$contenido}', NOW())";
+                $insercion = "INSERT INTO articulos (nombre, id_vulnerabilidad, contenido, fecha_hora, autor_creador) VALUES ('{$titulo}',{$id_tecnica},'{$contenido}', NOW(), {$id_autor})";
             } else {
                 self::cerrar();
                 return false;
             }
         } else if ($tipo === "algoritmo") {
             if (self::existe_algoritmo($id_tecnica)) {
-                $insercion = "INSERT INTO articulos (nombre, id_algoritmo, contenido, fecha_hora) VALUES ('{$titulo}',{$id_tecnica},'{$contenido}', NOW())";
+                $insercion = "INSERT INTO articulos (nombre, id_algoritmo, contenido, fecha_hora, autor_creador) VALUES ('{$titulo}',{$id_tecnica},'{$contenido}', NOW(), {$id_autor})";
             } else {
                 self::cerrar();
                 return false;
@@ -347,6 +414,7 @@ class ApiBd {
         self::cerrar();
         return false;
     }
+
 
     /**
      * Desactiva un artículo a través de su id.
@@ -551,7 +619,7 @@ SQL;
      * @param string $contenido
      * @return bool
      */
-    public static function editar_articulo($id_articulo, $titulo, $contenido){
+    public static function editar_articulo($id_articulo, $titulo, $contenido, $id_autor = null){
         self::iniciar();
         $id_articulo = self::sanitizar($id_articulo);
         $titulo = self::sanitizar($titulo);
@@ -570,9 +638,10 @@ SQL;
             $dif = xdiff_string_bdiff($contenido, $contenido_articulo_anterior);
             $diff_titulo = xdiff_string_bdiff($titulo, $titulo_articulo_anterior);
             $actualizacion_historial = <<<SQL
-			INSERT INTO historial_articulos (id_articulo, diff, diff_titulo, fecha_hora)
-			VALUES ($id_articulo, '$dif', '$diff_titulo', NOW())
+			INSERT INTO historial_articulos (id_articulo, diff, diff_titulo, fecha_hora, id_autor)
+			VALUES ($id_articulo, '$dif', '$diff_titulo', NOW(), $id_autor)
 SQL;
+
 			if (!self::$conexion->insertar_simple($actualizacion_historial)) {
 		        $ok = false;
 		    }
@@ -584,6 +653,8 @@ SQL;
         if (!self::$conexion->actualizar_simple($actualizacion)) {
             $ok = false;
         }
+
+
 		if ($ok) {
 			self::$conexion->transaccion_confirmar();
 		} else {
@@ -732,4 +803,67 @@ SQL;
        $ok = self::$conexion->insertar_simple($insert);
        return $ok;
    }
+
+    public static function consultar_autor_por_usuario($usuario) {
+        self::iniciar();
+        $usuario = self::sanitizar($usuario);
+
+        $consulta = <<<SQL
+        SELECT a.id, a.nombre 
+        FROM autores a JOIN usuarios u ON u.id = a.id_usuario 
+        WHERE u.nombre = "$usuario"
+SQL;
+        $resultado = self::$conexion->consultar_simple($consulta);
+        $autor["id"] = null;
+        $autor["nombre"] = null;
+        if(isset($resultado) && !empty($resultado)){
+            $autor = $resultado[0];
+        }
+        self::cerrar();
+
+        return $autor;
+    }
+
+
+    public static function existe_autor($id_autor) {
+        try {
+            self::obtener_autor($id_autor);
+        } catch (InvalidArgumentException $ex) {
+            return false;
+        }
+        return true;
+    }
+
+    public static function obtener_autor($id_autor) {
+        self::iniciar();
+        $consulta = "SELECT id, nombre, id_usuario FROM autores WHERE id={$id_autor}";
+        $autor = self::$conexion->consultar_simple($consulta);
+        if ($autor !== false && !empty($autor)) {
+            $o_autor = array(
+                "nombre" => $autor[0]["nombre"],
+                "id" => $autor[0]["id"],
+                "id_usuario" => $autor[0]["id_usuario"]
+            );
+        } else {
+            throw new InvalidArgumentException("Autor no encontrado");
+        }
+
+        self::cerrar();
+        return $o_autor;
+    }
+
+
+    public static function es_nuevo_autor_articulo($id_autor, $id_articulo) {
+        self::iniciar();
+        $consulta = "SELECT COUNT(*) as 'cantidad' FROM autores_articulo WHERE id_autor={$id_autor} AND id_articulo={$id_articulo}";
+        $resultado = self::$conexion->consultar_simple($consulta);
+        $es_nuevo = true;
+        if ($resultado !== false && !empty($resultado)) {
+            $es_nuevo = $resultado[0]['cantidad'] == 0;
+        }
+
+        self::cerrar();
+        return $es_nuevo;
+    }
+
 }

@@ -6,6 +6,8 @@ $sesion = Session::get_instance();
 try {
     $id_contenedor = filter_input(INPUT_GET, "id_contenedor");
     $metodo = filter_input(INPUT_SERVER, "REQUEST_METHOD");
+
+
     if (strcasecmp($metodo, "POST") === 0) {
         if ($sesion->is_active()) {
             $hubo_error = false;
@@ -24,11 +26,16 @@ try {
                 $sesion->add_error_message("El contenido no puede ser vacío");
                 $hubo_error = true;
             }
+
+
+
         } else {
             $hubo_error = true;
         }
         if (!$hubo_error) {
-            $ok = ApiBd::crear_articulo($titulo, $id_contenedor, $contenido, $tipo);
+            $id_autor = ApiBd::consultar_autor_por_usuario($sesion->get_user()->get_name())['id']; // en caso de que el autor sea obligatorio verificar acá si es null o no
+
+            $ok = ApiBd::crear_articulo($titulo, $id_contenedor, $contenido, $tipo, $id_autor);
             if ($ok){
                 $sesion->add_success_message("El artículo fue guardado con éxito");
             } else {
