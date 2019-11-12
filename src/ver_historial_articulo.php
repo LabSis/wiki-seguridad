@@ -17,6 +17,8 @@ if (strcasecmp($metodo, "POST") === 0) {
         $articulo_actual = ApiBd::obtener_version_articulo("-1", $id_articulo);
         $version_actual = $articulo_actual["version"];
         $titulo_actual = $articulo_actual["titulo"];
+
+
     }
 }
 ?>
@@ -55,9 +57,25 @@ if (strcasecmp($metodo, "POST") === 0) {
             $(document).ready(function(){
                 CKEDITOR.replace("txtEdicion");
                 $("#spanTituloEdicion").text("Actual");
+                $("#tituloAutorEdicion").css("display", "none")
+
                 $(".historico li").click(function(){
                     var versionSeleccionada = $(this).text();
                     var idVersion = $(this).data("id-version");
+                    let idAutor = $(this).data("id-autor");
+                    let nombreAutor = $(this).data("nombre-autor");
+
+
+                    if (parseFloat(idAutor) > 0){
+                        $("#spanAutorEdicion").html(`
+                             <a href='<?php echo $WEB_PATH ?><?php echo $CTRL_REL_PATH ?>ver_autor.php?id_autor=` + idAutor + `'>` + nombreAutor + `</a>
+                        `)
+                        $("#tituloAutorEdicion").css("display", "block")
+                    } else {
+                        $("#spanAutorEdicion").html("");
+                        $("#tituloAutorEdicion").css("display", "none")
+                    }
+
                     var idArticulo = $("#hidIdArticulo").val();
                     $.ajax({
                         "type": "post",
@@ -96,11 +114,13 @@ if (strcasecmp($metodo, "POST") === 0) {
             <ul class="historico">
                 <?php foreach($historial_articulos as $cambio): ?>
                     <?php if($cambio['fecha_hora'] === "Actual") :?>
-                        <li class="seleccionado" data-id-version="<?php echo $cambio["id"] ?>" >
+                        <li class="seleccionado" data-id-version="<?php echo $cambio["id"] ?>">
                             <?php echo $cambio['fecha_hora'] ?>
                         </li>
                     <?php else: ?>
-                        <li data-id-version="<?php echo $cambio["id"] ?>" >
+                        <li data-id-version="<?php echo $cambio["id"] ?>"
+                            data-id-autor="<?php echo (isset($cambio["id_autor"])) ? $cambio["id_autor"] : "-1" ?>"
+                            data-nombre-autor="<?php echo (isset($cambio["nombre_autor"])) ? $cambio["nombre_autor"] : "" ?>">
                             <?php echo $cambio['fecha_hora'] ?>
                         </li>
                     <?php endif; ?>
@@ -113,6 +133,7 @@ if (strcasecmp($metodo, "POST") === 0) {
                     <input type="hidden" value="<?php echo $id_articulo ?>" name="hidIdArticuloModalEditar" id="hidIdArticuloModalEditar" />
 
                     <h4>Edición de la versión de <span id="spanTituloEdicion"></span></h4>
+                    <h5 id="tituloAutorEdicion">por <span id="spanAutorEdicion"></span></h5>
                     <div class="form-group">
                         <label for="comment">Título:</label>
                         <input type="text" class="form-control" name="txtTituloModalEditar" id="txtTituloModalEditar" value="<?php echo $titulo_actual ?>">

@@ -116,6 +116,8 @@ var ModuloVentana = (function () {
         $modal.on('shown.bs.modal', function () {
             $closeButton.focus();
         });
+
+        $($modal).css("z-index", 9999)
         return $modal;
     }
     return yo;

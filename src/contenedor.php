@@ -78,7 +78,7 @@ try{
                 // Edición de artículo
                 function mostrarModalEditar(idArticulo, titulo, contenido){
                     /*$.ajax({
-                        url: "<?php echo $WEB_PATH ?><?php echo $CTRL_REL_PATH; ?>consultar_versiones_articulo.php",
+                        url: "<?php //echo $WEB_PATH ?><?php //echo $CTRL_REL_PATH; ?>consultar_versiones_articulo.php",
                         type: "post",
                         data: {
                             idArticulo: idArticulo
@@ -216,7 +216,9 @@ try{
                             <?php if(isset($tmpl_contenedor["autores"]) && count($tmpl_contenedor["autores"]) > 0): ?>
                                 <ul>
                                 <?php foreach ($tmpl_contenedor["autores"] as $autor): ?>
-                                        <li><?php echo $autor['nombre']?></li>
+                                        <li>
+                                            <a href="<?php echo $WEB_PATH ?><?php echo $CTRL_REL_PATH ?>ver_autor.php?id_autor=<?php echo $autor['id'] ?>"><?php echo $autor['nombre'] ?></a>
+                                        </li>
                                 <?php endforeach; ?>
                                 </ul>
                             <?php else: ?>
@@ -227,6 +229,7 @@ try{
                 </div>
 
             <?php endif; ?>
+
             <?php if (isset($tmpl_contenedor) && $sesion->is_active()): ?>
             <div class="row create-article">
                 <form role="form" action="guardar_articulo.php?id_contenedor=<?php echo $id_contenedor ?>" method="post">

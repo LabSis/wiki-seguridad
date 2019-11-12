@@ -1,0 +1,10 @@
+USE labsis_seg;
+
+ALTER TABLE autores ADD COLUMN alias VARCHAR(16);
+ALTER TABLE autores ADD COLUMN email VARCHAR(50);
+ALTER TABLE autores ADD COLUMN usuario_github VARCHAR(16);
+ALTER TABLE autores ADD COLUMN foto VARCHAR(64);
+
+
+
+

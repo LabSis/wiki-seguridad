@@ -153,9 +153,9 @@ class ApiBd {
         $consulta_autores = <<<SQL
         SELECT DISTINCT  * FROM
         (
-            SELECT aut.id, aut.nombre FROM autores aut JOIN  articulos art ON aut.id = art.autor_creador WHERE art.id_tecnica = $id_tecnica 
+            SELECT aut.* FROM autores aut JOIN  articulos art ON aut.id = art.autor_creador WHERE art.id_tecnica = $id_tecnica 
             UNION
-            SELECT aut.id, aut.nombre FROM autores aut JOIN  historial_articulos ha ON ha.id_autor = aut.id JOIN articulos art ON art.id = ha.id_articulo WHERE art.id_tecnica = $id_tecnica
+            SELECT aut.* FROM autores aut JOIN  historial_articulos ha ON ha.id_autor = aut.id JOIN articulos art ON art.id = ha.id_articulo WHERE art.id_tecnica = $id_tecnica
         ) a       
 SQL;
         $autores = self::$conexion->consultar_simple($consulta_autores);
@@ -163,7 +163,11 @@ SQL;
         foreach ($autores as $autor) {
             $o_autores[] = array(
                 "id" => $autor["id"],
-                "nombre" => $autor["nombre"]
+                "nombre" => $autor["nombre"],
+                "alias" => $autor["alias"],
+                "email" => $autor["email"],
+                "usuario_github" => $autor["usuario_github"],
+                "foto" => $autor['foto']
             );
         }
         $o_tecnica['autores'] = $o_autores;
@@ -207,9 +211,9 @@ SQL;
         $consulta_autores = <<<SQL
         SELECT DISTINCT  * FROM
         (
-            SELECT aut.id, aut.nombre FROM autores aut JOIN  articulos art ON aut.id = art.autor_creador WHERE art.id_algoritmo = $id_algoritmo
+            SELECT aut.* FROM autores aut JOIN  articulos art ON aut.id = art.autor_creador WHERE art.id_algoritmo = $id_algoritmo
             UNION
-            SELECT aut.id, aut.nombre FROM autores aut JOIN  historial_articulos ha ON ha.id_autor = aut.id JOIN articulos art ON art.id = ha.id_articulo WHERE art.id_algoritmo = $id_algoritmo
+            SELECT aut.* FROM autores aut JOIN  historial_articulos ha ON ha.id_autor = aut.id JOIN articulos art ON art.id = ha.id_articulo WHERE art.id_algoritmo = $id_algoritmo
         ) a       
 SQL;
         $autores = self::$conexion->consultar_simple($consulta_autores);
@@ -217,7 +221,11 @@ SQL;
         foreach ($autores as $autor) {
             $o_autores[] = array(
                 "id" => $autor["id"],
-                "nombre" => $autor["nombre"]
+                "nombre" => $autor["nombre"],
+                "alias" => $autor["alias"],
+                "email" => $autor["email"],
+                "usuario_github" => $autor["usuario_github"],
+                "foto" => $autor['foto']
             );
         }
         $o_algoritmo['autores'] = $o_autores;
@@ -495,8 +503,9 @@ SQL;
         self::iniciar();
         $id_articulo = self::sanitizar($id_articulo);
         $consulta = <<<SQL
-            SELECT ha.fecha_hora, ha.id AS id, ha.id_articulo
+            SELECT ha.fecha_hora, ha.id AS id, ha.id_articulo, a.id as 'id_autor', a.nombre as 'nombre_autor'
             FROM historial_articulos AS ha
+            LEFT JOIN autores a ON ha.id_autor = a.id
             WHERE id_articulo=$id_articulo
             ORDER BY fecha_hora DESC
 SQL;
@@ -508,6 +517,8 @@ SQL;
                 $articulo["fecha_hora"] = $fila["fecha_hora"];
                 $articulo["id"] = $fila["id"];
                 $articulo["id_articulo"] = $fila["id_articulo"];
+                $articulo["id_autor"] = $fila["id_autor"];
+                $articulo["nombre_autor"] = $fila["nombre_autor"];
                 $articulos[] = $articulo;
             }
         }
@@ -809,7 +820,7 @@ SQL;
         $usuario = self::sanitizar($usuario);
 
         $consulta = <<<SQL
-        SELECT a.id, a.nombre 
+        SELECT a.* 
         FROM autores a JOIN usuarios u ON u.id = a.id_usuario 
         WHERE u.nombre = "$usuario"
 SQL;
@@ -836,13 +847,17 @@ SQL;
 
     public static function obtener_autor($id_autor) {
         self::iniciar();
-        $consulta = "SELECT id, nombre, id_usuario FROM autores WHERE id={$id_autor}";
+        $consulta = "SELECT * FROM autores WHERE id={$id_autor}";
         $autor = self::$conexion->consultar_simple($consulta);
         if ($autor !== false && !empty($autor)) {
             $o_autor = array(
                 "nombre" => $autor[0]["nombre"],
                 "id" => $autor[0]["id"],
-                "id_usuario" => $autor[0]["id_usuario"]
+                "id_usuario" => $autor[0]["id_usuario"],
+                "alias" => $autor[0]["alias"],
+                "email" => $autor[0]["email"],
+                "usuario_github" => $autor[0]["usuario_github"],
+                "foto" => $autor[0]['foto']
             );
         } else {
             throw new InvalidArgumentException("Autor no encontrado");
@@ -864,6 +879,44 @@ SQL;
 
         self::cerrar();
         return $es_nuevo;
+    }
+
+
+    public static function editar_autor($id_autor, $nombre_autor, $alias_autor=null, $email_autor=null, $usuario_github=null) {
+        self::iniciar();
+        $id_autor = self::sanitizar($id_autor);
+        $nombre_autor = self::sanitizar($nombre_autor);
+        $alias_autor = self::sanitizar($alias_autor);
+        $email_autor = self::sanitizar($email_autor);
+        $usuario_github = self::sanitizar($usuario_github);
+
+        $sql = <<<SQL
+        UPDATE autores
+        SET nombre='{$nombre_autor}', alias='{$alias_autor}', email='{$email_autor}', usuario_github='{$usuario_github}'
+        WHERE id = {$id_autor}
+SQL;
+
+        if (self::$conexion->actualizar_simple($sql)) {
+            self::cerrar();
+            return true;
+        } else {
+            self::cerrar();
+            return false;
+        }
+    }
+
+    public static function cambiar_clave_usuario($nombre_usuario, $clave){
+            self::iniciar();
+            $usuario = self::sanitizar($nombre_usuario);
+            $clave = self::sanitizar($clave);
+            $sql = <<<SQL
+            UPDATE usuarios 
+            set clave = SHA2('$clave', 256)
+            WHERE nombre='{$usuario}'
+SQL;
+            $ok = self::$conexion->actualizar_simple($sql);
+            return $ok;
+
     }
 
 }
