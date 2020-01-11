@@ -211,7 +211,7 @@ try{
 
                 <div class="row">
                     <div class="col-sm-12">
-                        <h1>Autores</h1>
+                        <h4>Autores</h4>
                         <div id="divAutores">
                             <?php if(isset($tmpl_contenedor["autores"]) && count($tmpl_contenedor["autores"]) > 0): ?>
                                 <ul>
@@ -222,7 +222,7 @@ try{
                                 <?php endforeach; ?>
                                 </ul>
                             <?php else: ?>
-                                <p style="font-style: italic">No hay autores registrados</p>
+                                <p style="font-style: italic; font-size: 12px">No hay autores registrados</p>
                             <?php endif; ?>
                         </div>
                     </div>
