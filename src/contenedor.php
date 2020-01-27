@@ -144,7 +144,7 @@ try{
                                 contenidoHtml += articulo.contenido.version;
 
                                 tituloHtml += "</h3>";
-                                contenidoHtml += '<i class="editar glyphicon glyphicon-edit" title="Editar"></i></div>';
+                                contenidoHtml += '<i class="editar glyphicon glyphicon-edit btn-animado" title="Editar"></i></div>';
                                 seccionHtml += tituloHtml;
                                 seccionHtml += contenidoHtml;
 
@@ -193,8 +193,8 @@ try{
                                     <div class="contenido">
                                         <?php echo $articulo["contenido"] ?>
                                         <?php if($sesion->is_active()): ?>
-                                            <i class="borrar glyphicon glyphicon-trash" title="Borrar"></i>
-                                            <i class="editar glyphicon glyphicon-edit" title="Editar"></i>
+                                            <i class="borrar glyphicon glyphicon-trash btn-animado" title="Borrar"></i>
+                                            <i class="editar glyphicon glyphicon-edit btn-animado" title="Editar"></i>
                                         <?php endif; ?>
                                     </div>
                                 </section>
@@ -214,11 +214,28 @@ try{
                 </div>
             <?php endif; ?>
 
+            <?php if (isset($tmpl_contenedor) && $sesion->is_active()): ?>
+            <div class="row create-article">
+                <form role="form" action="guardar_articulo.php?id_contenedor=<?php echo $id_contenedor ?>" method="post">
+                    <input type="hidden" name="tipo" value="<?php echo $tipo_contenedor ?>" />
+                    <div class="form-group">
+                        <label for="txtTitulo">Título:</label>
+                        <input type="text" class="form-control" name="txtTitulo" id="txtTitulo">
+                    </div>
+                    <div class="form-group">
+                        <label for="txtContenido">Contenido:</label>
+                        <textarea class="form-control" rows="20" name="txtContenido" id="txtContenido"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary pull-right">Crear artículo</button>
+                </form>
+            </div>
+            <?php endif; ?>
+            
             <?php if (isset($tmpl_contenedor)): ?>
 
                 <div class="row">
                     <div class="col-sm-12">
-                        <h4>Autores</h4>
+                        <h4>En este artículo participaron:</h4>
                         <div id="divAutores">
                             <?php if(isset($tmpl_contenedor["autores"]) && count($tmpl_contenedor["autores"]) > 0): ?>
                                 <ul>
@@ -235,23 +252,6 @@ try{
                     </div>
                 </div>
 
-            <?php endif; ?>
-
-            <?php if (isset($tmpl_contenedor) && $sesion->is_active()): ?>
-            <div class="row create-article">
-                <form role="form" action="guardar_articulo.php?id_contenedor=<?php echo $id_contenedor ?>" method="post">
-                    <input type="hidden" name="tipo" value="<?php echo $tipo_contenedor ?>" />
-                    <div class="form-group">
-                        <label for="txtTitulo">Título:</label>
-                        <input type="text" class="form-control" name="txtTitulo" id="txtTitulo">
-                    </div>
-                    <div class="form-group">
-                        <label for="txtContenido">Contenido:</label>
-                        <textarea class="form-control" rows="20" name="txtContenido" id="txtContenido"></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-primary pull-right">Crear artículo</button>
-                </form>
-            </div>
             <?php endif; ?>
         </main>
         <?php require_once('../footer.php') ?>
