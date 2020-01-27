@@ -61,6 +61,12 @@ try{
                     $("#hidIdContenedorModalBorrado").val(idContenedor);
                     $("#modalConfirmarBorrado").modal("show");
                 }
+                
+                // Hack para que se pueda usar CKEditor desde un modal de Bootstrap
+                // https://stackoverflow.com/a/46442460/5258711
+                $('#modalEditar').on('shown.bs.modal', function() {
+                    $(document).off('focusin.modal');
+                });
 
                 $(document).on("hide.bs.modal", "#modalConfirmarBorrado", function () {
                     console.log(articuloABorrarJQuery);
