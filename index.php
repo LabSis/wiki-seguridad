@@ -13,6 +13,7 @@ $tmpl_vulnerabilidades = ApiBd::obtener_vulnerabilidades();
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" href="css/favicon.png">
         <link href="css/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
         <link href="css/general.css" rel="stylesheet" />
         <link href='css/footer-distributed.css' rel="stylesheet"/>

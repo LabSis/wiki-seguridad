@@ -33,6 +33,7 @@ try{
 <html>
     <head>
         <meta charset="utf-8" />
+        <link rel="icon" href="../css/favicon.png">
         <title>LabSis - Seg</title>
         <link href="<?php echo $WEB_PATH ?>css/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
         <link href="<?php echo $WEB_PATH ?>css/general.css" rel="stylesheet" />
