@@ -219,9 +219,6 @@ try{
                         <label for="txtContenido">Contenido:</label>
                         <textarea class="form-control" rows="20" name="txtContenido" id="txtContenido"></textarea>
                     </div>
-                    <div>
-                        <p>Al agregar un artículo usted se hace responsable de la información que publica. Para llevar un control interno guardamos algunos datos de aquellas personas que crean un artículo. Gracias.</p>
-                    </div>
                     <button type="submit" class="btn btn-primary pull-right">Crear artículo</button>
                 </form>
             </div>
