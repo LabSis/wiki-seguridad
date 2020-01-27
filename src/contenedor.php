@@ -33,6 +33,7 @@ try{
 <html>
     <head>
         <meta charset="utf-8" />
+        <link rel="icon" href="../css/favicon.png">
         <title>LabSis - Seg</title>
         <link href="<?php echo $WEB_PATH ?>css/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
         <link href="<?php echo $WEB_PATH ?>css/general.css" rel="stylesheet" />
@@ -241,9 +242,6 @@ try{
                     <div class="form-group">
                         <label for="txtContenido">Contenido:</label>
                         <textarea class="form-control" rows="20" name="txtContenido" id="txtContenido"></textarea>
-                    </div>
-                    <div>
-                        <p>Al agregar un artículo usted se hace responsable de la información que publica. Para llevar un control interno guardamos algunos datos de aquellas personas que crean un artículo. Gracias.</p>
                     </div>
                     <button type="submit" class="btn btn-primary pull-right">Crear artículo</button>
                 </form>

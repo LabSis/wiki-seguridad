@@ -9,13 +9,13 @@ CONFIG VERSION 2.3
 ini_set("display_errors", 1);
 
 /*** HEADER UTF-8 ***/
-header('Content-Type: text/html; charset=utf-8');
+ header('Content-Type: text/html; charset=utf-8');
 
     // Todas las rutas de directorio terminan en /
     // Rutas absolutas
 $PROTOCOL = 'http://';
 $SERVER_PATH = dirname(__FILE__) . '/';
-$WEB_PATH = $PROTOCOL . $_SERVER['HTTP_HOST'] . '/labsis_seg/';
+$WEB_PATH = $PROTOCOL . $_SERVER['HTTP_HOST'] . '/wiki-seguridad/';
 $LOGIN_PATH = $WEB_PATH;
 $PUBLIC_PATH = $SERVER_PATH . "public/";
 
@@ -100,8 +100,8 @@ spl_autoload_register(function ($nombre_clase) {
 
 /*** Base de datos ***/
 $DB_HOST = 'localhost';
-$DB_USER = 'root';
-$DB_PASS = '12345678';
+$DB_USER = 'ile';
+$DB_PASS = 'ileile';
 $DB_NAME = 'labsis_seg';
 
 Conexion::set_default_conexion($DB_NAME, Conexion::init($DB_HOST, $DB_USER, $DB_PASS, $DB_NAME, DEV_MODE));

@@ -387,10 +387,7 @@ SQL;
         }
         self::iniciar();
         $titulo = self::sanitizar($titulo);
-        $contenido = self::sanitizar($contenido, "<a><strong><em><ol><li><ul><p><span>");
-
-
-
+        $contenido = self::sanitizar($contenido, "<a><strong><em><ol><li><ul><p><span><pre><code><table><tbody><tr><th><td><thead><caption><hr><iframe><blockquote>");
         if ($tipo === "tecnica") {
             if (self::existe_tecnica($id_tecnica)) {
                 $insercion = "INSERT INTO articulos (nombre, id_tecnica, contenido, fecha_hora, autor_creador) VALUES ('{$titulo}',{$id_tecnica},'{$contenido}', NOW(), {$id_autor})";
