@@ -631,7 +631,7 @@ SQL;
         self::iniciar();
         $id_articulo = self::sanitizar($id_articulo);
         $titulo = self::sanitizar($titulo);
-        $contenido = self::sanitizar($contenido, "<a><strong><em><ol><li><ul><p><span>");
+        $contenido = self::sanitizar($contenido, "<a><strong><em><ol><li><ul><p><span><pre><code><table><tbody><tr><th><td><thead><caption><hr><iframe><blockquote>");
         $ok = true;
 		self::$conexion->transaccion_comenzar();
 
