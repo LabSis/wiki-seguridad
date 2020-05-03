@@ -19,3 +19,6 @@ section{
     position: relative;
     float: right;
 }
+dl dd {
+    text-align: justify;
+}

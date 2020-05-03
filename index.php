@@ -248,6 +248,7 @@ $tmpl_vulnerabilidades = ApiBd::obtener_vulnerabilidades();
 <?php require_once('header.php') ?>
 <div class="container">
 
+    <p>La presente wiki se compone de contenido de seguridad informática. Cualquier error puede escribirnos por Twitter a @SecLabsis.</p>
     <h3>
         <?php if ($sesion->is_active()): ?>
             <i class="agregar-tecnica boton-agregar glyphicon glyphicon-plus" title="Agregar" data-technique-id=""></i>
@@ -294,6 +295,9 @@ $tmpl_vulnerabilidades = ApiBd::obtener_vulnerabilidades();
                 <?php endif; ?>
                 <?php $i++ ?>
             <?php endforeach; ?>
+            <?php if ($i % 4 != 0): ?>
+                </div>
+            <?php endif; ?>
         </div>
     </div>
 
@@ -343,6 +347,9 @@ $tmpl_vulnerabilidades = ApiBd::obtener_vulnerabilidades();
                 <?php endif; ?>
                 <?php $i++ ?>
             <?php endforeach; ?>
+            <?php if ($i % 4 != 0): ?>
+                </div>
+            <?php endif; ?>
         </div>
     </div>
 
