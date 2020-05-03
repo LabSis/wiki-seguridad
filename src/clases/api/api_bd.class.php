@@ -178,6 +178,21 @@ SQL;
         return $o_tecnica;
     }
     
+    public static function mover_algoritmo($id_algoritmo, $id_nuevo_padre) {
+        self::iniciar();
+        
+        $id_algoritmo = self::sanitizar($id_algoritmo);
+        $id_nuevo_padre = self::sanitizar($id_nuevo_padre);
+        
+        if ($id_nuevo_padre > 0) {
+            // TODO: Puede ocurrir que id_nuevo_padre no exista si se está usando MyISAM en prod.
+            $actualizacion = "UPDATE algoritmos SET id_padre=$id_nuevo_padre WHERE id=$id_algoritmo";
+            self::$conexion->actualizar_simple($actualizacion);
+        } else {
+            throw new InvalidArgumentException("Parámetro id_algoritmo incorrecto");
+        }
+    }
+    
     public static function obtener_algoritmo($id_algoritmo) {
         self::iniciar();
         

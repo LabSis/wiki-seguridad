@@ -22,3 +22,6 @@ section{
 dl dd {
     text-align: justify;
 }
+.dnd-over {
+    border: 2px dashed #000;
+}
