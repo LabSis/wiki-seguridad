@@ -295,7 +295,7 @@ $tmpl_vulnerabilidades = ApiBd::obtener_vulnerabilidades();
                 <?php endif; ?>
                 <?php $i++ ?>
             <?php endforeach; ?>
-            <?php if ($i % 4 != 0): ?>
+            <?php if ($i % 4 != 1): ?>
                 </div>
             <?php endif; ?>
         </div>
@@ -347,7 +347,7 @@ $tmpl_vulnerabilidades = ApiBd::obtener_vulnerabilidades();
                 <?php endif; ?>
                 <?php $i++ ?>
             <?php endforeach; ?>
-            <?php if ($i % 4 != 0): ?>
+            <?php if ($i % 4 != 1): ?>
                 </div>
             <?php endif; ?>
         </div>
