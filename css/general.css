@@ -19,3 +19,7 @@ section{
     position: relative;
     float: right;
 }
+
+a {
+    word-break: break-all;
+}
