@@ -31,3 +31,11 @@ section{
 .btn-animado:hover {
     font-size: 18px;
 }
+
+
+
+.contenido {
+    width: 100%;
+    overflow-x: auto;
+}
+

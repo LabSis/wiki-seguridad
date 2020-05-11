@@ -25,3 +25,7 @@ dl dd {
 .dnd-over {
     border: 2px dashed #000;
 }
+
+a {
+    word-break: break-all;
+}
