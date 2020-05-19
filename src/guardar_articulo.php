@@ -21,7 +21,9 @@ try {
             }
 
             $contenido = filter_input(INPUT_POST, "txtContenido");
+
             $contenido = trim($contenido);
+
             if (strlen($contenido) === 0) {
                 $sesion->add_error_message("El contenido no puede ser vacío");
                 $hubo_error = true;
@@ -32,6 +34,7 @@ try {
         } else {
             $hubo_error = true;
         }
+
         if (!$hubo_error) {
             $id_autor = ApiBd::consultar_autor_por_usuario($sesion->get_user()->get_name())['id']; // en caso de que el autor sea obligatorio verificar acá si es null o no
 
@@ -43,6 +46,7 @@ try {
             }
         }
     }
+
     if ($tipo === "tecnica") {
         $sesion->redirect("contenedor.php?id=$id_contenedor&tipo=tecnica");
     } else if ($tipo === "vulnerabilidad") {

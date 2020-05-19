@@ -178,6 +178,21 @@ SQL;
         return $o_tecnica;
     }
     
+    public static function mover_algoritmo($id_algoritmo, $id_nuevo_padre) {
+        self::iniciar();
+        
+        $id_algoritmo = self::sanitizar($id_algoritmo);
+        $id_nuevo_padre = self::sanitizar($id_nuevo_padre);
+        
+        if ($id_nuevo_padre > 0) {
+            // TODO: Puede ocurrir que id_nuevo_padre no exista si se está usando MyISAM en prod.
+            $actualizacion = "UPDATE algoritmos SET id_padre=$id_nuevo_padre WHERE id=$id_algoritmo";
+            self::$conexion->actualizar_simple($actualizacion);
+        } else {
+            throw new InvalidArgumentException("Parámetro id_algoritmo incorrecto");
+        }
+    }
+    
     public static function obtener_algoritmo($id_algoritmo) {
         self::iniciar();
         
@@ -380,6 +395,7 @@ SQL;
     }
 
     public static function crear_articulo($titulo, $id_tecnica, $contenido, $tipo, $id_autor=null) {
+
         if(isset($id_autor) && $id_autor != null){
             if (!self::existe_autor($id_autor)){
                 return false;
@@ -387,7 +403,9 @@ SQL;
         }
         self::iniciar();
         $titulo = self::sanitizar($titulo);
-        $contenido = self::sanitizar($contenido, "<a><strong><em><ol><li><ul><p><span><pre><code><table><tbody><tr><th><td><thead><caption><hr><iframe><blockquote>");
+
+        $contenido = self::sanitizar($contenido, "<div><a><strong><em><ol><li><ul><p><span><pre><code><table><tbody><tr><th><td><thead><caption><hr><iframe><blockquote>");
+
         if ($tipo === "tecnica") {
             if (self::existe_tecnica($id_tecnica)) {
                 $insercion = "INSERT INTO articulos (nombre, id_tecnica, contenido, fecha_hora, autor_creador) VALUES ('{$titulo}',{$id_tecnica},'{$contenido}', NOW(), {$id_autor})";
@@ -631,7 +649,7 @@ SQL;
         self::iniciar();
         $id_articulo = self::sanitizar($id_articulo);
         $titulo = self::sanitizar($titulo);
-        $contenido = self::sanitizar($contenido, "<a><strong><em><ol><li><ul><p><span><pre><code><table><tbody><tr><th><td><thead><caption><hr><iframe><blockquote>");
+        $contenido = self::sanitizar($contenido, "<div><a><strong><em><ol><li><ul><p><span><pre><code><table><tbody><tr><th><td><thead><caption><hr><iframe><blockquote>");
         $ok = true;
 		self::$conexion->transaccion_comenzar();
 
@@ -640,7 +658,7 @@ SQL;
         SELECT id, nombre, contenido, nombre FROM articulos WHERE id={$id_articulo}
 SQL;
         $articulo = self::$conexion->consultar_simple($consulta);
-        if(isset($articulo) && is_array($articulo) && count($articulo) > 0){
+        /*if(isset($articulo) && is_array($articulo) && count($articulo) > 0){
             $contenido_articulo_anterior = $articulo[0]["contenido"];
             $titulo_articulo_anterior = $articulo[0]["nombre"];
             $dif = xdiff_string_bdiff($contenido, $contenido_articulo_anterior);
@@ -653,7 +671,7 @@ SQL;
 			if (!self::$conexion->insertar_simple($actualizacion_historial)) {
 		        $ok = false;
 		    }
-        }
+        }*/
         $actualizacion = <<<SQL
         UPDATE articulos AS a SET nombre='$titulo', contenido='$contenido', activada=1
         WHERE a.id=$id_articulo

@@ -101,6 +101,8 @@ $tmpl_vulnerabilidades = ApiBd::obtener_vulnerabilidades();
 
                 $("#modalTechnique").modal("show");
             });
+            
+            
 
             // Calcular la columna total de vulnerabilidades.
             var dimensionesCantidades = [];
@@ -241,6 +243,100 @@ $tmpl_vulnerabilidades = ApiBd::obtener_vulnerabilidades();
                 var etapa = $(this).parent().data("etapa");
                 cambiarCantidadVulnerabilidad(id, etapa, 1);
             });
+            
+            // Código para funcionamiento de Drag & Drop, basado en: https://www.html5rocks.com/es/tutorials/dnd/basics/
+            
+            var $elementoInicialDND = null;
+            var $contenedorInicialDND = null;
+            var $contenedorFinalDND = null;
+            
+            function onDragStart($elem, event) {
+                $elem.css("opacity", "0.4");
+                
+                $elementoInicialDND = $elem;
+                $contenedorInicialDND = $elem.parents(".panel-dnd");
+                event.dataTransfer.effectAllowed = 'move';
+                event.dataTransfer.setData('text/html', $elem.html());
+            }
+            
+            function onDragEnd($elem, event) {
+                $elem.css("opacity", "1");
+            }
+            
+            function onDragEnter(e) {
+                $(this).addClass("dnd-over");
+            }
+            
+            function onDragOver(e) {
+                if (e.preventDefault) {
+                    e.preventDefault();
+                }
+                e.dataTransfer.dropEffect = 'move';
+            }
+            
+            function onDragLeave(e) {
+                $(this).removeClass("dnd-over");
+            }
+            
+            function onDrop(e) {
+                if (e.stopPropagation) {
+                    e.stopPropagation();
+                }
+                
+                $elementoInicialDND.remove();
+                
+                $(this).removeClass("dnd-over");
+                var idNuevoPadre = $(this).data("algorithm-id");
+                var idAlgoritmo = $elementoInicialDND.data("id");
+                
+                var $listaEnlacesAArticulos = $(this).find(".lista-enlaces-a-articulos-dnd");
+                if ($listaEnlacesAArticulos != null && $listaEnlacesAArticulos.length > 0) {
+                    var innerHTMLSourceElemento = e.dataTransfer.getData('text/html');
+                    console.log(innerHTMLSourceElemento);
+                    $.ajax({
+                        url: "src/ajax/mover_algoritmo.php",
+                        type: "POST",
+                        data: {
+                            id_algoritmo: idAlgoritmo,
+                            id_nuevo_padre: idNuevoPadre
+                        },
+                        success: function(r) {
+                            var respuesta = JSON.parse(r);
+                            if (respuesta != null && respuesta.estado === "ok") {
+                                
+                                var $li = $("<li class='enlace-a-articulo-dnd' data-id='" + idAlgoritmo + "'></li>");
+                                $li.html(innerHTMLSourceElemento);
+                                $listaEnlacesAArticulos.append($li);
+                            }
+                        },
+                        error: function(r) {
+                            var respuesta = JSON.parse(r);
+                            alert(respuesta.mensaje);
+                        }
+                    });
+                }
+                
+                return false;
+            }
+            
+            $(document).on("dragstart", ".lista-enlaces-a-articulos-dnd .enlace-a-articulo-dnd", function (event) {
+                onDragStart($(this), event.originalEvent);
+            });
+            
+            $(document).on("dragend", ".lista-enlaces-a-articulos-dnd .enlace-a-articulo-dnd", function () {
+                onDragEnd($(this), event.originalEvent);
+            });
+            
+            var contenedoresFinales = document.querySelectorAll('.panel-dnd');
+            [].forEach.call(contenedoresFinales, function(elem) {
+                console.log("call");
+                elem.addEventListener('dragenter', onDragEnter, false);
+                elem.addEventListener('dragover', onDragOver, false);
+                elem.addEventListener('dragleave', onDragLeave, false);
+                elem.addEventListener('drop', onDrop, false);
+            });
+            
+            
         });
     </script>
 </head>
@@ -248,6 +344,7 @@ $tmpl_vulnerabilidades = ApiBd::obtener_vulnerabilidades();
 <?php require_once('header.php') ?>
 <div class="container">
 
+    <p>La presente wiki se compone de contenido de seguridad informática. Cualquier error puede escribirnos por Twitter a @SecLabsis.</p>
     <h3>
         <?php if ($sesion->is_active()): ?>
             <i class="agregar-tecnica boton-agregar glyphicon glyphicon-plus" title="Agregar" data-technique-id=""></i>
@@ -294,6 +391,9 @@ $tmpl_vulnerabilidades = ApiBd::obtener_vulnerabilidades();
                 <?php endif; ?>
                 <?php $i++ ?>
             <?php endforeach; ?>
+            <?php if ($i % 4 != 1): ?>
+                </div>
+            <?php endif; ?>
         </div>
     </div>
 
@@ -301,7 +401,7 @@ $tmpl_vulnerabilidades = ApiBd::obtener_vulnerabilidades();
         <?php if ($sesion->is_active()): ?>
             <i class="agregar-algoritmo boton-agregar glyphicon glyphicon-plus" title="Agregar" data-algorithm-id=""></i>
         <?php endif; ?>
-        Algoritmos, mecanismos y programas
+        Algoritmos, protocolos y programas
     </h3>
     <br/>
     <div class="row">
@@ -322,10 +422,10 @@ $tmpl_vulnerabilidades = ApiBd::obtener_vulnerabilidades();
                                 <span><?php echo $tmpl_algoritmo["nombre"]; ?></span>
                             </h3>
                         </div>
-                        <div class="panel-body">
-                            <ul>
+                        <div class="panel-body panel-dnd" data-algorithm-id="<?php echo $tmpl_algoritmo["id"] ?>">
+                            <ul class="lista-enlaces-a-articulos-dnd">
                                 <?php foreach ($tmpl_algoritmo["links"] as $link): ?>
-                                    <li>
+                                    <li class="enlace-a-articulo-dnd" data-id="<?php echo $link["href"]; ?>">
                                         <?php if ($sesion->is_active()): ?>
                                             <i class="editar-sub-algoritmo boton-editar glyphicon glyphicon-edit" title="Editar" data-algorithm-id="<?php echo $link["href"] ?>" data-algorithm-name="<?php echo $link["nombre"] ?>"></i>
                                         <?php endif; ?>
@@ -343,82 +443,87 @@ $tmpl_vulnerabilidades = ApiBd::obtener_vulnerabilidades();
                 <?php endif; ?>
                 <?php $i++ ?>
             <?php endforeach; ?>
+            <?php if ($i % 4 != 1): ?>
+                </div>
+            <?php endif; ?>
         </div>
     </div>
 
-    <div class="col-xs-12">
-        <h3>Vulnerabilidades</h3>
-        <br/>
-        <p>
-            La siguiente tabla muestra una clasificación de vulnerabildades de acuerdo a una categorización basada en el top 10 de OWASP (<a href='https://www.owasp.org/index.php/Top_10_2013-Top_10'>2013</a> y <a href='https://www.owasp.org/images/7/72/OWASP_Top_10-2017_%28en%29.pdf.pdf'>2017</a>) y a la etapa en la cual esa vulnerabilidad fue generada.
-            Los datos fueron extraídos de experiencias realizadas por el equipo de desarrollo y seguridad informática del LabSis de UTN-FRC.
-        </p>
-        <div class="row">
-            <div class="col-sm-7" style="overflow-x: auto">
-                <table class="table table-striped table-responsive" style="width: auto !important;">
-                    <thead>
-                    <tr>
-                        <th>Categoría</th>
-                        <th>Diseño</th>
-                        <th>Desarrollo</th>
-                        <th>Despliegue</th>
-                        <th>Total</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <?php foreach ($tmpl_vulnerabilidades as $tmpl_vulnerabilidad): ?>
-                        <tr id="<?php echo $tmpl_vulnerabilidad["id"] ?>">
-                            <td class="titulo-categoria">
-                                <a href="src/contenedor.php?id=<?php echo $tmpl_vulnerabilidad["id"] ?>&tipo=vulnerabilidad">
-                                    <?php echo $tmpl_vulnerabilidad["nombre"] ?>
-                                </a>
-                            </td>
-                            <td class="cantidad-disenio" data-etapa="disenio" style="min-width: 75px">
-                                <?php echo $tmpl_vulnerabilidad["disenio"] ?>
-                                <?php if($sesion->is_active()): ?>
-                                    <input type="button" value="-" class="btn btn-primary btn-xs btn-disminuir" />
-                                    <input type="button" value="+" class="btn btn-primary btn-xs btn-aumentar" />
-                                <?php endif; ?>
-                            </td>
-                            <td class="cantidad-codigo" data-etapa="desarrollo" style="min-width: 75px">
-                                <?php echo $tmpl_vulnerabilidad["codigo"] ?>
-                                <?php if($sesion->is_active()): ?>
-                                    <input type="button" value="-" class="btn btn-primary btn-xs btn-disminuir" />
-                                    <input type="button" value="+" class="btn btn-primary btn-xs btn-aumentar" />
-                                <?php endif; ?>
-                            </td>
-                            <td class="cantidad-configuracion" data-etapa="despliegue" style="min-width: 75px">
-                                <?php echo $tmpl_vulnerabilidad["configuracion"] ?>
-                                <?php if($sesion->is_active()): ?>
-                                    <input type="button" value="-" class="btn btn-primary btn-xs btn-disminuir" />
-                                    <input type="button" value="+" class="btn btn-primary btn-xs btn-aumentar" />
-                                <?php endif; ?>
-                            </td>
-                            <td class="total-fila">
-                            </td>
+    <div class="row">
+        <div class="col-xs-12">
+            <h3>Métricas de vulnerabilidades encontradas</h3>
+            <br/>
+            <p>
+                La siguiente tabla muestra una clasificación de vulnerabildades de acuerdo a una categorización basada en el top 10 de OWASP (<a href='https://www.owasp.org/index.php/Top_10_2013-Top_10'>2013</a> y <a href='https://www.owasp.org/images/7/72/OWASP_Top_10-2017_%28en%29.pdf.pdf'>2017</a>) y a la etapa en la cual esa vulnerabilidad fue generada.
+                Los datos fueron extraídos de experiencias realizadas por el equipo de desarrollo y seguridad informática del LabSis de UTN-FRC.
+            </p>
+            <div class="row">
+                <div class="col-sm-7" style="overflow-x: auto">
+                    <table class="table table-striped table-responsive" style="width: auto !important;">
+                        <thead>
+                        <tr>
+                            <th>Categoría</th>
+                            <th>Diseño</th>
+                            <th>Desarrollo</th>
+                            <th>Despliegue</th>
+                            <th>Total</th>
                         </tr>
-                    <?php endforeach; ?>
-                    </tbody>
-                    <tfoot>
-                    <tr>
-                        <td>Total</td>
-                        <td class="total-columna"></td>
-                        <td class="total-columna"></td>
-                        <td class="total-columna"></td>
-                        <td class="total-columna"></td>
-                    </tr>
-                    </tfoot>
-                </table>
-            </div>
-            <div class="col-sm-5">
-                <div class="row">
-                    <div class="col-sm-12">
-                        <canvas id="canvas1" height="250" width="520"></canvas>
-                    </div>
+                        </thead>
+                        <tbody>
+                        <?php foreach ($tmpl_vulnerabilidades as $tmpl_vulnerabilidad): ?>
+                            <tr id="<?php echo $tmpl_vulnerabilidad["id"] ?>">
+                                <td class="titulo-categoria">
+                                    <a href="src/contenedor.php?id=<?php echo $tmpl_vulnerabilidad["id"] ?>&tipo=vulnerabilidad">
+                                        <?php echo $tmpl_vulnerabilidad["nombre"] ?>
+                                    </a>
+                                </td>
+                                <td class="cantidad-disenio" data-etapa="disenio" style="min-width: 75px">
+                                    <?php echo $tmpl_vulnerabilidad["disenio"] ?>
+                                    <?php if($sesion->is_active()): ?>
+                                        <input type="button" value="-" class="btn btn-primary btn-xs btn-disminuir" />
+                                        <input type="button" value="+" class="btn btn-primary btn-xs btn-aumentar" />
+                                    <?php endif; ?>
+                                </td>
+                                <td class="cantidad-codigo" data-etapa="desarrollo" style="min-width: 75px">
+                                    <?php echo $tmpl_vulnerabilidad["codigo"] ?>
+                                    <?php if($sesion->is_active()): ?>
+                                        <input type="button" value="-" class="btn btn-primary btn-xs btn-disminuir" />
+                                        <input type="button" value="+" class="btn btn-primary btn-xs btn-aumentar" />
+                                    <?php endif; ?>
+                                </td>
+                                <td class="cantidad-configuracion" data-etapa="despliegue" style="min-width: 75px">
+                                    <?php echo $tmpl_vulnerabilidad["configuracion"] ?>
+                                    <?php if($sesion->is_active()): ?>
+                                        <input type="button" value="-" class="btn btn-primary btn-xs btn-disminuir" />
+                                        <input type="button" value="+" class="btn btn-primary btn-xs btn-aumentar" />
+                                    <?php endif; ?>
+                                </td>
+                                <td class="total-fila">
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                        </tbody>
+                        <tfoot>
+                        <tr>
+                            <td>Total</td>
+                            <td class="total-columna"></td>
+                            <td class="total-columna"></td>
+                            <td class="total-columna"></td>
+                            <td class="total-columna"></td>
+                        </tr>
+                        </tfoot>
+                    </table>
                 </div>
-                <div class="row">
-                    <div class="col-sm-12">
-                        <canvas id="canvas2" height="600" width="820"></canvas>
+                <div class="col-sm-5">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <canvas id="canvas1" height="250" width="520"></canvas>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <canvas id="canvas2" height="600" width="820"></canvas>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -426,56 +531,55 @@ $tmpl_vulnerabilidades = ApiBd::obtener_vulnerabilidades();
     </div>
 
 
+    <div class="row">
+        <div class="col-xs-12">
+            <h3>Glosario</h3>
+            <br/>
+            <dl class="dl-horizontal">
+                <dt>Vulnerabilidad</dt>
+                <dd>Una vulnerabilidad es una debilidad de una aplicación, la cual, puede ser una falla de diseño, un error de desarrollo o una mala configuración en el despliegue que puede provocar o ayudar a provocar un daño a los interesados de la misma. Los interesados incluyen al propietario de la aplicación, usuarios de la aplicación y a otras entidades que confían en la aplicación.</dd>
 
-    <div class="col-xs-12">
+                <dt>Técnica de ataque</dt>
+                <dd>Es una abstracción que abarca uno o más pasos para encontrar o explotar una vulnerabilidad en una aplicación.</dd>
 
+                <dt>Vector de ataque</dt>
+                <dd>Es la implementación de una técnica de ataque teniendo en cuenta el contexto de la aplicación objetivo.</dd>
 
-        <h3>Glosario</h3>
-        <br/>
-        <dl class="dl-horizontal">
-            <dt>Vulnerabilidad</dt>
-            <dd>Una vulnerabilidad es una debilidad de una aplicación, la cual, puede ser una falla de diseño, un error de desarrollo o una mala configuración en el despliegue que puede provocar o ayudar a provocar un daño a los interesados de la misma. Los interesados incluyen al propietario de la aplicación, usuarios de la aplicación y a otras entidades que confían en la aplicación.</dd>
+                <dt>Pentesting</dt>
+                <dd>Son ataques simulados a una aplicación lo que permite evaluar la seguridad de la misma. Debe haber un acuerdo entre ambas partes (pentester y cliente) y se debe definir los lineamientos del pentesting.</dd>
 
-            <dt>Técnica de ataque</dt>
-            <dd>Es una abstracción que abarca uno o más pasos para encontrar o explotar una vulnerabilidad en una aplicación.</dd>
+                <dt>Metodología</dt>
+                <dd>Es un conjunto de procedimientos ordenados que permiten ejecutar un pentesting.</dd>
 
-            <dt>Vector de ataque</dt>
-            <dd>Es la implementación de una técnica de ataque teniendo en cuenta el contexto de la aplicación objetivo.</dd>
+                <dt>Herramienta de ataque</dt>
+                <dd>Permite automatizar parcial o totalmente la ejecución de una o más técnicas de ataque.</dd>
 
-            <dt>Pentesting</dt>
-            <dd>Son ataques simulados a una aplicación lo que permite evaluar la seguridad de la misma. Debe haber un acuerdo entre ambas partes (pentester y cliente) y se debe definir los lineamientos del pentesting.</dd>
+                <dt>Herramienta de defensa</dt>
+                <dd>Permite defender una aplicación contra técnicas de ataque ya sea detectando, disminuyendo o evitando el impacto de la misma.</dd>
 
-            <dt>Metodología</dt>
-            <dd>Es un conjunto de procedimientos ordenados que permiten ejecutar un pentesting.</dd>
+                <dt>Riesgo</dt>
+                <dd>El riesgo es el producto del impacto y de la probabilidad para una determinada vulnerabilidad. El impacto puede ser diferente desde el punto de vista técnico como al negocio, por eso, puede ser necesario diferenciar el impacto técnico del impacto al negocio.</dd>
 
-            <dt>Herramienta de ataque</dt>
-            <dd>Permite automatizar parcial o totalmente la ejecución de una o más técnicas de ataque.</dd>
+                <dt>Score de vulnerabilidad</dt>
+                <dd>Cada vulnerabilidad debe ser puntuada, de esa manera se puede establecer una lista de prioridades. Por ejemplo, un sistema de puntuación es el <a href="https://www.first.org/cvss/calculator/3.0">CVSS</a> (Common Vulnerability Scoring System).</dd>
 
-            <dt>Herramienta de defensa</dt>
-            <dd>Permite defender una aplicación contra técnicas de ataque ya sea detectando, disminuyendo o evitando el impacto de la misma.</dd>
+                <dt>Amenaza</dt>
+                <dd>Es una posible interacción entre el software y uno o más actores donde los resultados de la ejecución es dañina para el sistema, para uno o varios de los actores o para los stakeholders pero sin saber exactamente cómo podría suceder dicha interacción.</dd>
 
-            <dt>Riesgo</dt>
-            <dd>El riesgo es el producto del impacto y de la probabilidad para una determinada vulnerabilidad. El impacto puede ser diferente desde el punto de vista técnico como al negocio, por eso, puede ser necesario diferenciar el impacto técnico del impacto al negocio.</dd>
+                <dt>Agentes de amenaza</dt>
+                <dd>Es el interesado en atacar a la aplicación. La detección de este rol es crucial para determinar el nivel de defensa necesario.</dd>
 
-            <dt>Score de vulnerabilidad</dt>
-            <dd>Cada vulnerabilidad debe ser puntuada, de esa manera se puede establecer una lista de prioridades. Por ejemplo, un sistema de puntuación es el <a href="https://www.first.org/cvss/calculator/3.0">CVSS</a> (Common Vulnerability Scoring System).</dd>
+                <dt>Caso de abuso</dt>
+                <dd>Es una especificación de la interacción entre el sistema y uno o más actores donde los resultados de la ejecución es dañina para el sistema, para uno o varios de los actores o para los stakeholders.</dd>
+            </dl>
 
-            <dt>Amenaza</dt>
-            <dd>Es una posible interacción entre el software y uno o más actores donde los resultados de la ejecución es dañina para el sistema, para uno o varios de los actores o para los stakeholders pero sin saber exactamente cómo podría suceder dicha interacción.</dd>
-
-            <dt>Agentes de amenaza</dt>
-            <dd>Es el interesado en atacar a la aplicación. La detección de este rol es crucial para determinar el nivel de defensa necesario.</dd>
-
-            <dt>Caso de abuso</dt>
-            <dd>Es una especificación de la interacción entre el sistema y uno o más actores donde los resultados de la ejecución es dañina para el sistema, para uno o varios de los actores o para los stakeholders.</dd>
-        </dl>
-
-        <h3>Enlaces de interés</h3>
-        <br/>
-        <ul>
-            <li><a href="https://www.owasp.org">OWASP: The Open Web Application Security Project</a></li>
-            <li><a href="https://www.first.org/cvss/calculator/3.0">Calculadora CVSS v3.0</a></li>
-        </ul>
+            <h3>Enlaces de interés</h3>
+            <br/>
+            <ul>
+                <li><a href="https://www.owasp.org">OWASP: The Open Web Application Security Project</a></li>
+                <li><a href="https://www.first.org/cvss/calculator/3.0">Calculadora CVSS v3.0</a></li>
+            </ul>
+        </div>
     </div>
 </div>
 <?php require_once 'footer.php' ?>

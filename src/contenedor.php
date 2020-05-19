@@ -41,6 +41,13 @@ try{
     <link href="<?php echo $WEB_PATH ?>css/contenedor.css" rel="stylesheet" />
     <link href='<?php echo $WEB_PATH ?>css/footer-distributed.css' rel="stylesheet"/>
     <script type="text/javascript" src="<?php echo $WEB_PATH ?>js/jquery.js"></script>
+
+    <script type="text/javascript" src="<?php echo $WEB_PATH ?>js/js-sequence-diagram/webfont.js"></script>
+    <script type="text/javascript" src="<?php echo $WEB_PATH ?>js/js-sequence-diagram/snap.svg-min.js"></script>
+    <script type="text/javascript" src="<?php echo $WEB_PATH ?>js/js-sequence-diagram/underscore-min.js"></script>
+    <script type="text/javascript" src="<?php echo $WEB_PATH ?>js/js-sequence-diagram/sequence-diagram-min.js"></script>
+
+
     <script type="text/javascript" src="<?php echo $WEB_PATH ?>js/ckeditor/ckeditor.js"></script>
     <script type="text/javascript" src="<?php echo $WEB_PATH ?>css/bootstrap/js/bootstrap.min.js"></script>
     <script type="text/javascript">
@@ -56,6 +63,8 @@ try{
 
             CKEDITOR.config.toolbarCanCollapse = true;
 
+
+            dibujarDiagramasSecuencia()
 
             // Borrado de artículo
             var articuloABorrarJQuery = null;
@@ -98,15 +107,50 @@ try{
                         console.log(r);
                     });*/
 
-                CKEDITOR.instances['txtContenidoModalEditar'].setData(contenido);
+
+
+                let callback = function(){
+
+                    $(CKEDITOR.instances.txtContenidoModalEditar.document.$.documentElement).children("body").children(".divDiagramaSecuencia").each(function(i, e){
+                        let htmlDiagrama = $(e).html()
+                        htmlDiagrama =  htmlDiagrama.split("<br>").join("\n");
+                        $(e).attr("content", htmlDiagrama)
+
+                        $(e).html(`
+                            <diagrama-secuencia>`  + htmlDiagrama + `</diagrama-secuencia>
+                        `)
+                    })
+
+                    $(CKEDITOR.instances.txtContenidoModalEditar.document.$.documentElement.getElementsByTagName("diagrama-secuencia")).sequenceDiagram({theme: 'simple'});
+                }
+                CKEDITOR.instances['txtContenidoModalEditar'].setData(contenido,callback);
+
+                //$(CKEDITOR.instances.txtContenidoModalEditar.document.$.documentElement).children("body").children(".svgDiagramaSecuencia").remove()
+                // $(CKEDITOR.instances.txtContenidoModalEditar.document.$.documentElement).children("body").children(".htmlDiagramaSecuencia").css("display", "block")
+
                 $("#txtTituloModalEditar").val(titulo);
                 $("#hidIdArticuloModalEditar").val(idArticulo);
                 $("#modalEditar").modal("show");
+
+
             }
 
             $(document).on("click", ".editar", function(){
                 var titulo = $(this).parents("section").find(".titulo").text().trim();
-                var contenido = $(this).parents(".contenido").html().trim();
+
+                // $(this).parents(".contenido").children("diagrama-secuencia").children(".svgDiagramaSecuencia").remove()
+
+                var contenido = $(this).parents(".contenido").clone()
+
+                let htmlDiagrama = $(contenido).children(".divDiagramaSecuencia").children(".htmlDiagramaSecuencia").html()
+                htmlDiagrama =  htmlDiagrama.split("\n").join("<br>");
+                $(contenido).children(".divDiagramaSecuencia").replaceWith(`
+                    <div class="divDiagramaSecuencia">` + htmlDiagrama + ` </div>
+                `)
+
+                contenido = contenido.html().trim();
+
+
                 var idArticulo = $(this).parents("section").data("id");
                 $("#btnVerHistorial").data("id-articulo", idArticulo);
                 mostrarModalEditar(idArticulo, titulo, contenido);
@@ -174,6 +218,19 @@ try{
                     ocultarArticulosDesactivados(idContenedor);
                 }
             });
+
+
+            function dibujarDiagramasSecuencia(){
+                $(".divDiagramaSecuencia").each(function(i,element){
+                    let htmlDiagrama = $(element).attr("content")
+                    $(element).html(
+                        `<div class="htmlDiagramaSecuencia" style="display: none">` + htmlDiagrama + `</div>`
+                        +
+                        `<div class="svgDiagramaSecuencia">` + htmlDiagrama + `</div>`
+                    )
+                })
+                $(".svgDiagramaSecuencia").sequenceDiagram({theme: 'simple'});
+            }
         });
     </script>
 </head>
