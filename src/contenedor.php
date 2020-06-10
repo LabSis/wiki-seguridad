@@ -142,11 +142,14 @@ try{
 
                 var contenido = $(this).parents(".contenido").clone()
 
-                let htmlDiagrama = $(contenido).children(".divDiagramaSecuencia").children(".htmlDiagramaSecuencia").html()
-                htmlDiagrama =  htmlDiagrama.split("\n").join("<br>");
-                $(contenido).children(".divDiagramaSecuencia").replaceWith(`
-                    <div class="divDiagramaSecuencia">` + htmlDiagrama + ` </div>
-                `)
+                let htmlDiagrama = $(contenido).children(".divDiagramaSecuencia").children(".htmlDiagramaSecuencia").html();
+                if (htmlDiagrama != null) {
+                    htmlDiagrama =  htmlDiagrama.split("\n").join("<br>");
+                    $(contenido).children(".divDiagramaSecuencia").replaceWith(`
+                        <div class="divDiagramaSecuencia">` + htmlDiagrama + ` </div>
+                    `)
+                }
+                
 
                 contenido = contenido.html().trim();
 
