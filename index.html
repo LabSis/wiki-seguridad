@@ -1,0 +1,131 @@
+<!DOCTYPE HTML> 
+<html> 
+<head> 
+    <title> 
+        SecLabSis
+    </title> 
+    <style> 
+        h1 {
+            color: green;
+        }
+        canvas { 
+            background-color: #2b2828;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            left: 0px;
+            margin: 0px!important;
+            padding: 0px!important;
+        }
+        body {
+            padding: 0px;
+            margin: 0px;
+        }
+        .titulo-principal {
+            position: absolute;
+            top: 30%;
+            left: calc(50% - 150px);
+            color: white;
+            z-index: 999;
+            width: 300px;
+            text-align: center;
+            margin: 0px;
+            padding: 0px;
+        }
+        .subtitulo-principal {
+            position: absolute;
+            top: 35%;
+            left: calc(50% - 150px);
+            color: white;
+            z-index: 999;
+            width: 300px;
+            text-align: center;
+        }
+        .menu-principal {
+            position: absolute;
+            top: 50%;
+            left: calc(50% - 250px);
+            color: white;
+            z-index: 999;
+            width: 500px;
+            text-align: center;
+            padding: 0px;
+        }
+        .menu-principal li {
+            display: inline;
+            margin-left: 10px;
+            margin-right: 10px;
+        }
+        .menu-principal li a {
+            text-decoration: underline;
+            color: #d3caca!important;
+            font-size: 18px;
+            letter-spacing: 1px;
+        }
+        * {
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        }
+    </style> 
+</head>
+<body>
+    <center>
+        <h1 class="titulo-principal">SecLabSis</h1>
+        <span class="subtitulo-principal">Seguridad desde los requerimientos</span>
+        <ul class="menu-principal">
+            <li><a href="">Wiki</a></li>
+            <li><a href="">Investigaciones</a></li>
+            <li><a href="">Contacto</a></li>
+        </ul>
+        <canvas> 
+        </canvas> 
+        <script>
+            // Basado en https://www.geeksforgeeks.org/how-to-build-a-bounce-ball-with-html-and-javascript/
+            var canvas = document.querySelector("canvas"); 
+            canvas.width = window.innerWidth; 
+            canvas.height = window.innerHeight; 
+            var l = canvas.getContext('2d'); 
+            var x = Math.floor(Math.random() * innerWidth);
+            var y = Math.floor(Math.random() * innerHeight);
+            var vx = Math.floor(Math.random() * 20);
+            var vy = Math.floor(Math.random() * 20);
+            var radius = 3;
+  
+            move(); 
+            
+            // This function will do the animation 
+            function move() { 
+                requestAnimationFrame(move); 
+  
+                // It clears the specified pixels within  
+                // the given rectangle
+                l.clearRect(0, 0, innerWidth, innerHeight); 
+  
+                // Creating a circle 
+                l.beginPath(); 
+                l.strokeStyle = "green";
+                l.fillStyle = "rgba(200, 200, 200, 0.5)";
+                l.arc(x, y, radius, 0, Math.PI * 2, false); 
+                l.fill(); 
+  
+                // Conditions sso that the ball bounces  
+                // from the edges 
+                if (radius + x > innerWidth)
+                    vx = 0 - vx;
+  
+                if (x - radius < 0)
+                    vx = 0 - vx;
+  
+                if (y + radius > innerHeight)
+                    vy = 0 - vy;
+  
+                if (y - radius < 0)
+                    vy = 0 - vy;
+  
+                x = x + vx;
+                y = y + vy;
+            } 
+        </script> 
+    </center> 
+</body> 
+  
+</html>
