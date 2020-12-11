@@ -4,7 +4,13 @@
     <title> 
         SecLabSis
     </title> 
-    <style> 
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Sofia">
+    <style>
+        :root {
+	        --delay: 0;
+	        --duration: 800ms;
+	        --iterations: 1;
+        }
         h1 {
             color: green;
         }
@@ -17,7 +23,11 @@
             margin: 0px!important;
             padding: 0px!important;
         }
+        * {
+            font-family: "Roboto", "Helvetica Neue", Helvetica, sans-serif;
+        }
         body {
+            font-family: "Roboto", "Helvetica Neue", Helvetica, sans-serif;
             padding: 0px;
             margin: 0px;
         }
@@ -34,7 +44,8 @@
         }
         .subtitulo-principal {
             position: absolute;
-            top: 35%;
+            top: 38%;
+            animation: subirSubtitulo 200ms linear;
             left: calc(50% - 150px);
             color: white;
             z-index: 999;
@@ -44,6 +55,7 @@
         .menu-principal {
             position: absolute;
             top: 50%;
+            animation: subirMenu 200ms linear;
             left: calc(50% - 250px);
             color: white;
             z-index: 999;
@@ -57,74 +69,101 @@
             margin-right: 10px;
         }
         .menu-principal li a {
-            text-decoration: underline;
-            color: #d3caca!important;
+            text-decoration: none;
+            color: #35b670!important;
             font-size: 18px;
             letter-spacing: 1px;
         }
-        * {
-            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        
+        @keyframes subirMenu {
+            from {
+                top: 55%;
+            }
+            to {
+                top: 50%;
+            }
+        }
+        
+        @keyframes subirSubtitulo {
+            from {
+                top: 45%;
+            }
+            to {
+                top: 38%;
+            }
+        }
+        
+        /* Basado en https://codemyui.com/text-reveal-animation-css/ */
+        .reveal-text,
+        .reveal-text::after {
+	        animation-delay: var(--animation-delay, 2s);
+	        animation-iteration-count: var(--iterations, 1);
+	        animation-duration: var(--duration, 800ms);
+	        animation-fill-mode: both;
+	        animation-timing-function: cubic-bezier(0.0, 0.0, 0.2, 1);
+        }
+
+        .reveal-text {
+	        --animation-delay: var(--delay, 0);
+	        --animation-duration: var(--duration, 800ms);
+	        --animation-iterations: var(--iterations, 1);
+	        animation-name: clip-text;
+	        color: #FFF;
+	        white-space: nowrap;
+	        cursor: default;
+        }
+        
+        .reveal-text::after {
+            content: "";
+            position: absolute;
+            z-index: 999;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #35b670;
+            transform: scaleX(0);
+            transform-origin: 0 50%;
+            pointer-events: none;
+            animation-name: text-revealer;
+        }
+
+        @keyframes clip-text {
+	        from {
+		        clip-path: inset(0 100% 0 0);
+	        }
+	        to {
+		        clip-path: inset(0 0 0 0);
+	        }
+        }
+
+        @keyframes text-revealer {
+	        0%, 50% {
+		        transform-origin: 0 50%;
+	        }
+	        60%, 100% {
+		        transform-origin: 100% 50%;		
+	        }
+	        60% {
+		        transform: scaleX(1);
+	        }
+	        100% {
+		        transform: scaleX(0);
+	        }
         }
     </style> 
 </head>
 <body>
     <center>
-        <h1 class="titulo-principal">SecLabSis</h1>
+        <h1 class="titulo-principal reveal-text">SecLabSis</h1>
         <span class="subtitulo-principal">Seguridad desde los requerimientos</span>
         <ul class="menu-principal">
-            <li><a href="">Wiki</a></li>
-            <li><a href="">Investigaciones</a></li>
-            <li><a href="">Contacto</a></li>
+            <li><a href="wiki.php">Wiki</a></li>
+            <li><a href="publicaciones/index.php">Publicaciones</a></li>
+            <li><a href="https://twitter.com/SecLabsis">Contacto</a></li>
         </ul>
-        <canvas> 
-        </canvas> 
-        <script>
-            // Basado en https://www.geeksforgeeks.org/how-to-build-a-bounce-ball-with-html-and-javascript/
-            var canvas = document.querySelector("canvas"); 
-            canvas.width = window.innerWidth; 
-            canvas.height = window.innerHeight; 
-            var l = canvas.getContext('2d'); 
-            var x = Math.floor(Math.random() * innerWidth);
-            var y = Math.floor(Math.random() * innerHeight);
-            var vx = Math.floor(Math.random() * 20);
-            var vy = Math.floor(Math.random() * 20);
-            var radius = 3;
-  
-            move(); 
-            
-            // This function will do the animation 
-            function move() { 
-                requestAnimationFrame(move); 
-  
-                // It clears the specified pixels within  
-                // the given rectangle
-                l.clearRect(0, 0, innerWidth, innerHeight); 
-  
-                // Creating a circle 
-                l.beginPath(); 
-                l.strokeStyle = "green";
-                l.fillStyle = "rgba(200, 200, 200, 0.5)";
-                l.arc(x, y, radius, 0, Math.PI * 2, false); 
-                l.fill(); 
-  
-                // Conditions sso that the ball bounces  
-                // from the edges 
-                if (radius + x > innerWidth)
-                    vx = 0 - vx;
-  
-                if (x - radius < 0)
-                    vx = 0 - vx;
-  
-                if (y + radius > innerHeight)
-                    vy = 0 - vy;
-  
-                if (y - radius < 0)
-                    vy = 0 - vy;
-  
-                x = x + vx;
-                y = y + vy;
-            } 
-        </script> 
+        <canvas>
+        </canvas>
     </center> 
 </body> 
   
